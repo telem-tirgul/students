@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>התלם שלי</title>
+<title>תלם שלי</title>
 <meta name="theme-color" content="#5A1216">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="התלם שלי">
+<meta name="apple-mobile-web-app-title" content="תלם שלי">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -343,6 +343,26 @@
     :root:not([data-theme="light"]) .subj-chip.s-e{ background:#36300E; color:#F0DB6A; border-color:#7A6A1C; } }
   .from-note{ font-size:13.5px; color:var(--ink-soft); margin:0 2px 8px; }
   .from-note .linkish{ padding:0 4px; }
+  .subj-sep{ width:1px; align-self:stretch; background:var(--border); margin:2px 2px; }
+  .subj-chip.on.s-b{ box-shadow:0 0 0 2px #8DB8EA55; }
+  :root[data-theme="dark"] .subj-chip.s-b{ background:#15263D; color:#9CC4F2; border-color:#2F5A8C; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .subj-chip.s-b{ background:#15263D; color:#9CC4F2; border-color:#2F5A8C; } }
+  .chk{ display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer; }
+  .chk input{ width:20px; height:20px; accent-color:var(--accent); }
+  .bk-bar{ display:flex; align-items:center; justify-content:space-between; margin:2px 2px 6px; }
+  .bk-list{ border:1px solid var(--border); border-radius:14px; max-height:46vh; overflow:auto; background:var(--paper); }
+  .bk-row{ display:flex; align-items:center; gap:10px; padding:8px 12px; border-bottom:1px solid var(--border); cursor:pointer; }
+  .bk-row:last-child{ border-bottom:none; }
+  .bk-row input{ width:20px; height:20px; accent-color:var(--accent); flex:none; }
+  .bk-row .avatar{ width:34px; height:34px; font-size:14px; }
+  .bk-row.dis{ opacity:.55; cursor:default; }
+  .bk-foot{ display:flex; gap:8px; margin-top:12px; } .bk-foot .btn{ flex:1; }
+  .field select{ width:100%; min-height:48px; border:1px solid var(--border); border-radius:14px; background:var(--paper); padding:0 12px; font-size:16px; }
+  @media (min-width:700px){ .sheet{ max-width:620px; } }
+  .ph-acts{ display:flex; gap:8px; flex-wrap:nowrap; }
+  .danger-zone{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:28px; padding:14px 16px; border:1px dashed color-mix(in srgb, var(--bad) 45%, var(--border)); border-radius:16px; }
+  .danger-zone > div{ flex:1; min-width:200px; }
+  .btn.danger{ color:var(--bad); border-color:color-mix(in srgb, var(--bad) 45%, var(--border)); background:var(--paper); }
   .panel-h.wrap{ flex-wrap:wrap; row-gap:8px; }
 </style>
 </head>
@@ -352,7 +372,7 @@
 <section id="loginView" hidden>
   <div class="wrap login">
     <img class="logo" src="logo.png" alt="תלם">
-    <h1>התלם שלי</h1>
+    <h1>תלם שלי</h1>
     <p class="lead muted">תלם – המרכז לשיעורי תרגול</p>
     <form id="loginForm" class="card" autocomplete="on">
       <div id="studentFields">
@@ -370,7 +390,7 @@
       <div class="err" id="lgErr"></div>
       <button class="btn primary block" id="lgBtn" type="submit">כניסה</button>
     </form>
-    <p class="muted small" style="text-align:center;margin:4px 0 0" id="forgotNote">שכחת את הקוד? לכתוב לנו בוואטסאפ, ונשלח קוד חדש.</p>
+    <div style="text-align:center" id="forgotNote"><button class="linkish small" id="forgotBtn" type="button">שכחתי את הקוד</button></div>
     <div style="text-align:center"><button class="linkish small" id="staffToggle" type="button">כניסת צוות</button></div>
     <p class="muted small" style="text-align:center;margin:0">גרסה <span class="appVer"></span></p>
   </div>
@@ -412,7 +432,7 @@
   <header class="top">
     <div class="wrap row">
       <img src="logo.png" alt="">
-      <div class="ttl"><span id="stHello">שלום</span><small>התלם שלי</small></div>
+      <div class="ttl"><span id="stHello">שלום</span><small>תלם שלי</small></div>
       <button class="icon-btn" id="stRefresh" aria-label="רענון"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
       <button class="icon-btn" id="stMenu" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
     </div>
@@ -433,7 +453,7 @@
   <div class="ad-shell">
     <!-- תפריט צד (מחשב) -->
     <aside class="ad-side">
-      <div class="ad-brand"><img src="logo.png" alt=""><div><b>התלם שלי</b><small>ניהול</small></div></div>
+      <div class="ad-brand"><img src="logo.png" alt=""><div><b>תלם שלי</b><small>ניהול</small></div></div>
       <nav class="ad-nav" id="adNavSide"></nav>
       <div class="ad-side-foot">
         <button class="side-link" id="adRefresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg>רענון</button>
@@ -444,7 +464,7 @@
     <!-- כותרת (נייד) -->
     <header class="ad-top">
       <img src="logo.png" alt="">
-      <div class="ttl" id="adTopTitle">התלם שלי</div>
+      <div class="ttl" id="adTopTitle">תלם שלי</div>
       <button class="icon-btn" id="adRefreshM" aria-label="רענון"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
       <button class="icon-btn" id="adLogoutM" aria-label="יציאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg></button>
     </header>
@@ -472,7 +492,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -608,6 +628,25 @@ function setStaffMode(on){
   STAFF_MODE = on; $("studentFields").hidden = on; $("staffFields").hidden = !on; $("forgotNote").hidden = on;
   $("staffToggle").textContent = on ? "כניסת תלמידים" : "כניסת צוות";
 }
+// "שכחתי את הקוד": בקשה למנהלת לשלוח קוד חדש (בלי כניסה)
+$("forgotBtn").onclick = () => openSheet(`<h2>שכחתי את הקוד</h2>
+  <p class="muted" style="margin-top:0">מקלידים את מספר הטלפון שלך, ונשלח לך קוד חדש בוואטסאפ.</p>
+  <label class="field"><span>מספר הטלפון שלך</span><input id="fgPhone" type="tel" inputmode="tel" class="ltr" placeholder="05X-XXXXXXX" value="${esc($("lgPhone").value)}"></label>
+  <div class="err" id="fgErr"></div>
+  <button class="btn primary block" id="fgGo">בקשת קוד חדש</button>`, (sh) => {
+    sh.querySelector("#fgGo").onclick = async () => {
+      const ph = normPhone(sh.querySelector("#fgPhone").value);
+      if (!/^05\d{8}$/.test(ph)) { sh.querySelector("#fgErr").textContent = "מספר הטלפון לא נראה תקין (05X-XXXXXXX)."; return; }
+      sh.querySelector("#fgGo").disabled = true;
+      try {
+        const res = await fetch(CONFIG.supabaseUrl + "/rest/v1/rpc/portal_request_code", { method: "POST", headers: baseHeaders(), body: JSON.stringify({ p_phone: ph }) });
+        if (!res.ok) throw new Error("x");
+        sh.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
+          <h2 style="margin-top:8px">הבקשה נשלחה</h2><p class="muted">אם המספר רשום אצלנו, נשלח לך קוד חדש בוואטסאפ בהקדם.</p>
+          <button class="btn primary block" onclick="closeSheet()">סגירה</button></div>`;
+      } catch(e) { sh.querySelector("#fgErr").textContent = "לא הצלחנו לשלוח. אפשר לכתוב לנו בוואטסאפ."; sh.querySelector("#fgGo").disabled = false; }
+    };
+  });
 $("staffToggle").onclick = () => { setStaffMode(!STAFF_MODE); $("lgErr").textContent = ""; };
 $("loginForm").onsubmit = async (ev) => {
   ev.preventDefault();
@@ -879,7 +918,7 @@ function showInstallHelp(){
 // ניהול (מנהלת) – גרסה 1.1: תצוגה למחשב (תפריט צד, רשימה + תוכנית זה לצד זה, חלונית מאגר)
 // ותצוגה לנייד (תפריט תחתון, מסך אחרי מסך)
 // ======================================================================
-const AD = { loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
+const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
              st: null, subj: null, sel: new Set(), showDone: false,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
@@ -904,7 +943,7 @@ function adminStart(){
 DESK.addEventListener("change", () => { if (!$("adminView").hidden) { if (!isDesk()) closeDrawer(true); adRender(); } });
 
 function renderNav(){
-  const n = waitingList().length;
+  const n = waitingList().length + (AD.codeReqs || []).length;
   const html = NAV.map(([v, l, ic]) => `<button data-v="${v}" class="${AD.view === v ? "on" : ""}">${ic}<span>${l}</span>${v === "wait" && n ? `<span class="badge">${n}</span>` : ""}</button>`).join("");
   $("adNavSide").innerHTML = html; $("adNavBottom").innerHTML = html;
   document.querySelectorAll("#adNavSide button, #adNavBottom button").forEach(b => b.onclick = () => adGo(b.dataset.v));
@@ -918,6 +957,10 @@ async function adLoad(){
     AD.students = (students || []).map(s => Object.assign(s, { student_id: String(s.student_id) }));
     AD.plan = (plan || []).map(p => Object.assign(p, { student_id: String(p.student_id) }));
     AD.loaded = true;
+    // בקשות "שכחתי את הקוד" (קובץ 64.1; אם לא הורץ – פשוט אין)
+    try { AD.codeReqs = (await get("portal_code_requests", "select=id,student_id,phone,created_at&handled_at=is.null&matched=is.true&order=created_at"))
+            .map(r => Object.assign(r, { student_id: String(r.student_id) })).filter(r => stById(r.student_id)); }
+    catch(e) { AD.codeReqs = []; }
   } catch(e) {
     if (e.message === "not signed in") return;
     $("adBody").innerHTML = `<div class="card err">${e.code === "PGRST202" || e.status === 404 ? "צריך להריץ את קובץ 63.1 ב-Supabase." : "לא הצלחנו לטעון. " + esc(errText(e))}</div>`; return;
@@ -961,6 +1004,9 @@ const wsTopicName = (wid) => { const w = AD.wsById.get(String(wid)); return w ? 
 const stName = (s) => (s.first_name || "") + " " + (s.last_name || "");
 const stMeta = (s) => [s.grade ? "כיתה " + s.grade : "", s.school].filter(Boolean).join(" · ");
 const subjCls = (x) => /אנגלית/.test(x) && /מתמטיקה/.test(x) ? "s-b" : /מתמטיקה/.test(x) ? "s-m" : /אנגלית/.test(x) ? "s-e" : "s-x";   // צבעים כמו במערכת הניהול
+// מקצוע/ות של תלמיד/ה: מתמטיקה (ירוק), אנגלית (צהוב), משולב = שניהם (כחול) – כמו במערכת הניהול
+const subjBadge = (subs, sm) => { subs = subs || []; if (!subs.length) return "";
+  const t = subs.length > 1 ? "משולב" : subs[0]; return `<span class="subj-chip ${subs.length > 1 ? "s-b" : subjCls(t)} on${sm ? " sm" : ""}">${esc(t)}</span>`; };
 const initials = (s) => ((s.first_name || "").trim()[0] || "") + ((s.last_name || "").trim()[0] || "");
 const avatar = (s) => `<span class="avatar">${esc(initials(s))}</span>`;
 const thumbOf = (g, wid, extra) => { const w = AD.wsById.get(String(wid)); return w ? `<span class="thumb" data-zoom="${esc(w.id)}" style="background-image:url('${esc(g(w.storage_path))}')" ${extra || ""}></span>` : `<span class="thumb"></span>`; };
@@ -990,6 +1036,11 @@ async function renderWait(){
       <button class="stat t-ok" data-go="students" data-f="all"><div class="v">${doneWeek}</div><div class="l">דפים שהושלמו השבוע</div></button>
       <button class="stat" data-go="students" data-f="noacc"><div class="v">${noAcc}</div><div class="l">רשומים בלי חשבון</div></button>
     </div>`;
+  const reqs = AD.codeReqs || [];
+  if (reqs.length) h += `<div class="sec-h">ביקשו קוד חדש (${reqs.length})</div><div class="wait-grid" style="margin-bottom:22px">` + reqs.map(r => { const s = stById(r.student_id);
+      return `<div class="wcard hot"><div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div>
+        <div class="sub">שכח/ה את הקוד · <span class="ltr">${esc(fmtPhone(r.phone))}</span> · ${esc(ago(r.created_at))}</div></div><span class="chip warn">קוד</span></div>
+        <div class="acts"><button class="btn primary sm" data-newcode="${esc(r.student_id)}">${IC.wa} שליחת קוד חדש</button><button class="btn sm ghost" data-dismiss="${esc(r.student_id)}">התעלמות</button></div></div>`; }).join("") + `</div>`;
   if (!list.length) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים כרגע</h2><p class="muted">כשתלמיד/ה ילחץ/תלחץ "סיימתי", הוא/היא יופיע/תופיע כאן.</p></div>`;
   else h += `<div class="wait-grid">` + list.map(w => waitCard(g, w.s, w.subj, `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`, true)).join("") + `</div>`;
   if (fresh.length) {
@@ -998,6 +1049,8 @@ async function renderWait(){
   }
   $("adBody").innerHTML = h;
   const B = $("adBody");
+  B.querySelectorAll("[data-newcode]").forEach(b => b.onclick = () => accountSheet(stById(b.dataset.newcode), true));
+  B.querySelectorAll("[data-dismiss]").forEach(b => b.onclick = () => codeReqDone(b.dataset.dismiss));
   B.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.f) AD.filter = b.dataset.f; adGo(b.dataset.go); });
   B.querySelectorAll("[data-rel]").forEach(b => b.onclick = () => releaseItems([Number(b.dataset.rel)]));
   B.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open, b.dataset.subj));
@@ -1050,7 +1103,7 @@ function studentsListHtml(){
     <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
     <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
     <div class="list-scroll">${list.map(s => `<button class="st-row ${AD.st === s.student_id && isDesk() ? "on" : ""}" data-open="${esc(s.student_id)}">
-      ${avatar(s)}<span style="min-width:0;flex:1"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}</div><div class="subj-tabs mini-tabs">${(s.subjects || []).map(x => `<span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>`).join("")}</div></span>
+      ${avatar(s)}<span style="min-width:0;flex:1"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}</div><div class="subj-tabs mini-tabs">${subjBadge(s.subjects, true)}</div></span>
       <span class="chips">
         ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? `<span class="chip warn">לא נכנס/ה</span>` : ""}
         ${(s.waiting_subjects || []).length ? `<span class="chip new">ממתין/ה</span>` : ""}
@@ -1103,13 +1156,13 @@ async function renderStudentPlan(T, mobile){
     ? `<span class="chip">אין עדיין חשבון</span><span class="sp" style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button>`
     : `<span class="chip ok">יש חשבון</span><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
        <span class="small muted">${s.must_change_code ? "עוד לא בחר/ה קוד אישי" : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
-       <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button><button class="btn sm ghost" id="accDel">מחיקת חשבון</button>`;
+       <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button>`;
   T.innerHTML = `
     ${mobile ? `<div class="crumb"><button class="btn sm ghost" id="stBack">${IC.back} חזרה</button></div>` : ""}
     <div class="card">
       <div class="p-head">${avatar(s)}<div style="flex:1;min-width:0"><h2>${esc(stName(s))}</h2>
         <div class="meta">${esc(stMeta(s))}${s.phone ? ` · <span class="ltr">${esc(fmtPhone(s.phone))}</span>` : ""}</div>
-        <div class="subj-tabs">${subs.map(x => { const w = (s.waiting_subjects || []).includes(x);
+        <div class="subj-tabs">${subs.length > 1 ? `<span class="subj-chip s-b on">משולב</span><span class="subj-sep"></span>` : ""}${subs.map(x => { const w = (s.waiting_subjects || []).includes(x);
           return subs.length > 1 ? `<button class="subj-chip ${subjCls(x)} ${x === AD.subj ? "on" : "off"}" data-subj="${esc(x)}" title="תוכנית ${esc(x)}">${x === AD.subj ? IC.check.replace("<svg", '<svg width="13" height="13"') : ""}${esc(x)}${w ? `<span class="wdot" title="ממתין/ה לדף"></span>` : ""}</button>`
                                  : `<span class="subj-chip ${subjCls(x)} on">${esc(x)}</span>`; }).join("")}</div></div>
         ${waiting ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>
@@ -1118,8 +1171,8 @@ async function renderStudentPlan(T, mobile){
     <div class="plan-cols" style="margin-top:12px">
       <div class="panel">
         <div class="panel-h wrap"><span>בתור – הדפים הבאים</span>${subs.length > 1 ? `<span class="subj-chip ${subjCls(AD.subj)} on sm">${esc(AD.subj)}</span>` : ""}<span class="cnt">${queue.length}</span><span class="sp"></span>
-          <button class="btn sm" id="addFromBank">${IC.plusBox} הוספת דפים<span class="hide-m"> מהמאגר</span></button>
-          ${queue.length ? `<button class="btn sm primary" id="relNext">${IC.check} שחרור<span class="hide-m">&nbsp;הדף</span> הבא</button>` : ""}</div>
+          <span class="ph-acts"><button class="btn sm" id="addFromBank">${IC.plusBox} הוספת דפים<span class="hide-m"> מהמאגר</span></button>
+          ${queue.length ? `<button class="btn sm primary" id="relNext">${IC.check} שחרור<span class="hide-m"> הדף</span> הבא</button>` : ""}</span></div>
         <div class="panel-b">
           ${queue.map((p, i) => `<div class="plan-item">
               <input type="checkbox" data-sel="${p.id}" ${AD.sel.has(p.id) ? "checked" : ""} aria-label="בחירה">
@@ -1145,7 +1198,8 @@ async function renderStudentPlan(T, mobile){
             ${done.length > 5 && !AD.showDone ? `<button class="linkish small" id="moreDoneAd">להציג הכול</button>` : ""}</div>
         </div>
       </div>
-    </div>`;
+    </div>
+    ${s.has_account ? `<div class="danger-zone"><div><b>מחיקת החשבון</b><div class="small muted">התלמיד/ה לא יוכל/תוכל להיכנס. התוכנית והדפים נשמרים.</div></div><button class="btn sm danger" id="accDel">מחיקת חשבון</button></div>` : ""}`;
   const q = (sel) => T.querySelector(sel);
   if (q("#stBack")) q("#stBack").onclick = () => { AD.st = null; adRender(); };
   T.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { AD.subj = b.dataset.subj; AD.sel.clear(); rerenderPlan(); });
@@ -1195,6 +1249,12 @@ async function removePlan(id){
 }
 
 // ---------- חשבון לתלמיד/ה ----------
+async function codeReqDone(sid, quiet){
+  if (!(AD.codeReqs || []).some(r => r.student_id === String(sid))) return;
+  try { await rpc("portal_code_request_done", { p_student: String(sid) }); } catch(e) { if (!quiet) { toast(errText(e)); return; } }
+  AD.codeReqs = AD.codeReqs.filter(r => r.student_id !== String(sid)); renderNav();
+  if (!quiet && AD.view === "wait") adRender();
+}
 const randCode = () => { let c; do { const a = new Uint32Array(1); crypto.getRandomValues(a); c = String(a[0] % 1000000).padStart(6, "0"); } while (/^(\d)\1{5}$/.test(c) || ["123456", "654321"].includes(c)); return c; };
 function accountSheet(s, reset){
   const code = randCode();
@@ -1212,15 +1272,17 @@ function accountSheet(s, reset){
         try {
           const r = await rpc("portal_create_account", { p_student: s.student_id, p_phone: ph, p_code: cd });
           s.has_account = true; s.login_phone = r.phone; s.must_change_code = true; if (!s.phone) s.phone = r.phone;
-          rerenderPlan(); sendCodeSheet(s, r.phone, cd, reset);
+          if (reset) codeReqDone(s.student_id, true);
+          if (AD.view === "wait" && !AD.st) adRender(); else rerenderPlan();
+          sendCodeSheet(s, r.phone, cd, reset);
         } catch(e) { er.textContent = errText(e); sh.querySelector("#acGo").disabled = false; }
       };
     });
 }
 function sendCodeSheet(s, phone, code, reset){
   const msg = reset
-    ? `שלום ${s.first_name || ""}! הנה קוד חדש לאפליקציה "התלם שלי" 🔑\n${CONFIG.appUrl}\nטלפון: ${fmtPhone(phone)}\nקוד: ${code}\nבכניסה תתבקש/י לבחור קוד אישי חדש.`
-    : `שלום ${s.first_name || ""}! 👋\nמעכשיו דפי התרגול של תלם מגיעים אליך באפליקציה "התלם שלי":\n${CONFIG.appUrl}\n\nנכנסים עם הטלפון שלך:\nטלפון: ${fmtPhone(phone)}\nקוד ראשוני: ${code}\n\nבכניסה הראשונה בוחרים קוד אישי חדש.\nכדאי להוסיף את האפליקציה למסך הבית – ההסבר מופיע בפנים.\nכשמסיימים דף לוחצים "סיימתי", ונשלח את הדף הבא 💪`;
+    ? `שלום ${s.first_name || ""}! הנה קוד חדש לאפליקציה "תלם שלי" 🔑\n${CONFIG.appUrl}\nטלפון: ${fmtPhone(phone)}\nקוד: ${code}\nבכניסה תתבקש/י לבחור קוד אישי חדש.`
+    : `שלום ${s.first_name || ""}! 👋\nמעכשיו דפי התרגול של תלם מגיעים אליך באפליקציה "תלם שלי":\n${CONFIG.appUrl}\n\nנכנסים עם הטלפון שלך:\nטלפון: ${fmtPhone(phone)}\nקוד ראשוני: ${code}\n\nבכניסה הראשונה בוחרים קוד אישי חדש.\nכדאי להוסיף את האפליקציה למסך הבית – ההסבר מופיע בפנים.\nכשמסיימים דף לוחצים "סיימתי", ונשלח את הדף הבא 💪`;
   const wa = "https://wa.me/972" + normPhone(phone).slice(1) + "?text=" + encodeURIComponent(msg);
   openSheet(`<h2>${reset ? "הקוד נשמר" : "החשבון נוצר"} ✓</h2>
     <p class="muted" style="margin:0">ההודעה לשליחה לתלמיד/ה:</p>
@@ -1305,7 +1367,9 @@ async function renderBank(T){
   if (wide && (!AD.bank.topic || !topics.some(t => t.no === AD.bank.topic)) && topics.length) AD.bank.topic = topics[0].no;
   const kindName = (k) => k === "summary" ? "סיכומים" : k === "topic" ? "לפי נושאים" : k;
   let h = "";
-  if (T.id === "adBody") h += `<div class="page-h"><div><h1>מאגר</h1><p>${pick ? "בחירת דפים לתוכנית" : "כל הדפים. לחיצה על דף פותחת אותו בגדול."}</p></div></div>`;
+  const multi = !pick && AD.bank.multi;
+  if (T.id === "adBody") h += `<div class="page-h"><div style="flex:1"><h1>מאגר</h1><p>${pick ? "בחירת דפים לתוכנית" : multi ? "לסמן דפים, ואז לבחור לאילו תלמידים לשלוח." : "כל הדפים. לחיצה על דף פותחת אותו בגדול."}</p></div>
+    ${pick ? "" : `<button class="btn sm ${multi ? "primary" : ""}" id="multiTgl">${multi ? IC.x + " סיום בחירה" : IC.plusBox + " שליחת דפים לכמה תלמידים"}</button>`}</div>`;
   if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subj)}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
   h += `<div class="bank-top"><div class="books">${books.map(([b, l]) => `<button data-b="${esc(b)}" class="${b === AD.bank.book ? "on" : ""}">${esc(l)}</button>`).join("")}</div></div>`;
   if (kinds.length > 1) h += `<div class="seg" style="max-width:420px">${kinds.map(k => `<button data-k="${esc(k)}" class="${k === AD.bank.kind ? "on" : ""}">${esc(kindName(k))}</button>`).join("")}</div>`;
@@ -1315,12 +1379,12 @@ async function renderBank(T){
   if (AD.bank.topic) {
     const rows = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic);
     const hasAns = rows.some(r => r.type !== "page");
-    show = rows.filter(r => pick ? r.type === "page" : (AD.bank.tab === "page" ? r.type === "page" : r.type !== "page"));
+    show = rows.filter(r => (pick || multi) ? r.type === "page" : (AD.bank.tab === "page" ? r.type === "page" : r.type !== "page"));
     const inPlan = pick ? new Map(planOf(pick.sid).map(p => [String(p.worksheet_id), p.status])) : new Map();
     const t0 = rows[0] || {};
     pagesHtml += wide ? `<div class="crumb"><b style="font-family:var(--font-display);font-size:18px">${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b></div>`
                       : `<div class="crumb" style="margin-top:12px"><button class="btn sm ghost" id="tBack">${IC.back} כל הנושאים</button><b>${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b></div>`;
-    if (!pick && hasAns) pagesHtml += `<div class="seg" style="max-width:300px"><button data-tab="page" class="${AD.bank.tab === "page" ? "on" : ""}">דפים</button><button data-tab="ans" class="${AD.bank.tab !== "page" ? "on" : ""}">פתרונות</button></div>`;
+    if (!pick && !multi && hasAns) pagesHtml += `<div class="seg" style="max-width:300px"><button data-tab="page" class="${AD.bank.tab === "page" ? "on" : ""}">דפים</button><button data-tab="ans" class="${AD.bank.tab !== "page" ? "on" : ""}">פתרונות</button></div>`;
     let lastSub = null;
     pagesHtml += `<div class="ws-grid" style="margin-top:10px">` + show.map(r => {
       const st = inPlan.get(r.id); let sub = "";
@@ -1340,12 +1404,13 @@ async function renderBank(T){
   W("[data-k]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.k; AD.bank.topic = null; renderBank(T); });
   W("[data-t]").forEach(b => b.onclick = () => { AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(T); if (!wide) (T.id === "adBody" ? window : T).scrollTo(0, 0); });
   W("[data-tab]").forEach(b => b.onclick = () => { AD.bank.tab = b.dataset.tab; renderBank(T); });
+  if (T.querySelector("#multiTgl")) T.querySelector("#multiTgl").onclick = () => { AD.bank.multi = !AD.bank.multi; AD.bank.sel.clear(); AD.bank.tab = "page"; renderBank(T); };
   if (T.querySelector("#showAllT")) T.querySelector("#showAllT").onclick = () => { AD.bank.showAll = !AD.bank.showAll; renderBank(T); };
   if (T.querySelector("#tBack")) T.querySelector("#tBack").onclick = () => { AD.bank.topic = null; renderBank(T); };
   if (T.querySelector("#pickCancel")) T.querySelector("#pickCancel").onclick = () => { const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; AD.bank.sel.clear(); AD.view = "students"; openStudent(sid, subj); };
   W("[data-w]").forEach(b => b.onclick = () => {
     const id = b.dataset.w;
-    if (!pick) return previewWs(id);
+    if (!pick && !AD.bank.multi) return previewWs(id);
     if (T._inPlan && T._inPlan.has(id)) { toast("הדף הזה כבר בתוכנית."); return; }
     AD.bank.sel.has(id) ? AD.bank.sel.delete(id) : AD.bank.sel.add(id);
     b.classList.toggle("sel", AD.bank.sel.has(id)); pickBar();
@@ -1358,6 +1423,15 @@ async function renderBank(T){
 }
 function pickBar(){
   const pick = AD.bank.pick;
+  if (!pick && AD.bank.multi) {
+    const n = AD.bank.sel.size;
+    setActionBar(`<span class="sp">${n === 1 ? "נבחר דף אחד" : n ? "נבחרו " + n + " דפים" : "לסמן דפים (אפשר גם מכמה נושאים)"}</span>
+      ${n ? `<button class="btn sm ghost" id="mClear">ניקוי</button>` : ""}<button class="btn sm primary" id="mSend" ${n ? "" : "disabled"}>בחירת תלמידים…</button>`, (b) => {
+        if (b.querySelector("#mClear")) b.querySelector("#mClear").onclick = () => { AD.bank.sel.clear(); renderBank($("adBody")); };
+        b.querySelector("#mSend").onclick = () => bulkSheet();
+      });
+    return;
+  }
   if (!pick) { if (!inDrawer()) setActionBar(null); return; }
   const n = AD.bank.sel.size;
   const html = `<span class="sp">${n === 1 ? "נבחר דף אחד" : n ? "נבחרו " + n + " דפים" : "לבחור דפים"}</span>
@@ -1384,6 +1458,108 @@ async function addToPlan(releaseNow){
     toast(releaseNow ? (ids.length === 1 ? "הדף נוסף ונשלח לתלמיד/ה." : ids.length + " דפים נוספו ונשלחו.") : (ids.length === 1 ? "דף אחד נוסף לתור." : ids.length + " דפים נוספו לתור."));
     const st = stById(sid); AD.view = "students"; AD.st = String(sid); AD.subj = subj; AD.sel.clear(); if (st) { window.scrollTo(0, 0); adRender(); }
   } catch(e) { toast(/duplicate|unique/i.test(e.message) ? "חלק מהדפים כבר בתוכנית." : errText(e)); }
+}
+// ---------- שליחה לכמה תלמידים (לפי קבוצה / יום ושעה, או ידנית) ----------
+async function loadGroups(){
+  if (AD.groups) return AD.groups;
+  const yr = encodeURIComponent('תשפ"ז');
+  try {
+    const [ss, asg] = await Promise.all([
+      get("session_summary", "select=session_id,city,location,day,time_label,start_time,assigned_count&school_year=eq." + yr),
+      getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")")
+    ]);
+    const kids = new Map(); (asg || []).forEach(a => { const k = String(a.session_id); if (!kids.has(k)) kids.set(k, new Set()); kids.get(k).add(String(a.student_id)); });
+    const DO = { "א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6 };
+    AD.groups = (ss || []).map(g => ({ id: String(g.session_id), city: g.city || "", day: g.day || "", time: g.time_label || String(g.start_time || "").slice(0, 5), loc: g.location || "",
+                                        start: g.start_time || "", kids: kids.get(String(g.session_id)) || new Set() }))
+      .filter(g => g.kids.size).sort((a, b) => a.city.localeCompare(b.city) || (DO[a.day] || 9) - (DO[b.day] || 9) || String(a.start).localeCompare(String(b.start)));
+  } catch(e) { AD.groups = []; }
+  return AD.groups;
+}
+async function presentToday(sessionId){
+  const d = new Date(), iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  try { const r = await get("attendance", "select=student_id&present=is.true&lesson_date=eq." + iso + "&session_id=eq." + sessionId); return new Set((r || []).map(x => String(x.student_id))); }
+  catch(e) { return null; }
+}
+async function bulkSheet(){
+  const wids = AD.ws.filter(r => AD.bank.sel.has(r.id)).map(r => r.id);
+  const subs = [...new Set(wids.map(w => wsSubject((AD.wsById.get(w) || {}).book)))];
+  if (subs.length > 1) { toast("אפשר לשלוח יחד רק דפים מאותו מקצוע."); return; }
+  const subj = subs[0];
+  const groups = await loadGroups();
+  const B = { q: "", grp: "", today: false, todaySet: null, sel: new Set() };
+  const elig = AD.students.filter(s => (s.subjects || []).includes(subj));
+  const status = (sid) => { const pl = planOf(sid); const st = wids.map(w => (pl.find(p => String(p.worksheet_id) === w) || {}).status).filter(Boolean);
+    return st.length === wids.length ? (st.every(x => x !== "מתוכנן") ? "יש" : "בתור") : st.length ? "חלק" : ""; };
+  const cities = [...new Set(groups.map(g => g.city))];
+  openSheet(`<h2>שליחה ל…</h2>
+    <p class="muted small" style="margin:0 0 10px">${wids.length === 1 ? "דף אחד" : wids.length + " דפים"} · <span class="subj-chip ${subjCls(subj)} on sm">${esc(subj)}</span> · רק תלמידים שרשומים ל${esc(subj)}</p>
+    <label class="field" style="margin-bottom:8px"><span>קבוצה (יום ושעה)</span>
+      <select id="bkGrp"><option value="">כל התלמידים</option>${cities.map(c => `<optgroup label="${esc(c)}">${groups.filter(g => g.city === c).map(g => `<option value="${esc(g.id)}">יום ${esc(g.day)}' ${esc(g.time)} · ${esc(g.loc)} (${g.kids.size})</option>`).join("")}</optgroup>`).join("")}</select></label>
+    <label class="chk" id="bkTodayL" hidden><input type="checkbox" id="bkToday"> רק מי שסומן/ה נוכח/ת היום</label>
+    <input class="search" id="bkQ" type="search" placeholder="חיפוש לפי שם" style="margin-top:8px">
+    <div class="bk-bar"><label class="chk"><input type="checkbox" id="bkAll"> סימון כולם</label><span class="muted small" id="bkCnt"></span></div>
+    <div class="bk-list" id="bkList"></div>
+    <div class="bk-foot"><button class="btn" id="bkQueue" disabled>הוספה לתור</button><button class="btn primary" id="bkSend" disabled>${IC.check} שליחה עכשיו</button></div>`, (sh) => {
+      const list = () => { let L = elig;
+        if (B.grp) { const g = groups.find(x => x.id === B.grp); L = L.filter(s => g && g.kids.has(s.student_id)); if (B.today && B.todaySet) L = L.filter(s => B.todaySet.has(s.student_id)); }
+        if (B.q.trim()) L = L.filter(s => stName(s).includes(B.q.trim()));
+        return L; };
+      const draw = () => {
+        const L = list();
+        sh.querySelector("#bkList").innerHTML = L.map(s => { const st = status(s.student_id), dis = st === "יש";
+          return `<label class="bk-row ${dis ? "dis" : ""}"><input type="checkbox" data-s="${esc(s.student_id)}" ${B.sel.has(s.student_id) ? "checked" : ""} ${dis ? "disabled" : ""}>
+            ${avatar(s)}<span style="flex:1;min-width:0"><b>${esc(stName(s))}</b><div class="small muted">${esc(stMeta(s))}</div></span>
+            ${st === "יש" ? `<span class="chip ok">כבר נשלח</span>` : st === "בתור" ? `<span class="chip acc">בתור</span>` : st === "חלק" ? `<span class="chip">חלק כבר יש</span>` : ""}
+            ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : ""}</label>`; }).join("") || `<div class="muted small" style="padding:16px 4px">${B.today ? "אף אחד לא סומן נוכח היום בקבוצה הזו." : "אין תלמידים מתאימים."}</div>`;
+        sh.querySelectorAll("[data-s]").forEach(c => c.onchange = () => { c.checked ? B.sel.add(c.dataset.s) : B.sel.delete(c.dataset.s); foot(); });
+        const able = L.filter(s => status(s.student_id) !== "יש");
+        sh.querySelector("#bkAll").checked = able.length > 0 && able.every(s => B.sel.has(s.student_id));
+        foot();
+      };
+      const foot = () => { const n = B.sel.size; sh.querySelector("#bkCnt").textContent = n ? "נבחרו " + n : "";
+        sh.querySelector("#bkQueue").disabled = sh.querySelector("#bkSend").disabled = !n;
+        sh.querySelector("#bkSend").innerHTML = IC.check + (n ? " שליחה עכשיו ל-" + n : " שליחה עכשיו"); };
+      sh.querySelector("#bkGrp").onchange = async (e) => {
+        B.grp = e.target.value; B.today = false; sh.querySelector("#bkToday").checked = false; B.todaySet = null;
+        sh.querySelector("#bkTodayL").hidden = !B.grp;
+        // בחירת קבוצה מסמנת את כל הילדים בה
+        if (B.grp) { const g = groups.find(x => x.id === B.grp); B.sel = new Set(elig.filter(s => g.kids.has(s.student_id) && status(s.student_id) !== "יש").map(s => s.student_id)); }
+        draw();
+        if (B.grp) { B.todaySet = await presentToday(B.grp); if (!B.todaySet || !B.todaySet.size) sh.querySelector("#bkTodayL").hidden = true; }
+      };
+      sh.querySelector("#bkToday").onchange = (e) => { B.today = e.target.checked; if (B.today && B.todaySet) B.sel = new Set([...B.sel].filter(x => B.todaySet.has(x))); draw(); };
+      sh.querySelector("#bkQ").oninput = (e) => { B.q = e.target.value; draw(); };
+      sh.querySelector("#bkAll").onchange = (e) => { list().filter(s => status(s.student_id) !== "יש").forEach(s => e.target.checked ? B.sel.add(s.student_id) : B.sel.delete(s.student_id)); draw(); };
+      sh.querySelector("#bkQueue").onclick = () => bulkSend([...B.sel], wids, false);
+      sh.querySelector("#bkSend").onclick = () => bulkSend([...B.sel], wids, true);
+      if (!groups.length) sh.querySelector("#bkGrp").closest(".field").hidden = true;
+      draw();
+    });
+}
+async function bulkSend(sids, wids, releaseNow){
+  const rows = [], toRelease = [];
+  sids.forEach(sid => {
+    const pl = planOf(sid); let pos = Math.max(0, ...pl.filter(p => p.status === "מתוכנן").map(p => p.position));
+    wids.forEach(w => { const ex = pl.find(p => String(p.worksheet_id) === w);
+      if (!ex) rows.push({ student_id: isNaN(Number(sid)) ? sid : Number(sid), worksheet_id: isNaN(Number(w)) ? w : Number(w), subject: wsSubject((AD.wsById.get(w) || {}).book), position: ++pos });
+      else if (ex.status === "מתוכנן" && releaseNow) toRelease.push(ex.id); });
+  });
+  try {
+    let added = [];
+    if (rows.length) {
+      added = await api("POST", "/rest/v1/portal_plan_items?on_conflict=student_id,worksheet_id", rows, { "Prefer": "return=representation,resolution=ignore-duplicates" }) || [];
+      added.forEach(p => AD.plan.push(Object.assign(p, { student_id: String(p.student_id) })));
+    }
+    if (releaseNow) {
+      const ids = [...toRelease, ...added.map(p => p.id)];
+      if (ids.length) { await rpc("portal_release", { p_items: ids }); const now = new Date().toISOString();
+        AD.plan.forEach(p => { if (ids.includes(p.id)) { p.status = "נשלח"; p.released_at = now; p.done_at = null; p.seen_at = null; } }); }
+    }
+    refreshWaitingLocal(); closeSheet(); AD.bank.sel.clear(); AD.bank.multi = false;
+    toast(releaseNow ? "נשלח ל-" + sids.length + (sids.length === 1 ? " תלמיד/ה." : " תלמידים.") : "נוסף לתור של " + sids.length + (sids.length === 1 ? " תלמיד/ה." : " תלמידים."));
+    adRender();
+  } catch(e) { toast(errText(e)); }
 }
 async function previewWs(wid){
   const w = AD.wsById.get(String(wid)); if (!w) return;
