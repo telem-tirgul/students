@@ -359,6 +359,17 @@
   .bk-foot{ display:flex; gap:8px; margin-top:12px; } .bk-foot .btn{ flex:1; }
   .field select{ width:100%; min-height:48px; border:1px solid var(--border); border-radius:14px; background:var(--paper); padding:0 12px; font-size:16px; }
   @media (min-width:700px){ .sheet{ max-width:620px; } }
+  .ws-stars{ background:#fff8d6; border:1.5px solid #e9cf62; border-radius:14px; padding:10px 12px; margin:10px 0 4px; }
+  .ws-stars-h{ font-weight:800; color:#7a5a00; margin-bottom:8px; font-family:var(--font-display); }
+  .ws-stars-row{ display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+  .ws-stars-row{ align-items:flex-start; }
+  .ws-tile.ws-mini{ flex:none; width:112px; display:block; }
+  .ws-tile.ws-mini .thumb{ width:100%; height:auto; aspect-ratio:210/297; }
+  .ws-tile .wstar{ position:absolute; bottom:34px; inset-inline-end:10px; font-size:16px; filter:drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+  .star-btn.on{ background:#FFF4CC; border-color:#E0A100; color:#7a5a00; }
+  .tstar{ font-size:14px; }
+  :root[data-theme="dark"] .ws-stars{ background:#2E2710; border-color:#7A6A1C; } :root[data-theme="dark"] .ws-stars-h{ color:#F0DB6A; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ws-stars{ background:#2E2710; border-color:#7A6A1C; } :root:not([data-theme="light"]) .ws-stars-h{ color:#F0DB6A; } }
   .ph-acts{ display:flex; gap:8px; flex-wrap:nowrap; }
   .danger-zone{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:28px; padding:14px 16px; border:1px dashed color-mix(in srgb, var(--bad) 45%, var(--border)); border-radius:16px; }
   .danger-zone > div{ flex:1; min-width:200px; }
@@ -492,7 +503,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.5",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -848,7 +859,9 @@ function openViewer(o){
   if (o.wire) o.wire(VIEWER);
   history.pushState({ v: 1 }, "");
 }
-function closeViewer(fromPop){ if (!VIEWER) return; $("viewerHost").innerHTML = ""; VIEWER = null; document.body.style.overflow = ""; if (!fromPop && history.state && history.state.v) history.back(); }
+let STAR_DIRTY = false;
+function closeViewer(fromPop){ if (!VIEWER) return; $("viewerHost").innerHTML = ""; VIEWER = null; document.body.style.overflow = "";
+  if (STAR_DIRTY) { STAR_DIRTY = false; if (!$("adminView").hidden) { if (inDrawer()) renderBank($("drawerBody")); else if (AD.view === "bank") renderBank($("adBody")); } } if (!fromPop && history.state && history.state.v) history.back(); }
 window.addEventListener("popstate", () => { if (VIEWER) closeViewer(true); });   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
 async function fetchBlob(url){ const r = await fetch(url); if (!r.ok) throw new Error("fetch"); return r.blob(); }
 async function saveImage(url, title){
@@ -922,7 +935,17 @@ const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: 
              st: null, subj: null, sel: new Set(), showDone: false,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
-const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
+const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
+// דפים "חשובים" (כוכבית) – אותו סימון כמו במאגר של מערכת הניהול (עמודה is_star)
+const wsFetch = () => getAll("worksheets", WSQ).catch(e => /is_star/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",is_star", "")) : Promise.reject(e));
+async function setStar(ids, on){
+  ids = ids.map(String);
+  try { await patch("worksheets", "id=in.(" + ids.join(",") + ")", { is_star: on }); }
+  catch(e) { toast("הסימון לא נשמר."); return false; }
+  ids.forEach(id => { const w = AD.wsById.get(id); if (w) w.is_star = on; });
+  try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: AD.ws })); } catch(e) {}
+  return true;
+}
 const wsSubject = (book) => /^ENG/i.test(book || "") ? "אנגלית" : "מתמטיקה";
 const DESK = window.matchMedia("(min-width: 900px)");
 const isDesk = () => DESK.matches;
@@ -974,16 +997,17 @@ async function loadWs(force){
   const setWs = (rows) => { AD.ws = rows.map(r => Object.assign(r, { id: String(r.id) })); AD.wsById = new Map(AD.ws.map(r => [r.id, r])); };
   if (cached && cached.rows && cached.rows.length && !force) {
     setWs(cached.rows);
-    getAll("worksheets", WSQ).then(fresh => { try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }).catch(() => {});
+    wsFetch().then(fresh => { try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }).catch(() => {});
     return;
   }
-  try { const fresh = await getAll("worksheets", WSQ); try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }
+  try { const fresh = await wsFetch(); try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }
   catch(e) { AD.ws = AD.ws || []; }
 }
 function adGo(v){
   AD.view = v; AD.sel.clear();
   if (!isDesk()) AD.st = null;
   if (v !== "bank" || isDesk()) AD.bank.pick = null;
+  if (v === "bank" && !AD.bank.pick) { AD.bank.topic = null; AD.bank.from = null; AD.bank.showAll = false; AD.bank.sel.clear(); }
   window.scrollTo(0, 0); adRender();
 }
 function adRender(){
@@ -1345,7 +1369,8 @@ function bankBooks(){
 function bankTopics(){
   const m = new Map();
   (AD.ws || []).filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind).forEach(r => {
-    if (!m.has(r.topic_no)) m.set(r.topic_no, { no: r.topic_no, name: r.topic_name, chapters: r.chapters, pages: 0 });
+    if (!m.has(r.topic_no)) m.set(r.topic_no, { no: r.topic_no, name: r.topic_name, chapters: r.chapters, pages: 0, star: false });
+    if (r.is_star) m.get(r.topic_no).star = true;
     if (r.type === "page") m.get(r.topic_no).pages++;
   });
   return [...m.values()];
@@ -1374,7 +1399,7 @@ async function renderBank(T){
   h += `<div class="bank-top"><div class="books">${books.map(([b, l]) => `<button data-b="${esc(b)}" class="${b === AD.bank.book ? "on" : ""}">${esc(l)}</button>`).join("")}</div></div>`;
   if (kinds.length > 1) h += `<div class="seg" style="max-width:420px">${kinds.map(k => `<button data-k="${esc(k)}" class="${k === AD.bank.kind ? "on" : ""}">${esc(kindName(k))}</button>`).join("")}</div>`;
   const topicsHtml = (fr ? `<div class="from-note">${AD.bank.showAll ? "כל הנושאים" : "מהנושא האחרון בתוכנית והלאה"}${hiddenN || AD.bank.showAll ? ` · <button class="linkish small" id="showAllT">${AD.bank.showAll ? "רק מהנושא האחרון" : "להציג גם " + hiddenN + " נושאים קודמים"}</button>` : ""}</div>` : "") +
-    topics.map(t => `<button class="topic-row ${AD.bank.topic === t.no && wide ? "on" : ""}" data-t="${esc(t.no)}"><span class="no">${esc(t.no)}</span><span class="nm">${esc(t.name)}${t.chapters ? `<div class="small muted">${esc(t.chapters)}</div>` : ""}${fr && fr.topic === t.no ? `<div><span class="chip new" style="margin-top:3px">כאן נמצא/ת עכשיו</span></div>` : ""}</span><span class="cnt">${t.pages} דפים</span>${wide ? "" : IC.chev}</button>`).join("");
+    topics.map(t => `<button class="topic-row ${AD.bank.topic === t.no && wide ? "on" : ""}" data-t="${esc(t.no)}"><span class="no">${esc(t.no)}</span><span class="nm">${t.star ? `<span class="tstar" title="יש בנושא דפים חשובים">⭐</span> ` : ""}${esc(t.name)}${t.chapters ? `<div class="small muted">${esc(t.chapters)}</div>` : ""}${fr && fr.topic === t.no ? `<div><span class="chip new" style="margin-top:3px">כאן נמצא/ת עכשיו</span></div>` : ""}</span><span class="cnt">${t.pages} דפים</span>${wide ? "" : IC.chev}</button>`).join("");
   let pagesHtml = "", show = [];
   if (AD.bank.topic) {
     const rows = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic);
@@ -1382,8 +1407,14 @@ async function renderBank(T){
     show = rows.filter(r => (pick || multi) ? r.type === "page" : (AD.bank.tab === "page" ? r.type === "page" : r.type !== "page"));
     const inPlan = pick ? new Map(planOf(pick.sid).map(p => [String(p.worksheet_id), p.status])) : new Map();
     const t0 = rows[0] || {};
-    pagesHtml += wide ? `<div class="crumb"><b style="font-family:var(--font-display);font-size:18px">${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b></div>`
-                      : `<div class="crumb" style="margin-top:12px"><button class="btn sm ghost" id="tBack">${IC.back} כל הנושאים</button><b>${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b></div>`;
+    const pagesOnly = rows.filter(r => r.type === "page"), allStar = pagesOnly.length > 0 && pagesOnly.every(r => r.is_star);
+    const starBtn = (!pick && !multi) ? `<button class="btn sm star-btn ${allStar ? "on" : ""}" id="tStar" title="סימון כל הנושא כחשוב">${allStar ? "⭐ חשוב" : "☆ חשוב"}</button>` : "";
+    pagesHtml += wide ? `<div class="crumb"><b style="font-family:var(--font-display);font-size:18px;flex:1">${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b>${starBtn}</div>`
+                      : `<div class="crumb" style="margin-top:12px"><button class="btn sm ghost" id="tBack">${IC.back} כל הנושאים</button><b style="flex:1">${esc(t0.topic_no || "")} · ${esc(t0.topic_name || "")}</b>${starBtn}</div>`;
+    // רצועת "דפים חשובים" בראש הנושא (כמו במערכת הניהול)
+    const starred = show.filter(r => r.is_star);
+    if (starred.length && !(allStar && show.length === starred.length)) pagesHtml += `<div class="ws-stars"><div class="ws-stars-h">⭐ דפים חשובים בנושא (${starred.length})</div><div class="ws-stars-row">` +
+      starred.map(r => `<button class="ws-tile ws-mini ${AD.bank.sel.has(r.id) ? "sel" : ""}" data-w="${esc(r.id)}"><span class="thumb" data-p="${esc(r.storage_path)}"></span><span class="tick">${IC.check}</span><div class="cap">${esc(r.title)}</div></button>`).join("") + `</div></div>`;
     if (!pick && !multi && hasAns) pagesHtml += `<div class="seg" style="max-width:300px"><button data-tab="page" class="${AD.bank.tab === "page" ? "on" : ""}">דפים</button><button data-tab="ans" class="${AD.bank.tab !== "page" ? "on" : ""}">פתרונות</button></div>`;
     let lastSub = null;
     pagesHtml += `<div class="ws-grid" style="margin-top:10px">` + show.map(r => {
@@ -1392,7 +1423,7 @@ async function renderBank(T){
       return sub + `<button class="ws-tile ${AD.bank.sel.has(r.id) ? "sel" : ""} ${st ? "dim" : ""}" data-w="${esc(r.id)}">
         <span class="thumb" data-p="${esc(r.storage_path)}"></span><span class="tick">${IC.check}</span>
         ${st ? `<span class="inplan chip ${st === "הושלם" ? "ok" : st === "נשלח" ? "new" : "acc"}">${st === "מתוכנן" ? "בתור" : st === "נשלח" ? "נשלח" : "סיים"}</span>` : ""}
-        <div class="cap">${esc(r.title)}</div></button>`;
+        ${r.is_star ? `<span class="wstar" title="דף חשוב">⭐</span>` : ""}<div class="cap">${esc(r.title)}</div></button>`;
     }).join("") + `</div>`;
     T._inPlan = inPlan;
   }
@@ -1404,6 +1435,9 @@ async function renderBank(T){
   W("[data-k]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.k; AD.bank.topic = null; renderBank(T); });
   W("[data-t]").forEach(b => b.onclick = () => { AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(T); if (!wide) (T.id === "adBody" ? window : T).scrollTo(0, 0); });
   W("[data-tab]").forEach(b => b.onclick = () => { AD.bank.tab = b.dataset.tab; renderBank(T); });
+  if (T.querySelector("#tStar")) T.querySelector("#tStar").onclick = async () => {
+    const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page");
+    const on = !pg.every(r => r.is_star); if (await setStar(pg.map(r => r.id), on)) { toast(on ? "כל הנושא סומן כחשוב." : "הסימון הוסר."); renderBank(T); } };
   if (T.querySelector("#multiTgl")) T.querySelector("#multiTgl").onclick = () => { AD.bank.multi = !AD.bank.multi; AD.bank.sel.clear(); AD.bank.tab = "page"; renderBank(T); };
   if (T.querySelector("#showAllT")) T.querySelector("#showAllT").onclick = () => { AD.bank.showAll = !AD.bank.showAll; renderBank(T); };
   if (T.querySelector("#tBack")) T.querySelector("#tBack").onclick = () => { AD.bank.topic = null; renderBank(T); };
@@ -1413,7 +1447,7 @@ async function renderBank(T){
     if (!pick && !AD.bank.multi) return previewWs(id);
     if (T._inPlan && T._inPlan.has(id)) { toast("הדף הזה כבר בתוכנית."); return; }
     AD.bank.sel.has(id) ? AD.bank.sel.delete(id) : AD.bank.sel.add(id);
-    b.classList.toggle("sel", AD.bank.sel.has(id)); pickBar();
+    T.querySelectorAll(`[data-w="${CSS.escape(id)}"]`).forEach(x => x.classList.toggle("sel", AD.bank.sel.has(id))); pickBar();
   });
   pickBar();
   if (show.length) {
@@ -1565,8 +1599,9 @@ async function previewWs(wid){
   const w = AD.wsById.get(String(wid)); if (!w) return;
   const g = await sign([w.storage_path]);
   openViewer({ title: w.title, path: w.storage_path, url: g(w.storage_path),
-    bar: `<button class="btn ghost" id="vCopy">${IC.copy} העתקה</button><button class="btn ghost" id="vSave">${IC.save} שמירה</button>`,
-    wire: (v) => { v.querySelector("#vCopy").onclick = () => copyImage(g(w.storage_path)); v.querySelector("#vSave").onclick = () => saveImage(g(w.storage_path), w.title); } });
+    bar: `${w.type === "page" ? `<button class="btn ghost" id="vStar">${w.is_star ? "⭐ חשוב" : "☆ חשוב"}</button>` : ""}<button class="btn ghost" id="vCopy">${IC.copy} העתקה</button><button class="btn ghost" id="vSave">${IC.save} שמירה</button>`,
+    wire: (v) => { v.querySelector("#vCopy").onclick = () => copyImage(g(w.storage_path)); v.querySelector("#vSave").onclick = () => saveImage(g(w.storage_path), w.title);
+      if (v.querySelector("#vStar")) v.querySelector("#vStar").onclick = async () => { if (await setStar([w.id], !w.is_star)) { v.querySelector("#vStar").textContent = w.is_star ? "⭐ חשוב" : "☆ חשוב"; STAR_DIRTY = true; } }; } });
 }
 
 // ======================================================================
