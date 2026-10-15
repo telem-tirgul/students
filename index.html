@@ -496,7 +496,7 @@ const CONFIG = {
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
-  studentDomain: "students.telem-tr.co.il"                      // חייב להתאים לקובץ 63.1
+  studentDomain: "students.telem-tr.co.il"                      // חייב להתאים לקובץ 72.1
 };
 
 // ======================================================================
@@ -688,7 +688,7 @@ async function boot(){
   let isManager = false;
   try { isManager = !!(await rpc("portal_is_manager")); }
   catch(e) {
-    if (e.status === 404 || e.code === "PGRST202") { showMsg("עוד לא מוכן", "צריך להריץ את קובץ 63.1 ב-Supabase."); return; }
+    if (e.status === 404 || e.code === "PGRST202") { showMsg("עוד לא מוכן", "צריך להריץ את קובץ 72.1 ב-Supabase."); return; }
     if (e.message === "not signed in") return;
     showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לבדוק את האינטרנט ולנסות שוב."); return;
   }
@@ -957,13 +957,13 @@ async function adLoad(){
     AD.students = (students || []).map(s => Object.assign(s, { student_id: String(s.student_id) }));
     AD.plan = (plan || []).map(p => Object.assign(p, { student_id: String(p.student_id) }));
     AD.loaded = true;
-    // בקשות "שכחתי את הקוד" (קובץ 64.1; אם לא הורץ – פשוט אין)
+    // בקשות "שכחתי את הקוד" (קובץ 73.1; אם לא הורץ – פשוט אין)
     try { AD.codeReqs = (await get("portal_code_requests", "select=id,student_id,phone,created_at&handled_at=is.null&matched=is.true&order=created_at"))
             .map(r => Object.assign(r, { student_id: String(r.student_id) })).filter(r => stById(r.student_id)); }
     catch(e) { AD.codeReqs = []; }
   } catch(e) {
     if (e.message === "not signed in") return;
-    $("adBody").innerHTML = `<div class="card err">${e.code === "PGRST202" || e.status === 404 ? "צריך להריץ את קובץ 63.1 ב-Supabase." : "לא הצלחנו לטעון. " + esc(errText(e))}</div>`; return;
+    $("adBody").innerHTML = `<div class="card err">${e.code === "PGRST202" || e.status === 404 ? "צריך להריץ את קובץ 72.1 ב-Supabase." : "לא הצלחנו לטעון. " + esc(errText(e))}</div>`; return;
   }
   await loadWs();
   adRender();
