@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>תלם – דפי תרגול</title>
+<meta name="theme-color" content="#5A1216">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="תלם">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@500;700;800;900&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EF; --paper:#FFFFFF; --ink:#2B2320; --ink-soft:#6B5F55; --border:#E5DDD3;
+    --accent:#5A1216; --accent-ink:#FFFFFF; --accent-soft:#F3E3E4; --gold:#C9A45C; --muted:#F1ECE6;
+    --ok:#3F7D4F; --ok-bg:#E5F1E8; --warn:#B7791F; --warn-bg:#FBF0DC; --bad:#B3423F;
+    --font-display:'Heebo','Segoe UI',sans-serif; --font-body:'Assistant','Segoe UI',sans-serif;
+    --safe-b: env(safe-area-inset-bottom, 0px); --safe-t: env(safe-area-inset-top, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17110F; --paper:#231B18; --ink:#F3ECE6; --ink-soft:#BBA99B; --border:#3E322C;
+      --accent:#E2707A; --accent-ink:#1A0F0E; --accent-soft:#3A1D20; --gold:#E3B765; --muted:#2E2420;
+      --ok:#6CC082; --ok-bg:#1D3324; --warn:#E3B765; --warn-bg:#3A2C14; --bad:#FF8A80;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17110F; --paper:#231B18; --ink:#F3ECE6; --ink-soft:#BBA99B; --border:#3E322C;
+    --accent:#E2707A; --accent-ink:#1A0F0E; --accent-soft:#3A1D20; --gold:#E3B765; --muted:#2E2420;
+    --ok:#6CC082; --ok-bg:#1D3324; --warn:#E3B765; --warn-bg:#3A2C14; --bad:#FF8A80;
+    color-scheme: dark;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{ margin:0; min-height:100%; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.5; }
+  button,input,select,textarea{ font:inherit; color:inherit; }
+  h1,h2,h3{ font-family:var(--font-display); margin:0; text-wrap:balance; }
+  [hidden]{ display:none !important; }
+  .wrap{ max-width:560px; margin:0 auto; padding:0 16px; }
+  .wrap.wide{ max-width:980px; }
+
+  /* top bar */
+  .top{ position:sticky; top:0; z-index:30; background:var(--accent); color:#fff; padding-top:var(--safe-t); }
+  :root[data-theme="dark"] .top{ background:#3A1416; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .top{ background:#3A1416; } }
+  .top .row{ display:flex; align-items:center; gap:10px; min-height:58px; }
+  .top img{ height:34px; background:#fff; border-radius:8px; padding:2px 5px; }
+  .top .ttl{ font-family:var(--font-display); font-weight:800; font-size:18px; line-height:1.2; flex:1; min-width:0; }
+  .top .ttl small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; }
+  .icon-btn{ background:none; border:none; color:inherit; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; cursor:pointer; flex:none; }
+  .icon-btn:active{ background:rgba(255,255,255,.15); }
+  .icon-btn svg{ width:24px; height:24px; }
+  .tabs{ display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+  .tabs button{ background:none; border:none; color:rgba(255,255,255,.75); padding:10px 14px; font-weight:700; font-family:var(--font-display);
+                border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tabs button.on{ color:#fff; border-bottom-color:var(--gold); }
+  .badge{ display:inline-block; min-width:20px; padding:0 6px; border-radius:10px; background:var(--gold); color:#2B2320; font-size:12px; font-weight:800; text-align:center; margin-inline-start:4px; line-height:20px; }
+
+  /* basic blocks */
+  main{ padding:16px 0 calc(110px + var(--safe-b)); }
+  .card{ background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .muted{ color:var(--ink-soft); }
+  .small{ font-size:14px; }
+  .sec-h{ font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--ink-soft); margin:20px 2px 8px; display:flex; align-items:center; gap:8px; }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:0 18px; border-radius:14px;
+        border:1px solid var(--border); background:var(--paper); font-weight:700; font-family:var(--font-display); cursor:pointer; text-decoration:none; }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .btn.ok{ background:var(--ok); border-color:var(--ok); color:#fff; }
+  .btn.ghost{ background:none; }
+  .btn.sm{ min-height:38px; padding:0 12px; border-radius:11px; font-size:14px; }
+  .btn.block{ width:100%; }
+  .btn:disabled{ opacity:.5; cursor:default; }
+  .btn svg{ width:20px; height:20px; }
+  .field{ display:block; margin-bottom:14px; }
+  .field span{ display:block; font-weight:700; margin-bottom:6px; font-size:15px; }
+  .field input, .field select{ width:100%; min-height:52px; border:1px solid var(--border); border-radius:14px; background:var(--paper); padding:0 14px; font-size:18px; }
+  .field input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .code-input{ letter-spacing:.35em; text-align:center; direction:ltr; font-family:var(--font-display) !important; font-weight:800; }
+  .ltr{ direction:ltr; unicode-bidi:embed; }
+  .err{ color:var(--bad); font-weight:700; min-height:1.5em; }
+  .chip{ display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:13px; font-weight:700; background:var(--muted); color:var(--ink-soft); }
+  .chip.new{ background:var(--gold); color:#2B2320; }
+  .chip.ok{ background:var(--ok-bg); color:var(--ok); }
+  .chip.warn{ background:var(--warn-bg); color:var(--warn); }
+  .chip.acc{ background:var(--accent-soft); color:var(--accent); }
+  .toast{ position:fixed; inset-inline:16px; bottom:calc(20px + var(--safe-b)); margin:0 auto; max-width:480px; background:#2B2320; color:#fff; border-radius:14px; padding:14px 16px; font-weight:700; z-index:100; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.25); }
+  .empty{ text-align:center; padding:36px 16px; }
+  .empty svg{ width:56px; height:56px; color:var(--gold); }
+
+  /* login */
+  .login{ min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:24px 0 calc(24px + var(--safe-b)); }
+  .login .logo{ display:block; height:84px; margin:0 auto 14px; background:#fff; border-radius:16px; padding:6px 10px; }
+  .login h1{ text-align:center; font-size:26px; margin-bottom:4px; }
+  .login p.lead{ text-align:center; margin:0 0 22px; }
+  .linkish{ background:none; border:none; color:var(--accent); font-weight:700; cursor:pointer; padding:10px; text-decoration:underline; }
+
+  /* student pages */
+  .seg{ display:flex; background:var(--muted); border-radius:14px; padding:4px; gap:4px; margin-bottom:6px; }
+  .seg button{ flex:1; border:none; background:none; min-height:44px; border-radius:11px; font-weight:800; font-family:var(--font-display); cursor:pointer; color:var(--ink-soft); }
+  .seg button.on{ background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.12); }
+  .page-card{ display:flex; gap:14px; align-items:center; width:100%; text-align:start; background:var(--paper); border:1px solid var(--border);
+              border-radius:16px; padding:10px; margin-bottom:10px; cursor:pointer; }
+  .page-card.is-new{ border-color:var(--gold); box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 35%, transparent); }
+  .thumb{ display:block; width:76px; aspect-ratio:210/297; border-radius:8px; background:var(--muted) center/cover no-repeat; flex:none; border:1px solid var(--border); }
+  .page-card .t{ font-family:var(--font-display); font-weight:800; font-size:17px; line-height:1.3; }
+  .page-card .s{ font-size:14px; color:var(--ink-soft); margin-top:2px; }
+  .page-card .go{ margin-inline-start:auto; color:var(--ink-soft); flex:none; }
+  .done-row{ display:flex; align-items:center; gap:10px; padding:12px 4px; border-bottom:1px solid var(--border); cursor:pointer; background:none; border-inline:none; border-top:none; width:100%; text-align:start; }
+  .done-row svg{ width:22px; height:22px; color:var(--ok); flex:none; }
+
+  /* viewer */
+  .viewer{ position:fixed; inset:0; z-index:60; background:#111; display:flex; flex-direction:column; }
+  .viewer .vtop{ display:flex; align-items:center; gap:6px; padding:calc(6px + var(--safe-t)) 8px 6px; color:#fff; background:#111; }
+  .viewer .vtop .ttl{ flex:1; font-family:var(--font-display); font-weight:800; font-size:16px; line-height:1.25; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .viewer .stage{ flex:1; overflow:auto; -webkit-overflow-scrolling:touch; background:#2a2a2a; touch-action:pan-x pan-y pinch-zoom; }
+  .viewer .stage img{ display:block; width:100%; height:auto; margin:0 auto; background:#fff; transition:width .15s; }
+  .viewer .vbar{ display:flex; gap:10px; padding:10px 12px calc(10px + var(--safe-b)); background:#111; }
+  .viewer .vbar .btn{ flex:1; }
+  .viewer .vbar .btn.ghost{ color:#fff; border-color:#555; }
+  .zoom{ display:flex; gap:2px; }
+
+  /* sheet */
+  .sheet-bg{ position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.45); display:flex; align-items:flex-end; justify-content:center; }
+  .sheet{ background:var(--paper); width:100%; max-width:560px; max-height:92vh; overflow:auto; border-radius:22px 22px 0 0; padding:18px 18px calc(20px + var(--safe-b)); }
+  @media (min-width:700px){ .sheet-bg{ align-items:center; } .sheet{ border-radius:22px; } }
+  .sheet h2{ font-size:21px; margin-bottom:10px; }
+  .steps{ margin:0; padding:0; list-style:none; counter-reset:s; }
+  .steps li{ counter-increment:s; display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+  .steps li::before{ content:counter(s); flex:none; width:30px; height:30px; border-radius:50%; background:var(--accent); color:var(--accent-ink); display:grid; place-items:center; font-weight:800; font-family:var(--font-display); }
+  .kbd{ display:inline-flex; align-items:center; gap:4px; background:var(--muted); border:1px solid var(--border); border-radius:8px; padding:0 6px; font-weight:700; white-space:nowrap; }
+  .kbd svg{ width:16px; height:16px; }
+  .install-banner{ display:flex; gap:12px; align-items:center; background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 25%, transparent); }
+  .install-banner svg{ width:30px; height:30px; color:var(--accent); flex:none; }
+  .install-banner .x{ margin-inline-start:auto; }
+
+  /* manager */
+  .search{ width:100%; min-height:48px; border:1px solid var(--border); border-radius:14px; padding:0 14px; background:var(--paper); font-size:16px; margin-bottom:10px; }
+  .filters{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .filters button{ border:1px solid var(--border); background:var(--paper); border-radius:20px; padding:6px 12px; font-weight:700; cursor:pointer; font-size:14px; }
+  .filters button.on{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .st-row{ display:flex; align-items:center; gap:10px; width:100%; text-align:start; background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:8px; cursor:pointer; }
+  .st-row .n{ font-family:var(--font-display); font-weight:800; font-size:16px; }
+  .st-row .meta{ font-size:13.5px; color:var(--ink-soft); }
+  .st-row .chips{ display:flex; gap:4px; flex-wrap:wrap; margin-inline-start:auto; justify-content:flex-end; }
+  .wait-card .head{ display:flex; gap:10px; align-items:flex-start; }
+  .wait-card .head .n{ font-family:var(--font-display); font-weight:800; font-size:17px; }
+  .wait-card .next{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .grid2{ display:grid; grid-template-columns:1fr; gap:12px; }
+  @media (min-width:860px){ .grid2{ grid-template-columns:1fr 1fr; } }
+  .plan-item{ display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .plan-item:last-child{ border-bottom:none; }
+  .plan-item .thumb{ width:44px; border-radius:5px; cursor:zoom-in; }
+  @media (max-width:480px){ .plan-item .thumb{ display:none; } }
+  .plan-item .t{ flex:1; min-width:0; font-weight:700; line-height:1.3; }
+  .plan-item .t small{ display:block; font-weight:400; color:var(--ink-soft); font-size:13px; }
+  .plan-item .pos{ width:26px; text-align:center; font-weight:800; color:var(--ink-soft); font-family:var(--font-display); }
+  .mini{ background:none; border:1px solid var(--border); border-radius:9px; width:34px; height:34px; display:grid; place-items:center; cursor:pointer; flex:none; color:var(--ink-soft); }
+  .mini svg{ width:18px; height:18px; }
+  .mini:disabled{ opacity:.3; }
+  .plan-item input[type=checkbox]{ width:22px; height:22px; accent-color:var(--accent); flex:none; }
+  .acc-box{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .books{ display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:8px; }
+  .books button{ flex:none; border:1px solid var(--border); background:var(--paper); border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; font-family:var(--font-display); font-size:14px; }
+  .books button.on{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .topic-row{ display:flex; gap:10px; align-items:center; width:100%; text-align:start; padding:12px 14px; background:var(--paper); border:1px solid var(--border); border-radius:12px; margin-bottom:6px; cursor:pointer; }
+  .topic-row .no{ font-family:var(--font-display); font-weight:900; color:var(--accent); width:28px; flex:none; }
+  .topic-row .nm{ flex:1; font-weight:700; }
+  .ws-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; }
+  .ws-tile{ position:relative; background:var(--paper); border:2px solid var(--border); border-radius:12px; padding:6px; cursor:pointer; text-align:start; }
+  .ws-tile .thumb{ width:100%; }
+  .ws-tile .cap{ font-size:13px; font-weight:700; line-height:1.25; margin-top:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .ws-tile.sel{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
+  .ws-tile .tick{ position:absolute; top:10px; inset-inline-start:10px; width:28px; height:28px; border-radius:50%; background:var(--accent); color:var(--accent-ink); display:none; place-items:center; }
+  .ws-tile.sel .tick{ display:grid; }
+  .ws-tile .inplan{ position:absolute; top:10px; inset-inline-end:10px; }
+  .ws-tile.dim{ opacity:.55; }
+  .actionbar{ position:fixed; inset-inline:0; bottom:0; z-index:40; background:var(--paper); border-top:1px solid var(--border); padding:10px 16px calc(10px + var(--safe-b)); box-shadow:0 -6px 18px rgba(0,0,0,.08); }
+  .actionbar .inner{ max-width:980px; margin:0 auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .actionbar .inner .sp{ flex:1; font-weight:700; }
+  .crumb{ display:flex; align-items:center; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .pick-banner svg{ width:22px; height:22px; flex:none; }
+  .pick-banner{ background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius:14px; padding:10px 14px; margin-bottom:12px; display:flex; gap:10px; align-items:center; font-weight:700; }
+  pre.msg{ unicode-bidi:plaintext; white-space:pre-wrap; background:var(--muted); border-radius:12px; padding:12px; font-family:var(--font-body); font-size:15px; margin:10px 0; }
+</style>
+</head>
+<body>
+
+<!-- ===================== כניסה ===================== -->
+<section id="loginView" hidden>
+  <div class="wrap login">
+    <img class="logo" src="logo.png" alt="תלם">
+    <h1>דפי התרגול שלי</h1>
+    <p class="lead muted">תלם – המרכז לשיעורי תרגול</p>
+    <form id="loginForm" class="card" autocomplete="on">
+      <div id="studentFields">
+        <label class="field"><span>מספר הטלפון שלך</span>
+          <input id="lgPhone" type="tel" inputmode="tel" autocomplete="username" placeholder="05X-XXXXXXX" class="ltr">
+        </label>
+        <label class="field"><span>קוד (6 ספרות)</span>
+          <input id="lgCode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="current-password" class="code-input">
+        </label>
+      </div>
+      <div id="staffFields" hidden>
+        <label class="field"><span>אימייל</span><input id="lgEmail" type="email" autocomplete="username" class="ltr"></label>
+        <label class="field"><span>סיסמה</span><input id="lgPass" type="password" autocomplete="current-password" class="ltr"></label>
+      </div>
+      <div class="err" id="lgErr"></div>
+      <button class="btn primary block" id="lgBtn" type="submit">כניסה</button>
+    </form>
+    <p class="muted small" style="text-align:center;margin:4px 0 0" id="forgotNote">שכחת את הקוד? לכתוב לנו בוואטסאפ, ונשלח קוד חדש.</p>
+    <div style="text-align:center"><button class="linkish small" id="staffToggle" type="button">כניסת צוות</button></div>
+    <p class="muted small" style="text-align:center;margin:0">גרסה <span class="appVer"></span></p>
+  </div>
+</section>
+
+<!-- ===================== החלפת קוד ===================== -->
+<section id="codeView" hidden>
+  <div class="wrap login">
+    <img class="logo" src="logo.png" alt="תלם">
+    <h1>בחירת קוד אישי</h1>
+    <p class="lead muted">בפעם הראשונה צריך לבחור קוד חדש משלך, 6 ספרות. בפעם הבאה נכנסים איתו.</p>
+    <form id="codeForm" class="card">
+      <label class="field" id="oldCodeField"><span>הקוד שקיבלת</span>
+        <input id="cdOld" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="code-input" autocomplete="current-password"></label>
+      <label class="field"><span>קוד חדש</span>
+        <input id="cdNew" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="code-input" autocomplete="new-password"></label>
+      <label class="field"><span>שוב את הקוד החדש</span>
+        <input id="cdNew2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="code-input" autocomplete="new-password"></label>
+      <div class="err" id="cdErr"></div>
+      <button class="btn primary block" type="submit">שמירה והמשך</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== הודעה (חשבון לא פעיל וכו') ===================== -->
+<section id="msgView" hidden>
+  <div class="wrap login">
+    <img class="logo" src="logo.png" alt="תלם">
+    <div class="card empty">
+      <h2 id="msgTitle"></h2>
+      <p class="muted" id="msgText"></p>
+      <button class="btn block" id="msgLogout">יציאה</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== תלמיד/ה ===================== -->
+<section id="studentView" hidden>
+  <header class="top">
+    <div class="wrap row">
+      <img src="logo.png" alt="">
+      <div class="ttl"><span id="stHello">שלום</span><small>דפי התרגול שלי</small></div>
+      <button class="icon-btn" id="stRefresh" aria-label="רענון"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+      <button class="icon-btn" id="stMenu" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+    </div>
+  </header>
+  <main class="wrap">
+    <div id="installBanner" class="card install-banner" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/></svg>
+      <div><b>להוסיף למסך הבית?</b><div class="small muted">ככה תפתחו את הדפים בלחיצה אחת.</div></div>
+      <button class="btn sm primary" id="installHow">איך?</button>
+    </div>
+    <div class="seg" id="stSeg" hidden></div>
+    <div id="stBody"></div>
+  </main>
+</section>
+
+<!-- ===================== ניהול ===================== -->
+<section id="adminView" hidden>
+  <header class="top">
+    <div class="wrap wide row">
+      <img src="logo.png" alt="">
+      <div class="ttl">דפי תרגול<small>ניהול תוכניות לתלמידים · גרסה <span class="appVer"></span></small></div>
+      <button class="icon-btn" id="adRefresh" aria-label="רענון"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+      <button class="icon-btn" id="adLogout" aria-label="יציאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg></button>
+    </div>
+    <div class="wrap wide tabs" id="adTabs">
+      <button data-v="wait" class="on">ממתינים לדף<span class="badge" id="waitBadge" hidden></span></button>
+      <button data-v="students">תלמידים</button>
+      <button data-v="bank">מאגר</button>
+    </div>
+  </header>
+  <main class="wrap wide" id="adBody"><div class="card muted">טוען…</div></main>
+  <div class="actionbar" id="actionBar" hidden><div class="inner" id="actionInner"></div></div>
+</section>
+
+<div class="toast" id="toast" hidden></div>
+<div id="sheetHost"></div>
+<div id="viewerHost"></div>
+
+<script>
+"use strict";
+// ======================================================================
+// הגדרות
+// ======================================================================
+const CONFIG = {
+  version: "1.0",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
+  anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
+  appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
+  studentDomain: "students.telem-tr.co.il"                      // חייב להתאים לקובץ 63.1
+};
+
+// ======================================================================
+// עזר
+// ======================================================================
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const digits = (s) => String(s || "").replace(/\D/g, "");
+function normPhone(p){ let d = digits(p); if (/^9725\d{8}$/.test(d)) d = "0" + d.slice(3); return d; }
+const fmtPhone = (p) => { const d = normPhone(p); return d.length === 10 ? d.slice(0,3) + "-" + d.slice(3) : d; };
+const fmtDay = (iso) => iso ? new Date(iso).toLocaleDateString("he-IL", { day:"numeric", month:"numeric" }) : "";
+function ago(iso){
+  if (!iso) return ""; const m = (Date.now() - new Date(iso).getTime()) / 60000;
+  if (m < 2) return "עכשיו"; if (m < 60) return "לפני " + Math.round(m) + " דק'";
+  const h = m / 60; if (h < 24) return "לפני " + Math.round(h) + (Math.round(h) === 1 ? " שעה" : " שעות");
+  const d = Math.round(h / 24); return d === 1 ? "אתמול" : "לפני " + d + " ימים";
+}
+function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { el.hidden = true; }, 3200); }
+function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e) { return null; } }
+const IC = {
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  circleCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l-5-5 5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
+  save: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>',
+  dots: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
+  plusBox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM8 7h7M8 11h5"/></svg>',
+  wa: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.1.6 2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>'
+};
+
+// ======================================================================
+// חיבור ל-Supabase (בלי ספריות חיצוניות, כמו במערכת הניהול)
+// ======================================================================
+const AUTH_KEY = "telem_portal_auth";
+let auth = null;
+try { auth = JSON.parse(store(AUTH_KEY) || "null"); } catch(e) {}
+function saveAuth(a){ auth = a; store(AUTH_KEY, a ? JSON.stringify(a) : null); }
+function baseHeaders(){
+  const h = { "apikey": CONFIG.anonKey, "Content-Type": "application/json" };
+  if (CONFIG.anonKey.indexOf("eyJ") === 0) h["Authorization"] = "Bearer " + CONFIG.anonKey;
+  return h;
+}
+async function tokenRequest(grant, body){
+  const res = await fetch(CONFIG.supabaseUrl + "/auth/v1/token?grant_type=" + grant, { method:"POST", headers: baseHeaders(), body: JSON.stringify(body) });
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data || !data.access_token) { const e = new Error("auth failed"); e.status = res.status; e.data = data; throw e; }
+  saveAuth({ access_token: data.access_token, refresh_token: data.refresh_token,
+             expires_at: data.expires_at || (Math.floor(Date.now()/1000) + (data.expires_in || 3600)),
+             email: (data.user && data.user.email) || (auth && auth.email) || "" });
+}
+let REFRESHING = null;
+function refreshAuth(){
+  if (REFRESHING) return REFRESHING;
+  REFRESHING = (async () => {
+    if (!auth) return false;
+    const old = auth.refresh_token;
+    for (let i = 0; i < 3; i++) {
+      try { await tokenRequest("refresh_token", { refresh_token: old }); return true; }
+      catch(e) {
+        if (e.status === 400 || e.status === 401 || e.status === 403) { saveAuth(null); return false; }
+        await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+      }
+    }
+    return !!auth && auth.expires_at > Date.now()/1000;
+  })().finally(() => { REFRESHING = null; });
+  return REFRESHING;
+}
+async function token(){
+  if (!auth) return null;
+  if (auth.expires_at - 60 > Date.now()/1000) return auth.access_token;
+  return (await refreshAuth()) && auth ? auth.access_token : null;
+}
+async function api(method, path, body, extra){
+  const t = await token();
+  if (!t) { showLogin(); throw new Error("not signed in"); }
+  const res = await fetch(CONFIG.supabaseUrl + path, { method, headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + t }, extra || {}),
+                                                       body: body === undefined ? undefined : JSON.stringify(body) });
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    const err = new Error(e.message || e.msg || ("HTTP " + res.status)); err.status = res.status; err.code = e.code; throw err;
+  }
+  if (res.status === 204) return null;
+  const txt = await res.text(); return txt ? JSON.parse(txt) : null;
+}
+const get = (table, q) => api("GET", "/rest/v1/" + table + "?" + q);
+async function getAll(table, q){
+  const out = [], step = 1000;
+  for (let off = 0; ; off += step) { const part = await get(table, q + "&limit=" + step + "&offset=" + off); out.push(...part); if (part.length < step) return out; }
+}
+const patch = (table, filter, v) => api("PATCH", "/rest/v1/" + table + "?" + filter, v, { "Prefer": "return=minimal" });
+const insert = (table, v) => api("POST", "/rest/v1/" + table, v, { "Prefer": "return=representation" });
+const del = (table, filter) => api("DELETE", "/rest/v1/" + table + "?" + filter, undefined, { "Prefer": "return=minimal" });
+const rpc = (fn, body) => api("POST", "/rest/v1/rpc/" + fn, body || {});
+const errText = (e) => { const m = String(e && e.message || ""); return /[֐-׿]/.test(m) ? m : "משהו השתבש. כדאי לנסות שוב."; };
+
+// קישורים זמניים לתמונות (שעה)
+const URLS = {};
+async function sign(paths){
+  const now = Date.now(), need = [...new Set(paths.filter(p => p && (!URLS[p] || URLS[p].exp < now + 120000)))];
+  for (let i = 0; i < need.length; i += 100) {
+    const part = need.slice(i, i + 100);
+    try {
+      const res = await api("POST", "/storage/v1/object/sign/worksheets", { expiresIn: 3600, paths: part });
+      (res || []).forEach(r => { if (r.signedURL) URLS[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + 3600 * 1000 }; });
+    } catch(e) {}
+  }
+  return (p) => URLS[p] ? URLS[p].url : "";
+}
+
+// ======================================================================
+// מסכים: כניסה
+// ======================================================================
+const VIEWS = ["loginView", "codeView", "msgView", "studentView", "adminView"];
+function showView(id){ VIEWS.forEach(v => { $(v).hidden = v !== id; }); window.scrollTo(0, 0); }
+let STAFF_MODE = false, LAST_CODE = "";
+function showLogin(msg){
+  showView("loginView"); closeSheet(); closeViewer();
+  $("lgErr").textContent = msg || "";
+  setStaffMode(store("telem_portal_staff") === "1");
+}
+function setStaffMode(on){
+  STAFF_MODE = on; $("studentFields").hidden = on; $("staffFields").hidden = !on; $("forgotNote").hidden = on;
+  $("staffToggle").textContent = on ? "כניסת תלמידים" : "כניסת צוות";
+}
+$("staffToggle").onclick = () => { setStaffMode(!STAFF_MODE); $("lgErr").textContent = ""; };
+$("loginForm").onsubmit = async (ev) => {
+  ev.preventDefault();
+  const err = $("lgErr"); err.textContent = "";
+  let email, pass;
+  if (STAFF_MODE) {
+    email = $("lgEmail").value.trim(); pass = $("lgPass").value;
+    if (!email || !pass) { err.textContent = "צריך אימייל וסיסמה."; return; }
+  } else {
+    const ph = normPhone($("lgPhone").value); pass = $("lgCode").value.trim();
+    if (!/^05\d{8}$/.test(ph)) { err.textContent = "מספר הטלפון לא נראה תקין (05X-XXXXXXX)."; return; }
+    if (!/^\d{6}$/.test(pass)) { err.textContent = "הקוד הוא 6 ספרות."; return; }
+    email = ph + "@" + CONFIG.studentDomain;
+  }
+  $("lgBtn").disabled = true; $("lgBtn").textContent = "נכנסים…";
+  try {
+    await tokenRequest("password", { email, password: pass });
+    LAST_CODE = STAFF_MODE ? "" : pass;
+    store("telem_portal_staff", STAFF_MODE ? "1" : null);
+    $("lgCode").value = ""; $("lgPass").value = "";
+    await boot();
+  } catch(e) {
+    err.textContent = e.status === 400 ? (STAFF_MODE ? "האימייל או הסיסמה לא נכונים." : "הטלפון או הקוד לא נכונים.")
+                    : e.status === 429 ? "יותר מדי ניסיונות. כדאי לחכות כמה דקות." : "אין חיבור. כדאי לבדוק את האינטרנט ולנסות שוב.";
+  } finally { $("lgBtn").disabled = false; $("lgBtn").textContent = "כניסה"; }
+};
+async function logout(){
+  try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
+  saveAuth(null); LAST_CODE = ""; ST.pages = null; AD.loaded = false; showLogin();
+}
+$("msgLogout").onclick = logout;
+function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
+
+// ======================================================================
+// הפעלה: מי נכנס/ה – צוות (מנהלת) או תלמיד/ה
+// ======================================================================
+async function boot(){
+  if (!(await token())) { showLogin(); return; }
+  let isManager = false;
+  try { isManager = !!(await rpc("portal_is_manager")); }
+  catch(e) {
+    if (e.status === 404 || e.code === "PGRST202") { showMsg("עוד לא מוכן", "צריך להריץ את קובץ 63.1 ב-Supabase."); return; }
+    if (e.message === "not signed in") return;
+    showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לבדוק את האינטרנט ולנסות שוב."); return;
+  }
+  if (isManager) { adminStart(); return; }
+  let me;
+  try { me = await rpc("portal_me"); } catch(e) { showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לנסות שוב."); return; }
+  if (!me || me.status === "no_account") { showMsg("אין גישה", "המשתמש הזה לא מוגדר כתלמיד/ה. אם זו טעות – לכתוב לנו."); return; }
+  if (me.status === "inactive") { showMsg("החשבון לא פעיל כרגע", "הגישה לדפים פתוחה רק לתלמידים רשומים. לשאלות – לכתוב לנו בוואטסאפ."); return; }
+  ST.me = me;
+  if (me.must_change_code) { showCodeChange(); return; }
+  studentStart();
+}
+
+// ---------- החלפת קוד ----------
+function showCodeChange(){
+  showView("codeView");
+  $("oldCodeField").hidden = !!LAST_CODE; $("cdOld").value = LAST_CODE; $("cdNew").value = ""; $("cdNew2").value = ""; $("cdErr").textContent = "";
+}
+$("codeForm").onsubmit = async (ev) => {
+  ev.preventDefault();
+  const o = $("cdOld").value.trim(), n = $("cdNew").value.trim(), n2 = $("cdNew2").value.trim(), err = $("cdErr");
+  err.textContent = "";
+  if (!/^\d{6}$/.test(o)) { err.textContent = "צריך את הקוד שקיבלת (6 ספרות)."; $("oldCodeField").hidden = false; return; }
+  if (!/^\d{6}$/.test(n)) { err.textContent = "הקוד החדש צריך להיות 6 ספרות."; return; }
+  if (n !== n2) { err.textContent = "שני הקודים לא זהים."; return; }
+  try {
+    await rpc("portal_change_code", { p_old: o, p_new: n });
+    LAST_CODE = ""; ST.me.must_change_code = false; toast("הקוד נשמר. מעכשיו נכנסים איתו.");
+    studentStart();
+  } catch(e) { err.textContent = errText(e); if (/הנוכחי/.test(e.message)) $("oldCodeField").hidden = false; }
+};
+
+// ======================================================================
+// תלמיד/ה
+// ======================================================================
+const ST = { me: null, pages: null, subj: null, showDone: false };
+function studentStart(){
+  showView("studentView");
+  $("stHello").textContent = "שלום " + (ST.me.first_name || "");
+  const subs = ST.me.subjects || [];
+  if (!ST.subj || !subs.includes(ST.subj)) ST.subj = store("telem_portal_subj") && subs.includes(store("telem_portal_subj")) ? store("telem_portal_subj") : subs[0];
+  updateInstallBanner();
+  loadStudentPages();
+}
+async function loadStudentPages(quiet){
+  if (!ST.pages && !quiet) $("stBody").innerHTML = "<div class='card muted'>טוען…</div>";
+  try {
+    const rows = await rpc("portal_my_pages");
+    ST.pages = rows || [];
+    const g = await sign(ST.pages.map(r => r.storage_path));
+    ST.url = g;
+    renderStudent();
+  } catch(e) {
+    if (e.message === "not signed in") return;
+    if (!quiet) $("stBody").innerHTML = "<div class='card'>לא הצלחנו לטעון את הדפים. <button class='btn sm' onclick='loadStudentPages()'>לנסות שוב</button></div>";
+  }
+}
+function renderStudent(){
+  const subs = ST.me.subjects || [];
+  const seg = $("stSeg");
+  if (subs.length > 1) {
+    seg.hidden = false;
+    seg.innerHTML = subs.map(s => { const n = ST.pages.filter(p => p.subject === s && p.status === "נשלח").length;
+      return `<button data-s="${esc(s)}" class="${s === ST.subj ? "on" : ""}">${esc(s)}${n ? `<span class="badge">${n}</span>` : ""}</button>`; }).join("");
+    seg.querySelectorAll("button").forEach(b => b.onclick = () => { ST.subj = b.dataset.s; store("telem_portal_subj", ST.subj); ST.showDone = false; renderStudent(); });
+  } else seg.hidden = true;
+
+  const mine = ST.pages.filter(p => subs.length < 2 || p.subject === ST.subj);
+  const open = mine.filter(p => p.status === "נשלח"), done = mine.filter(p => p.status === "הושלם");
+  let h = "";
+  if (open.length) {
+    h += `<div class="sec-h">לעבודה עכשיו</div>`;
+    h += open.map(p => `
+      <button class="page-card ${p.is_new ? "is-new" : ""}" data-i="${p.item_id}">
+        <span class="thumb" style="background-image:url('${esc(ST.url(p.storage_path))}')"></span>
+        <span style="min-width:0">
+          ${p.is_new ? `<span class="chip new">חדש</span>` : ""}
+          <div class="t">${esc(p.title)}</div>
+          <div class="s">${esc(p.topic_name || "")}</div>
+          <div class="s">נשלח ${esc(ago(p.released_at))}</div>
+        </span>
+        <span class="go">${IC.chev}</span>
+      </button>`).join("");
+  } else {
+    h += `<div class="card empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
+      <h2 style="margin-top:8px">${done.length ? "כל הכבוד, סיימת הכול!" : "עוד אין דפים"}</h2>
+      <p class="muted">${done.length ? "עדכנו שסיימת. דף חדש יגיע לכאן בקרוב." : "כשיישלח אליך דף תרגול, הוא יופיע כאן."}</p></div>`;
+  }
+  if (done.length) {
+    const list = ST.showDone ? done : done.slice(0, 3);
+    h += `<div class="sec-h">סיימתי (${done.length})</div><div class="card" style="padding:4px 12px">` +
+      list.map(p => `<button class="done-row" data-i="${p.item_id}">${IC.circleCheck}<span style="flex:1;min-width:0"><b>${esc(p.title)}</b><div class="small muted">${esc(p.topic_name || "")}</div></span><span class="small muted">${esc(fmtDay(p.done_at))}</span></button>`).join("") +
+      (done.length > 3 && !ST.showDone ? `<button class="linkish" id="moreDone">להציג את כולם</button>` : "") + `</div>`;
+  }
+  $("stBody").innerHTML = h;
+  $("stBody").querySelectorAll("[data-i]").forEach(b => b.onclick = () => openStudentPage(Number(b.dataset.i)));
+  if ($("moreDone")) $("moreDone").onclick = () => { ST.showDone = true; renderStudent(); };
+}
+$("stRefresh").onclick = () => { loadStudentPages(); toast("מתעדכן…"); };
+$("stMenu").onclick = () => openSheet(`
+  <h2>תפריט</h2>
+  <button class="btn block" id="mInstall" style="margin-bottom:10px">איך מוסיפים למסך הבית</button>
+  <button class="btn block" id="mCode" style="margin-bottom:10px">החלפת קוד</button>
+  <button class="btn block" id="mOut">יציאה</button>
+  <p class="muted small" style="text-align:center;margin:12px 0 0">גרסה ${esc(CONFIG.version)}</p>`, (sh) => {
+    sh.querySelector("#mInstall").onclick = () => { closeSheet(); showInstallHelp(); };
+    sh.querySelector("#mCode").onclick = () => { closeSheet(); LAST_CODE = ""; showCodeChange(); $("codeView").querySelector("h1").textContent = "החלפת קוד"; };
+    sh.querySelector("#mOut").onclick = () => { closeSheet(); logout(); };
+  });
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("studentView").hidden && !VIEWER) loadStudentPages(true); });
+
+// ---------- צפייה בדף ----------
+let VIEWER = null;
+function openStudentPage(itemId){
+  const p = ST.pages.find(x => x.item_id === itemId); if (!p) return;
+  if (p.is_new) { p.is_new = false; rpc("portal_seen", { p_item: itemId }).catch(() => {}); }
+  const done = p.status === "הושלם";
+  openViewer({ title: p.title, path: p.storage_path, url: ST.url(p.storage_path),
+    bar: `<button class="btn ghost" id="vSave">${IC.save} שמירה</button>
+          ${done ? `<button class="btn ghost" id="vUndo">${IC.undo} עוד לא סיימתי</button>` : `<button class="btn ok" id="vDone">${IC.check} סיימתי</button>`}`,
+    wire: (v) => {
+      v.querySelector("#vSave").onclick = () => saveImage(ST.url(p.storage_path), p.title);
+      if (v.querySelector("#vDone")) v.querySelector("#vDone").onclick = () => markDone(p, true);
+      if (v.querySelector("#vUndo")) v.querySelector("#vUndo").onclick = () => markDone(p, false);
+    } });
+}
+async function markDone(p, on){
+  try {
+    await rpc("portal_mark_done", { p_item: p.item_id, p_done: on });
+    p.status = on ? "הושלם" : "נשלח"; p.done_at = on ? new Date().toISOString() : null;
+    closeViewer(); renderStudent();
+    if (on) openSheet(`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
+      <h2 style="margin-top:8px">כל הכבוד!</h2><p class="muted">עדכנו שסיימת את הדף. הדף הבא יגיע לכאן בקרוב.</p>
+      <button class="btn primary block" onclick="closeSheet()">מעולה</button></div>`);
+    else toast("הדף חזר לרשימת הדפים לעבודה.");
+  } catch(e) { toast(errText(e)); }
+}
+function openViewer(o){
+  closeViewer();
+  const host = $("viewerHost");
+  host.innerHTML = `<div class="viewer" role="dialog" aria-modal="true">
+    <div class="vtop">
+      <button class="icon-btn" id="vClose" aria-label="חזרה">${IC.back}</button>
+      <div class="ttl">${esc(o.title)}</div>
+      <div class="zoom"><button class="icon-btn" id="vZo" aria-label="הקטנה" style="font-size:24px;font-weight:800">−</button><button class="icon-btn" id="vZi" aria-label="הגדלה" style="font-size:24px;font-weight:800">+</button></div>
+    </div>
+    <div class="stage" id="vStage"><img id="vImg" alt="${esc(o.title)}" src="${esc(o.url)}"></div>
+    <div class="vbar">${o.bar || ""}</div></div>`;
+  VIEWER = host.firstElementChild; document.body.style.overflow = "hidden";
+  let z = 100; const img = VIEWER.querySelector("#vImg");
+  const setZ = (nz) => { z = Math.max(100, Math.min(300, nz)); img.style.width = z + "%"; };
+  VIEWER.querySelector("#vZi").onclick = () => setZ(z + 50);
+  VIEWER.querySelector("#vZo").onclick = () => setZ(z - 50);
+  VIEWER.querySelector("#vClose").onclick = closeViewer;
+  img.onerror = () => { if (!img.dataset.retry && o.path) { img.dataset.retry = "1"; delete URLS[o.path]; sign([o.path]).then(g => { img.src = g(o.path); }); } };
+  if (o.wire) o.wire(VIEWER);
+  history.pushState({ v: 1 }, "");
+}
+function closeViewer(fromPop){ if (!VIEWER) return; $("viewerHost").innerHTML = ""; VIEWER = null; document.body.style.overflow = ""; if (!fromPop && history.state && history.state.v) history.back(); }
+window.addEventListener("popstate", () => { if (VIEWER) closeViewer(true); });   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
+async function fetchBlob(url){ const r = await fetch(url); if (!r.ok) throw new Error("fetch"); return r.blob(); }
+async function saveImage(url, title){
+  try {
+    const blob = await fetchBlob(url);
+    const name = (String(title || "page").replace(/[\\/:*?"<>|]/g, "").trim() || "page") + ".png";
+    const file = new File([blob], name, { type: blob.type || "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  } catch(e) { if (e && e.name === "AbortError") return; toast("לא הצלחנו לשמור. אפשר ללחוץ לחיצה ארוכה על הדף ולבחור 'שמירה'."); }
+}
+async function copyImage(url){
+  try {
+    if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw new Error("no");
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": fetchBlob(url).then(b => b.type === "image/png" ? b : toPng(b)) })]);
+    toast("הדף הועתק – אפשר להדביק בוואטסאפ.");
+  } catch(e) { toast("ההעתקה לא עבדה בדפדפן הזה. אפשר ללחוץ לחיצה ארוכה על התמונה."); }
+}
+async function toPng(blob){
+  const bmp = await createImageBitmap(blob); const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
+  c.getContext("2d").drawImage(bmp, 0, 0); return new Promise(r => c.toBlob(r, "image/png"));
+}
+
+// ---------- חלונית תחתונה ----------
+let SHEET = null;
+function openSheet(html, wire){
+  closeSheet(true);
+  $("sheetHost").innerHTML = `<div class="sheet-bg"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  SHEET = $("sheetHost").firstElementChild;
+  SHEET.addEventListener("click", (e) => { if (e.target === SHEET) closeSheet(); });
+  if (wire) wire(SHEET.querySelector(".sheet"));
+}
+function closeSheet(){ if (!SHEET) return; $("sheetHost").innerHTML = ""; SHEET = null; }
+
+// ---------- הוספה למסך הבית ----------
+let INSTALL_EVT = null;
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); INSTALL_EVT = e; updateInstallBanner(); });
+window.addEventListener("appinstalled", () => { store("telem_portal_installed", "1"); updateInstallBanner(); });
+function updateInstallBanner(){
+  const b = $("installBanner"); if (!b) return;
+  b.hidden = isStandalone() || store("telem_portal_installed") === "1" || Number(store("telem_portal_hide_install") || 0) > Date.now();
+}
+$("installHow").onclick = () => showInstallHelp();
+function showInstallHelp(){
+  const ios = isIOS(), chromeIOS = /CriOS/i.test(navigator.userAgent);
+  const shareKbd = `<span class="kbd">${IC.share} שיתוף</span>`;
+  let steps;
+  if (ios) steps = chromeIOS
+    ? [`ללחוץ על ${shareKbd} – בשורת הכתובת למעלה.`, `לגלול ולבחור <b>"הוספה למסך הבית"</b>.`, `ללחוץ <b>"הוסף"</b>.`]
+    : [`ללחוץ על ${shareKbd} – בתחתית המסך (או למעלה, ליד הכתובת).`, `לגלול ולבחור <b>"הוספה למסך הבית"</b>.`, `ללחוץ <b>"הוסף"</b>.`];
+  else steps = [`ללחוץ על <span class="kbd">${IC.dots}</span> – שלוש הנקודות למעלה.`, `לבחור <b>"הוספה למסך הבית"</b> או <b>"התקנת אפליקציה"</b>.`, `לאשר.`];
+  openSheet(`<h2>הוספה למסך הבית</h2>
+    ${INSTALL_EVT ? `<button class="btn primary block" id="doInstall" style="margin-bottom:8px">התקנה בלחיצה אחת</button><p class="muted small" style="margin:0 0 6px">או ידנית:</p>` : ""}
+    <ol class="steps">${steps.map(s => `<li><span>${s}</span></li>`).join("")}</ol>
+    <p class="muted small">אחרי זה יופיע הסמל של תלם במסך הבית, ונכנסים ממנו לדפים.</p>
+    <div style="display:flex;gap:8px"><button class="btn primary" style="flex:1" id="instOk">הבנתי</button><button class="btn" id="instLater">אחר כך</button></div>`, (sh) => {
+      if (sh.querySelector("#doInstall")) sh.querySelector("#doInstall").onclick = async () => { const e = INSTALL_EVT; INSTALL_EVT = null; closeSheet(); e.prompt(); const r = await e.userChoice.catch(() => null); if (r && r.outcome === "accepted") store("telem_portal_installed", "1"); updateInstallBanner(); };
+      sh.querySelector("#instOk").onclick = () => closeSheet();
+      sh.querySelector("#instLater").onclick = () => { store("telem_portal_hide_install", String(Date.now() + 3 * 864e5)); updateInstallBanner(); closeSheet(); };
+    });
+}
+
+// ======================================================================
+// ניהול (מנהלת)
+// ======================================================================
+const AD = { loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
+             st: null, subj: null, sel: new Set(), bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
+const WS_CACHE = "telem_portal_ws";
+const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
+const wsSubject = (book) => /^ENG/i.test(book || "") ? "אנגלית" : "מתמטיקה";
+
+function adminStart(){
+  showView("adminView");
+  document.querySelectorAll("#adTabs button").forEach(b => b.onclick = () => { AD.st = null; AD.bank.pick = null; adGo(b.dataset.v); });
+  adLoad();
+}
+async function adLoad(){
+  try {
+    const [students, plan] = await Promise.all([
+      rpc("portal_students"),
+      getAll("portal_plan_items", "select=id,student_id,worksheet_id,subject,position,status,released_at,done_at,seen_at&order=position,id")
+    ]);
+    AD.students = (students || []).map(s => Object.assign(s, { student_id: String(s.student_id) }));
+    AD.plan = (plan || []).map(p => Object.assign(p, { student_id: String(p.student_id) }));
+    AD.loaded = true;
+  } catch(e) {
+    if (e.message === "not signed in") return;
+    $("adBody").innerHTML = `<div class="card err">${e.code === "PGRST202" || e.status === 404 ? "צריך להריץ את קובץ 63.1 ב-Supabase." : "לא הצלחנו לטעון. " + esc(errText(e))}</div>`; return;
+  }
+  await loadWs();
+  updateWaitBadge();
+  adRender();
+}
+async function loadWs(force){
+  if (AD.ws && !force) return;
+  let cached = null; try { cached = JSON.parse(store(WS_CACHE) || "null"); } catch(e) {}
+  const setWs = (rows) => { AD.ws = rows.map(r => Object.assign(r, { id: String(r.id) })); AD.wsById = new Map(AD.ws.map(r => [r.id, r])); };
+  if (cached && cached.rows && cached.rows.length && !force) {
+    setWs(cached.rows);
+    getAll("worksheets", WSQ).then(fresh => { try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }).catch(() => {});
+    return;
+  }
+  try { const fresh = await getAll("worksheets", WSQ); try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: fresh })); } catch(e) {} setWs(fresh); }
+  catch(e) { AD.ws = AD.ws || []; }
+}
+function updateWaitBadge(){ const n = waitingList().length; const b = $("waitBadge"); b.hidden = !n; b.textContent = n; }
+function adGo(v){
+  AD.view = v; AD.sel.clear();
+  document.querySelectorAll("#adTabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  window.scrollTo(0, 0); adRender();
+}
+function adRender(){
+  setActionBar(null);
+  if (!AD.loaded) return;
+  if (AD.st) return renderStudentPlan();
+  if (AD.view === "wait") return renderWait();
+  if (AD.view === "students") return renderStudents();
+  if (AD.view === "bank") return renderBank();
+}
+$("adRefresh").onclick = async () => { toast("מתעדכן…"); await adLoad(); };
+$("adLogout").onclick = logout;
+const stById = (id) => AD.students.find(s => s.student_id === String(id));
+const planOf = (sid, subj) => AD.plan.filter(p => p.student_id === String(sid) && (!subj || p.subject === subj));
+const queueOf = (sid, subj) => planOf(sid, subj).filter(p => p.status === "מתוכנן").sort((a, b) => a.position - b.position || a.id - b.id);
+const wsTitle = (wid) => { const w = AD.wsById.get(String(wid)); return w ? w.title : "דף"; };
+const wsTopicName = (wid) => { const w = AD.wsById.get(String(wid)); return w ? [w.book_label, w.topic_name].filter(Boolean).join(" · ") : ""; };
+const stName = (s) => (s.first_name || "") + " " + (s.last_name || "");
+const stMeta = (s) => [s.grade ? "כיתה " + s.grade : "", s.school].filter(Boolean).join(" · ");
+
+// ---------- ממתינים לדף ----------
+function waitingList(){
+  const out = [];
+  AD.students.forEach(s => (s.waiting_subjects || []).forEach(subj => {
+    const last = planOf(s.student_id, subj).filter(p => p.done_at).sort((a, b) => b.done_at.localeCompare(a.done_at))[0];
+    out.push({ s, subj, done_at: last ? last.done_at : s.last_done_at, last });
+  }));
+  return out.sort((a, b) => String(a.done_at || "").localeCompare(String(b.done_at || "")));   // הכי מזמן – ראשון
+}
+function renderWait(){
+  const list = waitingList();
+  const fresh = AD.students.filter(s => s.has_account && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
+  let h = "";
+  if (!list.length) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים</h2><p class="muted">כשתלמיד/ה ילחץ/תלחץ "סיימתי", הוא/היא יופיע/תופיע כאן.</p></div>`;
+  else {
+    h += `<div class="sec-h">סיימו דף ומחכים לדף הבא (${list.length})</div><div class="grid2">`;
+    h += list.map(w => waitCard(w.s, w.subj, `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`)).join("");
+    h += `</div>`;
+  }
+  if (fresh.length) {
+    h += `<div class="sec-h">יש חשבון, עוד לא נשלח אף דף (${fresh.length})</div><div class="grid2">`;
+    h += fresh.map(s => waitCard(s, (s.subjects || [])[0], s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : "עוד לא נכנס/ה")).join("");
+    h += `</div>`;
+  }
+  $("adBody").innerHTML = h;
+  wireWaitCards();
+}
+function waitCard(s, subj, sub){
+  const q = queueOf(s.student_id, subj), nx = q[0];
+  const two = (s.subjects || []).length > 1;
+  return `<div class="card wait-card">
+    <div class="head"><div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="small muted">${esc(stMeta(s))}</div><div class="small muted">${sub}</div></div>
+      ${two ? `<span class="chip acc">${esc(subj)}</span>` : ""}</div>
+    <div class="next">
+      ${nx ? `<button class="btn primary sm" data-rel="${nx.id}">${IC.check} שחרור: ${esc(wsTitle(nx.worksheet_id))}</button>`
+           : `<span class="chip warn">אין דפים בתור</span>`}
+      <button class="btn sm" data-open="${esc(s.student_id)}" data-subj="${esc(subj)}">${nx ? "תוכנית" : "הוספת דפים"}</button>
+    </div></div>`;
+}
+function wireWaitCards(){
+  $("adBody").querySelectorAll("[data-rel]").forEach(b => b.onclick = () => releaseItems([Number(b.dataset.rel)]));
+  $("adBody").querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open, b.dataset.subj));
+}
+async function releaseItems(ids){
+  if (!ids.length) return;
+  try {
+    const n = await rpc("portal_release", { p_items: ids });
+    const now = new Date().toISOString();
+    AD.plan.forEach(p => { if (ids.includes(p.id) && p.status === "מתוכנן") { p.status = "נשלח"; p.released_at = now; p.done_at = null; } });
+    refreshWaitingLocal(); AD.sel.clear();
+    toast(n === 1 ? "הדף נשלח לתלמיד/ה." : n + " דפים נשלחו.");
+    adRender();
+  } catch(e) { toast(errText(e)); }
+}
+// חישוב מחדש של "ממתין" בלי לטעון מהשרת
+function refreshWaitingLocal(){
+  AD.students.forEach(s => {
+    s.waiting_subjects = (s.subjects || []).filter(subj => { const pl = planOf(s.student_id, subj); return !pl.some(p => p.status === "נשלח") && pl.some(p => p.status === "הושלם"); });
+    s.planned = planOf(s.student_id).filter(p => p.status === "מתוכנן").length;
+    s.open_pages = planOf(s.student_id).filter(p => p.status === "נשלח").length;
+  });
+  updateWaitBadge();
+}
+
+// ---------- תלמידים ----------
+function renderStudents(){
+  const F = [["all", "הכול"], ["wait", "ממתינים"], ["noacc", "בלי חשבון"], ["noq", "אין דפים בתור"]];
+  const q = AD.q.trim();
+  let list = AD.students.filter(s => !q || stName(s).includes(q) || digits(s.phone).includes(digits(q)) && digits(q).length > 2);
+  if (AD.filter === "wait") list = list.filter(s => (s.waiting_subjects || []).length);
+  if (AD.filter === "noacc") list = list.filter(s => !s.has_account);
+  if (AD.filter === "noq") list = list.filter(s => s.has_account && !s.planned);
+  $("adBody").innerHTML = `
+    <input class="search" id="stSearch" type="search" placeholder="חיפוש לפי שם או טלפון" value="${esc(AD.q)}">
+    <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
+    ${list.map(s => `<button class="st-row" data-open="${esc(s.student_id)}">
+      <span style="min-width:0"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}${s.subjects && s.subjects.length ? " · " + esc(s.subjects.join(" + ")) : ""}</div></span>
+      <span class="chips">
+        ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? `<span class="chip warn">עוד לא נכנס/ה</span>` : ""}
+        ${(s.waiting_subjects || []).length ? `<span class="chip new">ממתין/ה</span>` : ""}
+        ${s.open_pages ? `<span class="chip ok">${s.open_pages} פתוחים</span>` : ""}
+        ${s.planned ? `<span class="chip acc">${s.planned} בתור</span>` : ""}
+      </span></button>`).join("") || `<div class="card muted">אין תלמידים שמתאימים לחיפוש.</div>`}`;
+  const inp = $("stSearch");
+  inp.oninput = () => { AD.q = inp.value; const pos = inp.selectionStart; renderStudents(); const n = $("stSearch"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(e) {} };
+  $("adBody").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { AD.filter = b.dataset.f; renderStudents(); });
+  $("adBody").querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open));
+}
+
+// ---------- תוכנית של תלמיד/ה ----------
+function openStudent(sid, subj){
+  const s = stById(sid); if (!s) return;
+  AD.st = String(sid); AD.subj = subj && (s.subjects || []).includes(subj) ? subj : (s.subjects || [])[0]; AD.sel.clear(); AD.showDone = false;
+  window.scrollTo(0, 0); renderStudentPlan();
+}
+async function renderStudentPlan(){
+  const s = stById(AD.st); if (!s) { AD.st = null; return adRender(); }
+  const subs = s.subjects || [];
+  const open = planOf(s.student_id, AD.subj).filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)));
+  const queue = queueOf(s.student_id, AD.subj);
+  const done = planOf(s.student_id, AD.subj).filter(p => p.status === "הושלם").sort((a, b) => String(b.done_at).localeCompare(String(a.done_at)));
+  const thumbs = await sign([...open, ...queue, ...done.slice(0, AD.showDone ? 999 : 5)].map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
+  const th = (p) => { const w = AD.wsById.get(String(p.worksheet_id)); return w ? `<span class="thumb" data-zoom="${esc(w.id)}" style="background-image:url('${esc(thumbs(w.storage_path))}')"></span>` : `<span class="thumb"></span>`; };
+  const acc = !s.has_account
+    ? `<span class="chip">אין עדיין חשבון</span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button>`
+    : `<span class="chip ok">יש חשבון</span><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
+       <span class="small muted">${s.must_change_code ? "עוד לא בחר/ה קוד אישי" : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
+       <button class="btn sm" id="accReset">קוד חדש</button><button class="btn sm ghost" id="accDel">מחיקת חשבון</button>`;
+  $("adBody").innerHTML = `
+    <div class="crumb"><button class="btn sm ghost" id="stBack">${IC.back} חזרה</button></div>
+    <div class="card">
+      <h2 style="font-size:22px">${esc(stName(s))}</h2>
+      <div class="muted small" style="margin-bottom:10px">${esc(stMeta(s))}${s.phone ? ` · <span class="ltr">${esc(fmtPhone(s.phone))}</span>` : ""}</div>
+      <div class="acc-box">${acc}</div>
+    </div>
+    ${subs.length > 1 ? `<div class="seg">${subs.map(x => { const w = (s.waiting_subjects || []).includes(x); return `<button data-subj="${esc(x)}" class="${x === AD.subj ? "on" : ""}">${esc(x)}${w ? `<span class="badge">ממתין</span>` : ""}</button>`; }).join("")}</div>` : ""}
+    <div class="grid2">
+      <div>
+        <div class="sec-h">אצל התלמיד/ה עכשיו (${open.length})</div>
+        <div class="card" style="padding:6px 14px">${open.map(p => `<div class="plan-item">${th(p)}<div class="t">${esc(wsTitle(p.worksheet_id))}<small>${esc(wsTopicName(p.worksheet_id))} · נשלח ${esc(ago(p.released_at))}${p.seen_at ? " · נפתח" : " · עוד לא נפתח"}</small></div>
+            <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button></div>`).join("") || `<div class="muted small" style="padding:8px 0">אין דף פתוח${(s.waiting_subjects || []).includes(AD.subj) ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`}</div>
+        <div class="sec-h">סיימ/ה (${done.length})</div>
+        <div class="card" style="padding:6px 14px">${(AD.showDone ? done : done.slice(0, 5)).map(p => `<div class="plan-item">${th(p)}<div class="t">${esc(wsTitle(p.worksheet_id))}<small>${esc(wsTopicName(p.worksheet_id))} · סיים/ה ${esc(ago(p.done_at))}</small></div></div>`).join("") || `<div class="muted small" style="padding:8px 0">עוד לא סיים/ה דפים.</div>`}
+          ${done.length > 5 && !AD.showDone ? `<button class="linkish small" id="moreDoneAd">להציג הכול</button>` : ""}</div>
+      </div>
+      <div>
+        <div class="sec-h">בתור – הדפים הבאים (${queue.length})</div>
+        <div class="card" style="padding:6px 14px">
+          ${queue.map((p, i) => `<div class="plan-item">
+              <input type="checkbox" data-sel="${p.id}" ${AD.sel.has(p.id) ? "checked" : ""} aria-label="בחירה">
+              <span class="pos">${i + 1}</span>${th(p)}
+              <div class="t">${esc(wsTitle(p.worksheet_id))}<small>${esc(wsTopicName(p.worksheet_id))}</small></div>
+              <button class="mini" data-mv="${p.id}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="למעלה">${IC.up}</button>
+              <button class="mini" data-mv="${p.id}" data-d="1" ${i === queue.length - 1 ? "disabled" : ""} aria-label="למטה">${IC.down}</button>
+              <button class="mini" data-rm="${p.id}" aria-label="הסרה">${IC.x}</button></div>`).join("") || `<div class="muted small" style="padding:8px 0">התור ריק.</div>`}
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 4px">
+            <button class="btn sm" id="addFromBank">${IC.plusBox} הוספת דפים מהמאגר</button>
+            ${queue.length ? `<button class="btn sm primary" id="relNext">${IC.check} שחרור הדף הבא</button>` : ""}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  const B = $("adBody");
+  $("stBack").onclick = () => { AD.st = null; adRender(); };
+  B.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { AD.subj = b.dataset.subj; AD.sel.clear(); renderStudentPlan(); });
+  B.querySelectorAll("[data-unrel]").forEach(b => b.onclick = () => unrelease(Number(b.dataset.unrel)));
+  B.querySelectorAll("[data-sel]").forEach(c => c.onchange = () => { const id = Number(c.dataset.sel); c.checked ? AD.sel.add(id) : AD.sel.delete(id); planActionBar(); });
+  B.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => movePlan(Number(b.dataset.mv), Number(b.dataset.d)));
+  B.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => removePlan(Number(b.dataset.rm)));
+  B.querySelectorAll("[data-zoom]").forEach(t => t.onclick = () => previewWs(t.dataset.zoom));
+  if ($("relNext")) $("relNext").onclick = () => releaseItems([queue[0].id]);
+  if ($("moreDoneAd")) $("moreDoneAd").onclick = () => { AD.showDone = true; renderStudentPlan(); };
+  $("addFromBank").onclick = () => startPick(s);
+  if ($("accCreate")) $("accCreate").onclick = () => accountSheet(s, false);
+  if ($("accReset")) $("accReset").onclick = () => accountSheet(s, true);
+  if ($("accDel")) $("accDel").onclick = () => deleteAccount(s);
+  planActionBar();
+}
+function planActionBar(){
+  if (!AD.sel.size) return setActionBar(null);
+  setActionBar(`<span class="sp">נבחרו ${AD.sel.size} דפים</span>
+    <button class="btn sm ghost" id="abClear">ביטול</button>
+    <button class="btn sm primary" id="abRel">${IC.check} שחרור הנבחרים</button>`, (b) => {
+      b.querySelector("#abClear").onclick = () => { AD.sel.clear(); renderStudentPlan(); };
+      b.querySelector("#abRel").onclick = () => releaseItems([...AD.sel]);
+    });
+}
+function setActionBar(html, wire){
+  const bar = $("actionBar");
+  if (!html) { bar.hidden = true; $("actionInner").innerHTML = ""; return; }
+  $("actionInner").innerHTML = html; bar.hidden = false; if (wire) wire($("actionInner"));
+}
+async function unrelease(id){
+  try { await rpc("portal_unrelease", { p_item: id });
+    const p = AD.plan.find(x => x.id === id); if (p) { p.status = "מתוכנן"; p.released_at = null; p.done_at = null; p.seen_at = null;
+      const q = queueOf(p.student_id, p.subject).filter(x => x.id !== id); p.position = q.length ? Math.min(...q.map(x => x.position)) - 1 : 0; patch("portal_plan_items", "id=eq." + id, { position: p.position }).catch(() => {}); }
+    refreshWaitingLocal(); toast("הדף חזר לראש התור."); renderStudentPlan();
+  } catch(e) { toast(errText(e)); }
+}
+async function movePlan(id, d){
+  const p = AD.plan.find(x => x.id === id); if (!p) return;
+  const q = queueOf(p.student_id, p.subject), i = q.findIndex(x => x.id === id), j = i + d; if (j < 0 || j >= q.length) return;
+  q.splice(j, 0, q.splice(i, 1)[0]);
+  const changes = []; q.forEach((x, k) => { if (x.position !== k + 1) { x.position = k + 1; changes.push(x); } });
+  renderStudentPlan();
+  try { await Promise.all(changes.map(x => patch("portal_plan_items", "id=eq." + x.id, { position: x.position }))); }
+  catch(e) { toast("הסדר לא נשמר. כדאי לרענן."); }
+}
+async function removePlan(id){
+  try { await del("portal_plan_items", "id=eq." + id); AD.plan = AD.plan.filter(x => x.id !== id); AD.sel.delete(id); refreshWaitingLocal(); renderStudentPlan(); }
+  catch(e) { toast(errText(e)); }
+}
+
+// ---------- חשבון לתלמיד/ה ----------
+const randCode = () => { let c; do { const a = new Uint32Array(1); crypto.getRandomValues(a); c = String(a[0] % 1000000).padStart(6, "0"); } while (/^(\d)\1{5}$/.test(c) || ["123456", "654321"].includes(c)); return c; };
+function accountSheet(s, reset){
+  const code = randCode();
+  openSheet(`<h2>${reset ? "קוד חדש ל" : "חשבון ל"}${esc(stName(s))}</h2>
+    <label class="field"><span>הטלפון של התלמיד/ה</span><input id="acPhone" type="tel" class="ltr" value="${esc(fmtPhone(reset ? s.login_phone : s.phone))}"></label>
+    <label class="field"><span>קוד ראשוני</span><input id="acCode" inputmode="numeric" maxlength="6" class="code-input" value="${code}"></label>
+    <p class="muted small" style="margin-top:-6px">התלמיד/ה יתבקש/תתבקש לבחור קוד חדש בכניסה הראשונה.</p>
+    <div class="err" id="acErr"></div>
+    <button class="btn primary block" id="acGo">${reset ? "שמירת הקוד החדש" : "יצירת החשבון"}</button>`, (sh) => {
+      sh.querySelector("#acGo").onclick = async () => {
+        const ph = normPhone(sh.querySelector("#acPhone").value), cd = sh.querySelector("#acCode").value.trim(), er = sh.querySelector("#acErr");
+        if (!/^05\d{8}$/.test(ph)) { er.textContent = "הטלפון צריך להיות נייד ישראלי (05X-XXXXXXX)."; return; }
+        if (!/^\d{6}$/.test(cd)) { er.textContent = "הקוד צריך להיות 6 ספרות."; return; }
+        sh.querySelector("#acGo").disabled = true;
+        try {
+          const r = await rpc("portal_create_account", { p_student: s.student_id, p_phone: ph, p_code: cd });
+          s.has_account = true; s.login_phone = r.phone; s.must_change_code = true; if (!s.phone) s.phone = r.phone;
+          renderStudentPlan(); sendCodeSheet(s, r.phone, cd, reset);
+        } catch(e) { er.textContent = errText(e); sh.querySelector("#acGo").disabled = false; }
+      };
+    });
+}
+function sendCodeSheet(s, phone, code, reset){
+  const msg = reset
+    ? `שלום ${s.first_name || ""}! הנה קוד חדש לאפליקציית דפי התרגול של תלם 🔑\n${CONFIG.appUrl}\nטלפון: ${fmtPhone(phone)}\nקוד: ${code}\nבכניסה תתבקש/י לבחור קוד אישי חדש.`
+    : `שלום ${s.first_name || ""}! 👋\nמעכשיו דפי התרגול של תלם מגיעים אליך באפליקציה:\n${CONFIG.appUrl}\n\nנכנסים עם הטלפון שלך:\nטלפון: ${fmtPhone(phone)}\nקוד ראשוני: ${code}\n\nבכניסה הראשונה בוחרים קוד אישי חדש.\nכדאי להוסיף את האפליקציה למסך הבית – ההסבר מופיע בפנים.\nכשמסיימים דף לוחצים "סיימתי", ונשלח את הדף הבא 💪`;
+  const wa = "https://wa.me/972" + normPhone(phone).slice(1) + "?text=" + encodeURIComponent(msg);
+  openSheet(`<h2>${reset ? "הקוד נשמר" : "החשבון נוצר"} ✓</h2>
+    <p class="muted" style="margin:0">ההודעה לשליחה לתלמיד/ה:</p>
+    <pre class="msg">${esc(msg)}</pre>
+    <a class="btn primary block" href="${esc(wa)}" target="_blank" rel="noopener" style="margin-bottom:8px">${IC.wa} שליחה בוואטסאפ</a>
+    <button class="btn block" id="cpMsg" style="margin-bottom:8px">${IC.copy} העתקת ההודעה</button>
+    <button class="btn ghost block" onclick="closeSheet()">סגירה</button>`, (sh) => {
+      sh.querySelector("#cpMsg").onclick = async () => { try { await navigator.clipboard.writeText(msg); toast("ההודעה הועתקה."); } catch(e) { toast("לא הצלחנו להעתיק."); } };
+    });
+}
+function deleteAccount(s){
+  openSheet(`<h2>למחוק את החשבון?</h2><p class="muted">${esc(stName(s))} לא יוכל/תוכל להיכנס לאפליקציה. התוכנית והדפים נשמרים, ואפשר ליצור חשבון חדש בכל רגע.</p>
+    <div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeSheet()">ביטול</button><button class="btn primary" style="flex:1" id="delGo">מחיקה</button></div>`, (sh) => {
+      sh.querySelector("#delGo").onclick = async () => {
+        try { await rpc("portal_delete_account", { p_student: s.student_id }); s.has_account = false; s.login_phone = null; closeSheet(); toast("החשבון נמחק."); renderStudentPlan(); }
+        catch(e) { toast(errText(e)); }
+      };
+    });
+}
+
+// ---------- מאגר ----------
+function startPick(s){
+  const gradeBook = { "ז'": "7A", "ח'": "8A", "ט'": "9A" }[s.grade] || null;
+  AD.bank.pick = { sid: s.student_id, subj: AD.subj };
+  AD.bank.sel = new Set(); AD.bank.topic = null; AD.bank.tab = "page";
+  const books = bankBooks();
+  if (AD.subj === "אנגלית") AD.bank.book = (books.find(b => wsSubject(b[0]) === "אנגלית") || [null])[0];
+  else if (!AD.bank.book || wsSubject(AD.bank.book) !== "מתמטיקה") AD.bank.book = gradeBook && books.some(b => b[0] === gradeBook) ? gradeBook : (books.find(b => wsSubject(b[0]) === "מתמטיקה") || [null])[0];
+  AD.st = null; AD.view = "bank";
+  document.querySelectorAll("#adTabs button").forEach(b => b.classList.toggle("on", b.dataset.v === "bank"));
+  window.scrollTo(0, 0); renderBank();
+}
+const bookRank = (b) => /^\d/.test(b) ? 0 : b === "GEN" ? 1 : /^ENG/i.test(b) ? 3 : 2;
+function bankBooks(){
+  const m = new Map(); (AD.ws || []).forEach(r => { if (!m.has(r.book)) m.set(r.book, r.book_label || r.book); });
+  let arr = [...m.entries()].sort((a, b) => bookRank(a[0]) - bookRank(b[0]) || a[0].localeCompare(b[0]));
+  if (AD.bank.pick) arr = arr.filter(b => wsSubject(b[0]) === AD.bank.pick.subj);
+  return arr;
+}
+function bankTopics(){
+  const m = new Map();
+  (AD.ws || []).filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind).forEach(r => {
+    if (!m.has(r.topic_no)) m.set(r.topic_no, { no: r.topic_no, name: r.topic_name, chapters: r.chapters, pages: 0 });
+    if (r.type === "page") m.get(r.topic_no).pages++;
+  });
+  return [...m.values()];
+}
+async function renderBank(){
+  const pick = AD.bank.pick, ps = pick ? stById(pick.sid) : null;
+  if (!AD.ws || !AD.ws.length) { $("adBody").innerHTML = "<div class='card muted'>המאגר ריק או עוד נטען…</div>"; return; }
+  const books = bankBooks();
+  if (!books.some(b => b[0] === AD.bank.book)) AD.bank.book = books.length ? books[0][0] : null;
+  const kinds = [...new Set(AD.ws.filter(r => r.book === AD.bank.book).map(r => r.kind))];
+  if (!kinds.includes(AD.bank.kind)) AD.bank.kind = kinds[0];
+  const kindName = (k) => k === "summary" ? "סיכומים" : k === "topic" ? "לפי נושאים" : k;
+  let h = "";
+  if (pick && ps) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subj)}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
+  h += `<div class="books">${books.map(([b, l]) => `<button data-b="${esc(b)}" class="${b === AD.bank.book ? "on" : ""}">${esc(l)}</button>`).join("")}</div>`;
+  if (kinds.length > 1) h += `<div class="seg" style="max-width:420px">${kinds.map(k => `<button data-k="${esc(k)}" class="${k === AD.bank.kind ? "on" : ""}">${esc(kindName(k))}</button>`).join("")}</div>`;
+  if (!AD.bank.topic) {
+    h += `<div style="margin-top:10px">` + bankTopics().map(t => `<button class="topic-row" data-t="${esc(t.no)}"><span class="no">${esc(t.no)}</span><span class="nm">${esc(t.name)}${t.chapters ? `<div class="small muted">${esc(t.chapters)}</div>` : ""}</span><span class="chip">${t.pages} דפים</span>${IC.chev}</button>`).join("") + `</div>`;
+    $("adBody").innerHTML = h;
+  } else {
+    const rows = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic);
+    const hasAns = rows.some(r => r.type !== "page");
+    const show = rows.filter(r => pick ? r.type === "page" : (AD.bank.tab === "page" ? r.type === "page" : r.type !== "page"));
+    const inPlan = pick ? new Map(planOf(pick.sid).map(p => [String(p.worksheet_id), p.status])) : new Map();
+    const t0 = rows[0] || {};
+    h += `<div class="crumb" style="margin-top:12px"><button class="btn sm ghost" id="tBack">${IC.back} כל הנושאים</button><b>${esc(t0.topic_no)} · ${esc(t0.topic_name)}</b></div>`;
+    if (!pick && hasAns) h += `<div class="seg" style="max-width:300px"><button data-tab="page" class="${AD.bank.tab === "page" ? "on" : ""}">דפים</button><button data-tab="ans" class="${AD.bank.tab !== "page" ? "on" : ""}">פתרונות</button></div>`;
+    let lastSub = null;
+    h += `<div class="ws-grid" style="margin-top:10px">` + show.map(r => {
+      const st = inPlan.get(r.id); let sub = "";
+      if (r.sub && r.sub !== lastSub) { sub = `<div style="grid-column:1/-1" class="sec-h">${esc(r.sub)}</div>`; lastSub = r.sub; }
+      return sub + `<button class="ws-tile ${AD.bank.sel.has(r.id) ? "sel" : ""} ${st ? "dim" : ""}" data-w="${esc(r.id)}">
+        <span class="thumb" data-p="${esc(r.storage_path)}"></span><span class="tick">${IC.check}</span>
+        ${st ? `<span class="inplan chip ${st === "הושלם" ? "ok" : st === "נשלח" ? "new" : "acc"}">${st === "מתוכנן" ? "בתור" : st === "נשלח" ? "נשלח" : "סיים"}</span>` : ""}
+        <div class="cap">${esc(r.title)}</div></button>`;
+    }).join("") + `</div>`;
+    $("adBody").innerHTML = h;
+    $("tBack").onclick = () => { AD.bank.topic = null; renderBank(); };
+    $("adBody").querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { AD.bank.tab = b.dataset.tab; renderBank(); });
+    $("adBody").querySelectorAll("[data-w]").forEach(b => b.onclick = () => {
+      const id = b.dataset.w;
+      if (!pick) return previewWs(id);
+      if (inPlan.has(id)) { toast("הדף הזה כבר בתוכנית."); return; }
+      AD.bank.sel.has(id) ? AD.bank.sel.delete(id) : AD.bank.sel.add(id);
+      b.classList.toggle("sel", AD.bank.sel.has(id)); pickBar();
+    });
+    const g = await sign(show.map(r => r.storage_path));
+    $("adBody").querySelectorAll(".ws-tile .thumb[data-p]").forEach(t => { t.style.backgroundImage = `url('${g(t.dataset.p)}')`; });
+  }
+  $("adBody").querySelectorAll("[data-b]").forEach(b => b.onclick = () => { AD.bank.book = b.dataset.b; AD.bank.topic = null; renderBank(); });
+  $("adBody").querySelectorAll("[data-k]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.k; AD.bank.topic = null; renderBank(); });
+  $("adBody").querySelectorAll("[data-t]").forEach(b => b.onclick = () => { AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(); window.scrollTo(0, 0); });
+  if ($("pickCancel")) $("pickCancel").onclick = () => { const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; AD.bank.sel.clear(); openStudent(sid, subj); };
+  pickBar();
+}
+function pickBar(){
+  const pick = AD.bank.pick;
+  if (!pick) return setActionBar(null);
+  const n = AD.bank.sel.size;
+  setActionBar(`<span class="sp">${n ? "נבחרו " + n + " דפים" : "לבחור דפים מהמאגר"}</span>
+    <button class="btn sm" id="pkAdd" ${n ? "" : "disabled"}>הוספה לתור</button>
+    <button class="btn sm primary" id="pkAddRel" ${n ? "" : "disabled"}>הוספה ושליחה עכשיו</button>`, (b) => {
+      b.querySelector("#pkAdd").onclick = () => addToPlan(false);
+      b.querySelector("#pkAddRel").onclick = () => addToPlan(true);
+    });
+}
+async function addToPlan(releaseNow){
+  const pick = AD.bank.pick; if (!pick || !AD.bank.sel.size) return;
+  // לפי סדר המאגר
+  const ids = AD.ws.filter(r => AD.bank.sel.has(r.id)).map(r => r.id);
+  const q = queueOf(pick.sid, pick.subj); let pos = q.length ? Math.max(...q.map(x => x.position)) : 0;
+  const rows = ids.map(wid => ({ student_id: isNaN(Number(pick.sid)) ? pick.sid : Number(pick.sid), worksheet_id: isNaN(Number(wid)) ? wid : Number(wid),
+                                 subject: wsSubject((AD.wsById.get(wid) || {}).book), position: ++pos }));
+  try {
+    const res = await insert("portal_plan_items", rows);
+    (res || []).forEach(p => AD.plan.push(Object.assign(p, { student_id: String(p.student_id) })));
+    AD.bank.sel.clear();
+    if (releaseNow) await releaseItems((res || []).map(p => p.id));
+    refreshWaitingLocal();
+    toast(releaseNow ? "נוסף ונשלח לתלמיד/ה." : ids.length + " דפים נוספו לתור.");
+    const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; openStudent(sid, subj);
+  } catch(e) { toast(/duplicate|unique/i.test(e.message) ? "חלק מהדפים כבר בתוכנית." : errText(e)); }
+}
+async function previewWs(wid){
+  const w = AD.wsById.get(String(wid)); if (!w) return;
+  const g = await sign([w.storage_path]);
+  openViewer({ title: w.title, path: w.storage_path, url: g(w.storage_path),
+    bar: `<button class="btn ghost" id="vCopy">${IC.copy} העתקה</button><button class="btn ghost" id="vSave">${IC.save} שמירה</button>`,
+    wire: (v) => { v.querySelector("#vCopy").onclick = () => copyImage(g(w.storage_path)); v.querySelector("#vSave").onclick = () => saveImage(g(w.storage_path), w.title); } });
+}
+
+// ======================================================================
+// התחלה
+// ======================================================================
+document.querySelectorAll(".appVer").forEach(x => { x.textContent = CONFIG.version; });
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+boot();
+</script>
+</body>
+</html>
