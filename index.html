@@ -113,6 +113,20 @@
   .page-card .go{ margin-inline-start:auto; color:var(--ink-soft); flex:none; }
   .done-row{ display:flex; align-items:center; gap:10px; padding:12px 4px; border-bottom:1px solid var(--border); cursor:pointer; background:none; border-inline:none; border-top:none; width:100%; text-align:start; }
   .done-row svg{ width:22px; height:22px; color:var(--ok); flex:none; }
+  details.dt{ padding:0; margin:0 0 10px; overflow:hidden; }
+  details.dt > summary{ list-style:none; display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer; min-height:56px; }
+  details.dt > summary::-webkit-details-marker{ display:none; }
+  .dt-no{ flex:none; min-width:32px; height:32px; padding:0 6px; border-radius:10px; background:var(--accent-soft); color:var(--accent); font-family:var(--font-display); font-weight:800; display:grid; place-items:center; font-size:15px; }
+  .dt-name{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .dt-name b{ font-family:var(--font-display); font-weight:700; font-size:16px; line-height:1.3; }
+  .dt-name small{ color:var(--ink-soft); font-size:13px; }
+  .dt-car{ flex:none; font-style:normal; color:var(--ink-soft); font-size:14px; }
+  .dt-car::after{ content:"◂"; }
+  details.dt[open] .dt-car::after{ content:"▾"; }
+  .dt-body{ padding:0 14px 6px; border-top:1px solid var(--border); }
+  .dt-body .done-row:last-child{ border-bottom:none; }
+  .dt-sub{ font-size:13px; font-weight:700; color:var(--ink-soft); padding:12px 2px 2px; }
+  .dt-book{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink-soft); margin:14px 4px 6px; }
 
   /* viewer */
   .viewer{ position:fixed; inset:0; z-index:60; background:#111; display:flex; flex-direction:column; }
@@ -266,6 +280,47 @@
   .wcard .next-box .t small{ display:block; font-weight:500; color:var(--ink-soft); font-size:12.5px; }
   .wcard .acts{ display:flex; gap:8px; }
   .wcard .acts .btn{ flex:1; }
+  .wc-tags{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; }
+  .wg-bar{ display:flex; flex-direction:column; gap:10px; margin-bottom:6px; }
+  .wg-cities{ margin:0; }
+  .wg-opts{ display:flex; flex-wrap:wrap; gap:8px 20px; font-size:14.5px; }
+  .wg-city{ font-family:var(--font-display); font-weight:800; font-size:20px; margin:24px 2px 4px; }
+  .wg-loc{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-weight:800; font-size:15.5px; color:var(--accent); margin:16px 2px 8px; }
+  .wg-loc svg{ width:18px; height:18px; }
+  .wg{ background:color-mix(in srgb, var(--muted) 55%, transparent); border:1px solid var(--border); border-radius:20px; padding:12px; margin-bottom:12px; }
+  .wg-h{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 4px 10px; }
+  .wg-h b{ font-family:var(--font-display); font-size:16px; }
+  .wg-n{ color:var(--ink-soft); font-size:13.5px; flex:1; }
+  .wg.live{ border:2px solid var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, transparent); margin-top:14px; }
+  .live-dot{ flex:none; width:11px; height:11px; border-radius:50%; background:var(--ok); box-shadow:0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); animation:livePulse 1.6s infinite; }
+  @keyframes livePulse{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70%{ box-shadow:0 0 0 9px transparent; } 100%{ box-shadow:0 0 0 0 transparent; } }
+  .wk{ margin-top:12px; background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:6px 12px; }
+  .wk-h{ font-family:var(--font-display); font-weight:800; font-size:14.5px; color:var(--ink-soft); padding:6px 2px; }
+  .wk-row{ display:flex; align-items:center; gap:10px; width:100%; padding:10px 2px; border:none; border-top:1px solid var(--border); background:none; cursor:pointer; text-align:start; font:inherit; color:inherit; }
+  .wk-row .thumb{ width:40px; border-radius:6px; flex:none; }
+  .wk-row .t{ flex:1; min-width:0; display:flex; flex-direction:column; font-size:14px; line-height:1.3; }
+  .wk-row .t b{ font-family:var(--font-display); font-size:15px; } .wk-row .t small{ color:var(--ink-soft); font-size:12.5px; }
+  .wk-row .tags{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; }
+  .kpi-row{ display:flex; flex-wrap:wrap; gap:4px 6px; align-items:center; margin:-4px 0 12px; font-size:13px; color:var(--ink-soft); }
+  .kpi{ border:none; background:var(--paper); border:1px solid var(--border); border-radius:999px; padding:3px 10px; font:inherit; color:inherit; cursor:pointer; white-space:nowrap; }
+  .kpi b{ font-family:var(--font-display); font-size:14px; color:var(--ink); }
+  .kpi.k-gold b{ color:var(--warn); } .kpi.k-acc b{ color:var(--accent); } .kpi.k-ok b{ color:var(--ok); }
+  .live-bar{ background:var(--ok-bg); border:2px solid var(--ok); border-radius:18px; padding:10px 12px; margin:0 0 16px; }
+  .live-bar.idle{ background:var(--paper); border:1px dashed var(--border); padding:9px 14px; font-size:14px; }
+  .lb-h{ display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-size:15.5px; margin:0 2px 8px; }
+  .lb-list{ display:grid; grid-template-columns:1fr; gap:8px; }
+  @media (min-width:900px){ .lb-list{ grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); } }
+  .lb-g{ display:flex; align-items:center; gap:10px; background:var(--paper); border:1px solid color-mix(in srgb, var(--ok) 45%, var(--border)); border-radius:14px; padding:10px 12px; cursor:pointer; text-align:start; color:inherit; font:inherit; min-height:52px; }
+  .lb-g .t{ flex:1; min-width:0; font-size:15px; } .lb-g .t small, .lb-g .c small{ display:block; color:var(--ink-soft); font-size:12.5px; }
+  .lb-g .c{ flex:none; text-align:end; font-size:13.5px; } .lb-g .c b{ font-family:var(--font-display); font-size:18px; color:var(--ok); }
+  .wg.live.flash{ box-shadow:0 0 0 4px color-mix(in srgb, var(--ok) 35%, transparent); }
+  .wg.live{ scroll-margin-top:240px; } @media (min-width:900px){ .wg.live{ scroll-margin-top:80px; } }
+  .nw{ white-space:nowrap; unicode-bidi:isolate; direction:ltr; display:inline-block; }
+  .need-box{ border:2px solid var(--accent); background:color-mix(in srgb, var(--accent-soft) 60%, transparent); border-radius:20px; padding:12px; margin:0 0 22px; }
+  .need-h{ display:flex; align-items:center; gap:8px; color:var(--accent); font-family:var(--font-display); font-size:16px; margin:0 4px 10px; }
+  .need-h svg{ width:20px; height:20px; }
+  .wcard.req{ border-color:color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .live-banner{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--ok-bg); border:1.5px solid var(--ok); border-radius:16px; padding:10px 14px; margin-bottom:14px; font-size:14.5px; }
 
   /* תלמידים – רשימה + תוכנית */
   .split{ display:block; }
@@ -950,7 +1005,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.8",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.9",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -975,6 +1030,10 @@ function ago(iso){
 function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { el.hidden = true; }, 3200); }
 function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e) { return null; } }
 const IC = {
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M16 7l3 3M14 9l2 2"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   circleCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>',
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
@@ -1087,7 +1146,23 @@ function showLogin(msg){
 function setStaffMode(on){
   STAFF_MODE = on; $("studentFields").hidden = on; $("staffFields").hidden = !on; $("forgotNote").hidden = on;
   $("staffToggle").textContent = on ? "כניסת תלמידים" : "כניסת צוות";
+  // שדות מוסתרים כבויים – כך המילוי האוטומטי של גוגל ממלא רק את השדות שרואים
+  ["lgPhone", "lgCode"].forEach(id => $(id).disabled = on);
+  ["lgEmail", "lgPass"].forEach(id => $(id).disabled = !on);
 }
+// מילוי אוטומטי של אימייל בשדה הטלפון → עוברים לבד לכניסת צוות
+function phoneLooksEmail(){
+  const v = $("lgPhone").value.trim();
+  if (STAFF_MODE || v.indexOf("@") < 0) return false;
+  const pass = $("lgCode").value;
+  setStaffMode(true); store("telem_portal_staff", "1");
+  $("lgEmail").value = v; $("lgPhone").value = ""; $("lgCode").value = "";
+  if (pass.length > 6 || !pass) { $("lgPass").value = ""; $("lgPass").focus(); }
+  $("lgErr").textContent = "זו כניסת צוות. צריך להקליד את הסיסמה.";
+  return true;
+}
+$("lgPhone").addEventListener("input", phoneLooksEmail);
+$("lgPhone").addEventListener("change", phoneLooksEmail);
 // "שכחתי את הקוד": בקשה למנהלת לשלוח קוד חדש (בלי כניסה)
 $("forgotBtn").onclick = () => openSheet(`<h2>שכחתי את הקוד</h2>
   <p class="muted" style="margin-top:0">מקלידים את מספר הטלפון שלך, ונשלח לך קוד חדש בוואטסאפ.</p>
@@ -1112,8 +1187,9 @@ $("loginForm").onsubmit = async (ev) => {
   ev.preventDefault();
   const err = $("lgErr"); err.textContent = "";
   let email, pass;
+  if (phoneLooksEmail()) return;
   if (STAFF_MODE) {
-    email = $("lgEmail").value.trim(); pass = $("lgPass").value;
+    email = $("lgEmail").value.replace(/[\s\u200e\u200f\u202a-\u202e]/g, "").toLowerCase(); pass = $("lgPass").value;
     if (!email || !pass) { err.textContent = "צריך אימייל וסיסמה."; return; }
   } else {
     const ph = normPhone($("lgPhone").value); pass = $("lgCode").value.trim();
@@ -1135,7 +1211,7 @@ $("loginForm").onsubmit = async (ev) => {
 };
 async function logout(){
   try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
-  saveAuth(null); LAST_CODE = ""; ST.pages = null; AD.loaded = false; showLogin();
+  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; showLogin();
 }
 $("msgLogout").onclick = logout;
 function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
@@ -1184,7 +1260,7 @@ $("codeForm").onsubmit = async (ev) => {
 // ======================================================================
 // תלמיד/ה
 // ======================================================================
-const ST = { me: null, pages: null, subj: null, showDone: false };
+const ST = { me: null, pages: null, subj: null, openT: null };
 function studentStart(){
   showView("studentView");
   $("stHello").textContent = "שלום " + (ST.me.first_name || "");
@@ -1213,7 +1289,7 @@ function renderStudent(){
     seg.hidden = false;
     seg.innerHTML = subs.map(s => { const n = ST.pages.filter(p => p.subject === s && p.status === "נשלח").length;
       return `<button data-s="${esc(s)}" class="${s === ST.subj ? "on" : ""}">${esc(s)}${n ? `<span class="badge">${n}</span>` : ""}</button>`; }).join("");
-    seg.querySelectorAll("button").forEach(b => b.onclick = () => { ST.subj = b.dataset.s; store("telem_portal_subj", ST.subj); ST.showDone = false; renderStudent(); });
+    seg.querySelectorAll("button").forEach(b => b.onclick = () => { ST.subj = b.dataset.s; store("telem_portal_subj", ST.subj); ST.openT = null; renderStudent(); });
   } else seg.hidden = true;
 
   const mine = ST.pages.filter(p => subs.length < 2 || p.subject === ST.subj);
@@ -1238,15 +1314,41 @@ function renderStudent(){
       <h2 style="margin-top:8px">${done.length ? "כל הכבוד, סיימת הכול!" : "עוד אין דפים"}</h2>
       <p class="muted">${done.length ? "עדכנו שסיימת. דף חדש יגיע לכאן בקרוב." : "כשיישלח אליך דף תרגול, הוא יופיע כאן."}</p></div>`;
   }
-  if (done.length) {
-    const list = ST.showDone ? done : done.slice(0, 3);
-    h += `<div class="sec-h">סיימתי (${done.length})</div><div class="card" style="padding:4px 12px">` +
-      list.map(p => `<button class="done-row" data-i="${p.item_id}">${IC.circleCheck}<span style="flex:1;min-width:0"><b>${esc(p.title)}</b><div class="small muted">${esc(p.topic_name || "")}</div></span><span class="small muted">${esc(fmtDay(p.done_at))}</span></button>`).join("") +
-      (done.length > 3 && !ST.showDone ? `<button class="linkish" id="moreDone">להציג את כולם</button>` : "") + `</div>`;
-  }
+  if (done.length) h += `<div class="sec-h">סיימתי (${done.length})</div>` + doneByTopic(done);
   $("stBody").innerHTML = h;
   $("stBody").querySelectorAll("[data-i]").forEach(b => b.onclick = () => openStudentPage(Number(b.dataset.i)));
-  if ($("moreDone")) $("moreDone").onclick = () => { ST.showDone = true; renderStudent(); };
+  $("stBody").querySelectorAll("details.dt").forEach(d => d.ontoggle = () => { d.open ? ST.openT.add(d.dataset.k) : ST.openT.delete(d.dataset.k); });
+}
+// "סיימתי" מסודר כמו במאגר: ספר → נושא → תת-נושא, ובתוכם לפי סדר הדפים
+function doneByTopic(done){
+  const num = (x) => { const n = parseFloat(x); return isNaN(n) ? 1e9 : n; };
+  const kOrd = (k) => { const i = ["topic", "summary", "grammar", "unseen", "vocab", "general"].indexOf(k); return i < 0 ? 9 : i; };
+  const rows = done.slice().sort((a, b) =>
+    bookRank(a.book || "") - bookRank(b.book || "") || String(a.book || "").localeCompare(String(b.book || "")) ||
+    kOrd(a.kind) - kOrd(b.kind) || num(a.topic_no) - num(b.topic_no) || String(a.topic_name || "").localeCompare(String(b.topic_name || "")) ||
+    num(a.sort_order) - num(b.sort_order) || num(a.page_no) - num(b.page_no) || String(a.title || "").localeCompare(String(b.title || "")));
+  const topics = [];
+  rows.forEach(p => {
+    const k = [p.book || "", p.kind || "", p.topic_no || "", p.topic_no ? "" : (p.topic_name || "")].join("|");
+    let t = topics[topics.length - 1];
+    if (!t || t.k !== k) { t = { k, p, rows: [], last: "" }; topics.push(t); }
+    t.rows.push(p); if (String(p.done_at || "") > t.last) t.last = String(p.done_at || "");
+  });
+  if (!ST.openT) { ST.openT = new Set(); const latest = topics.slice().sort((a, b) => b.last.localeCompare(a.last))[0]; if (latest) ST.openT.add(latest.k); }
+  const books = new Set(topics.map(t => t.p.book || "")), kinds = new Set(topics.map(t => t.p.kind || ""));
+  const row = (p) => `<button class="done-row" data-i="${p.item_id}">${IC.circleCheck}<span style="flex:1;min-width:0"><b>${esc(p.title)}</b></span><span class="small muted">${esc(fmtDay(p.done_at))}</span></button>`;
+  let h = "", lastBook = null;
+  topics.forEach(t => {
+    const p = t.p;
+    if (books.size > 1 && p.book !== lastBook) { h += `<div class="dt-book">${esc(p.book_label || p.book || "")}</div>`; lastBook = p.book; }
+    const no = p.topic_no ? String(Number(p.topic_no) || p.topic_no) : "";
+    const meta = [kinds.size > 1 && p.kind ? (WS_KIND[p.kind] || "") : "", t.rows.length === 1 ? "דף אחד" : t.rows.length + " דפים"].filter(Boolean).join(" · ");
+    // תתי-נושאים: לפי הסדר במאגר, כותרת רק כשיש
+    const subs = []; t.rows.forEach(r => { const s = r.sub || ""; if (!subs.length || subs[subs.length - 1].s !== s) subs.push({ s, rows: [] }); subs[subs.length - 1].rows.push(r); });
+    const inner = subs.some(x => x.s) ? subs.map(x => (x.s ? `<div class="dt-sub">${esc(x.s)}</div>` : "") + x.rows.map(row).join("")).join("") : t.rows.map(row).join("");
+    h += `<details class="dt card" data-k="${esc(t.k)}" ${ST.openT.has(t.k) ? "open" : ""}><summary>${no ? `<span class="dt-no">${esc(no)}</span>` : ""}<span class="dt-name"><b>${esc(p.topic_name || "בלי נושא")}</b><small>${esc(meta)}</small></span><i class="dt-car" aria-hidden="true"></i></summary><div class="dt-body">${inner}</div></details>`;
+  });
+  return h;
 }
 $("stRefresh").onclick = () => { loadStudentPages(); toast("מתעדכן…"); };
 $("stMenu").onclick = () => openSheet(`
@@ -1381,7 +1483,7 @@ function showInstallHelp(){
 // ותצוגה לנייד (תפריט תחתון, מסך אחרי מסך)
 // ======================================================================
 const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
-             st: null, subj: null, sel: new Set(), showDone: false,
+             st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "groups" ? "groups" : "list", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
 const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
@@ -1406,7 +1508,7 @@ const NAV = [   // [מסך, שם, אייקון, שם קצר לנייד] – אי
 
 function adminStart(){
   showView("adminView");
-  $("adRefresh").onclick = async () => { toast("מתעדכן…"); await adLoad(); };
+  $("adRefresh").onclick = async () => { toast("מתעדכן…"); AD.groups = null; AD.present = null; await adLoad(); };
   $("adLogout").onclick = logout;
   rpc("my_role").then(r => { if (r && r.full_name) $("adWho").textContent = r.full_name; }).catch(() => {});
   $("drawerClose").onclick = $("drawerBg").onclick = () => closeDrawer();
@@ -1495,28 +1597,30 @@ function waitingList(){
 }
 async function renderWait(){
   const list = waitingList();
+  await loadGroups();
   const fresh = AD.students.filter(s => s.has_account && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
   const week = Date.now() - 7 * 864e5;
   const openN = AD.plan.filter(p => p.status === "נשלח").length;
   const doneWeek = AD.plan.filter(p => p.done_at && new Date(p.done_at).getTime() > week).length;
   const noAcc = AD.students.filter(s => !s.has_account).length;
-  const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0])].filter(Boolean);
+  const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
   const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
-  let h = `<div class="page-h"><div><h1>ממתינים לדף</h1><p>מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים.</p></div></div>
-    <div class="stats">
-      <button class="stat t-gold" data-go="wait"><div class="v">${list.length}</div><div class="l">ממתינים לדף</div></button>
-      <button class="stat t-acc" data-go="students" data-f="all"><div class="v">${openN}</div><div class="l">דפים פתוחים אצל תלמידים</div></button>
-      <button class="stat t-ok" data-go="students" data-f="all"><div class="v">${doneWeek}</div><div class="l">דפים שהושלמו השבוע</div></button>
-      <button class="stat" data-go="students" data-f="noacc"><div class="v">${noAcc}</div><div class="l">רשומים בלי חשבון</div></button>
-    </div>`;
+  const byGroup = AD.waitMode === "groups";
+  const kpi = (v, l, cls, go, f) => `<button class="kpi ${cls}" data-go="${go}"${f ? ` data-f="${f}"` : ""}><b>${v}</b> ${l}</button>`;
+  let h = `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
+    <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "מי שמחכה לדף – לפי עיר, מקום תרגול וקבוצה." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
+      <div class="mode-sw" role="tablist"><button data-wm="list" class="${byGroup ? "" : "on"}">${IC.list || ""} רשימה</button><button data-wm="groups" class="${byGroup ? "on" : ""}">${IC.users || ""} לפי קבוצות</button></div></div>
+`;
   const reqs = AD.codeReqs || [];
-  if (reqs.length) h += `<div class="sec-h">ביקשו קוד חדש (${reqs.length})</div><div class="wait-grid" style="margin-bottom:22px">` + reqs.map(r => { const s = stById(r.student_id);
-      return `<div class="wcard hot"><div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div>
+  if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
+      return `<div class="wcard req"><div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div>
         <div class="sub">שכח/ה את הקוד · <span class="ltr">${esc(fmtPhone(r.phone))}</span> · ${esc(ago(r.created_at))}</div></div><span class="chip warn">קוד</span></div>
-        <div class="acts"><button class="btn primary sm" data-newcode="${esc(r.student_id)}">${IC.wa} שליחת קוד חדש</button><button class="btn sm ghost" data-dismiss="${esc(r.student_id)}">התעלמות</button></div></div>`; }).join("") + `</div>`;
-  if (!list.length) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים כרגע</h2><p class="muted">כשתלמיד/ה ילחץ/תלחץ "סיימתי", הוא/היא יופיע/תופיע כאן.</p></div>`;
-  else h += `<div class="wait-grid">` + list.map(w => waitCard(g, w.s, w.subj, `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`, true)).join("") + `</div>`;
-  if (fresh.length) {
+        <div class="acts"><button class="btn primary sm" data-newcode="${esc(r.student_id)}">${IC.wa} שליחת קוד חדש</button><button class="btn sm ghost" data-dismiss="${esc(r.student_id)}">התעלמות</button></div></div>`; }).join("") + `</div></section>`;
+  h += liveBar(list);
+  if (byGroup) h += await waitGroupsHtml(g, list, fresh);
+  else if (!list.length) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים כרגע</h2><p class="muted">כשתלמיד/ה ילחץ/תלחץ "סיימתי", הוא/היא יופיע/תופיע כאן.</p></div>`;
+  else h += `<div class="wait-grid">` + list.map(w => waitCard(g, w.s, w.subj, `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`, true, doneChip(w.s.student_id, w.done_at))).join("") + `</div>`;
+  if (fresh.length && !byGroup) {
     h += `<div class="sec-h" style="margin-top:26px">יש חשבון, עוד לא נשלח אף דף (${fresh.length})</div><div class="wait-grid">`;
     h += fresh.map(s => waitCard(g, s, (s.subjects || [])[0], s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : "עוד לא נכנס/ה", false)).join("") + `</div>`;
   }
@@ -1528,13 +1632,142 @@ async function renderWait(){
   B.querySelectorAll("[data-rel]").forEach(b => b.onclick = () => releaseItems([Number(b.dataset.rel)]));
   B.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open, b.dataset.subj));
   B.querySelectorAll("[data-zoom]").forEach(t => t.onclick = (e) => { e.stopPropagation(); previewWs(t.dataset.zoom); });
+  B.querySelectorAll("[data-golive]").forEach(b => b.onclick = async () => { const id = b.dataset.golive;
+    if (AD.waitMode !== "groups" || (AD.waitCity !== "*" && AD.waitCity !== b.dataset.city)) { AD.waitMode = "groups"; store("telem_portal_waitmode", "groups"); AD.waitCity = "*"; AD.waitPresent = false; await renderWait(); }
+    const el = $("live-" + id); if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1200); } });
+  B.querySelectorAll("[data-wm]").forEach(b => b.onclick = () => { AD.waitMode = b.dataset.wm; store("telem_portal_waitmode", AD.waitMode); renderWait(); });
+  B.querySelectorAll("[data-wcity]").forEach(b => b.onclick = () => { AD.waitCity = b.dataset.wcity; store("telem_portal_waitcity", AD.waitCity); renderWait(); });
+  if ($("wgToday")) $("wgToday").onchange = (e) => { AD.waitToday = e.target.checked; renderWait(); };
+  if ($("wgPresent")) $("wgPresent").onchange = (e) => { AD.waitPresent = e.target.checked; renderWait(); };
+  B.querySelectorAll("[data-relg]").forEach(b => b.onclick = () => { const ids = b.dataset.relg.split(",").map(Number).filter(Boolean);
+    confirmSheet(`לשלוח את הדף הבא בתור ל-${ids.length} תלמידים בקבוצה?`, "שליחה", () => releaseItems(ids)); });
 }
-function waitCard(g, s, subj, sub, hot){
+// ---------- ממתינים לפי קבוצות: עיר → מקום תרגול → יום ושעה ----------
+const DAY_L = ["א", "ב", "ג", "ד", "ה", "ו", "ש"];
+const todayIso = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+async function presentAllToday(){
+  const iso = todayIso();
+  if (AD.present && AD.present.iso === iso && Date.now() - AD.present.at < 5 * 60e3) return AD.present;
+  let rows = null;
+  try { rows = await get("attendance", "select=student_id,session_id&present=is.true&lesson_date=eq." + iso); } catch(e) {}
+  AD.present = { iso, at: Date.now(), ok: !!rows, set: new Set((rows || []).map(r => r.student_id + "|" + r.session_id)), any: new Set((rows || []).map(r => String(r.student_id))) };
+  return AD.present;
+}
+// חלון הזמן של קבוצה ביום מסוים (עם מרווח קטן: 10 דק' לפני, 15 אחרי). בלי שעת סיום – שעה וחצי.
+function groupWindow(gr, d){
+  const hm = (t) => { const m = /^(\d{1,2}):(\d{2})/.exec(t || ""); return m ? Number(m[1]) * 60 + Number(m[2]) : null; };
+  const st = hm(gr.start) ?? hm(gr.time); if (st == null) return null;
+  const en = hm(gr.end) ?? st + 90;
+  const base = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return [base + (st - 10) * 60e3, base + (en + 15) * 60e3];
+}
+const isLive = (gr, now) => { now = now || new Date(); if (gr.day !== DAY_L[now.getDay()]) return false; const w = groupWindow(gr, now); return !!w && now >= w[0] && now <= w[1]; };
+// באיזה שיעור נלחץ "סיימתי": קבוצה של התלמיד/ה שהזמן מתאים לה, או null (= מחוץ לשיעור)
+function doneInGroup(sid, doneAt){
+  if (!doneAt || !AD.groups) return null;
+  const d = new Date(doneAt);
+  return AD.groups.find(gr => gr.kids.has(String(sid)) && gr.day === DAY_L[d.getDay()] && (w => w && d >= w[0] && d <= w[1])(groupWindow(gr, d))) || null;
+}
+function doneChip(sid, doneAt, gr){
+  if (!doneAt) return "";
+  const inG = doneInGroup(sid, doneAt), d = new Date(doneAt), today = new Date().toDateString() === d.toDateString();
+  if (inG && gr && inG.id === gr.id && today) return `<span class="chip ok">✓ סיים/ה בשיעור הזה</span>`;
+  if (inG) return `<span class="chip ok">בשיעור · ${esc(today ? "היום" : "יום " + inG.day + "'")} ${esc(inG.time)}</span>`;
+  return `<span class="chip warn" title="נלחץ מחוץ לשעות השיעור">מחוץ לשיעור</span>`;
+}
+// פס למעלה: קבוצות שפעילות עכשיו (או הקבוצה הבאה היום)
+// בקבוצה שמתנהלת עכשיו: מי עובד/ת עכשיו על דף, ואיזה
+function workingHtml(gr, g){
+  const rows = [];
+  gr.kids.forEach(sid => { const s = stById(sid); if (!s) return;
+    planOf(sid).filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at))).forEach(p => rows.push({ s, p })); });
+  if (!rows.length) return "";
+  const pres = AD.present && AD.present.set;
+  rows.sort((a, b) => ((pres && pres.has(b.s.student_id + "|" + gr.id)) - (pres && pres.has(a.s.student_id + "|" + gr.id))) || stName(a.s).localeCompare(stName(b.s)));
+  return `<div class="wk"><div class="wk-h">עובדים עכשיו על דף (${rows.length})</div>` + rows.map(({ s, p }) => `<button class="wk-row" data-open="${esc(s.student_id)}" data-subj="${esc(p.subject)}">
+      ${thumbOf(g, p.worksheet_id)}<span class="t"><b>${esc(stName(s))}</b><span>${esc(wsTitle(p.worksheet_id))}</span><small>${esc(wsTopicName(p.worksheet_id))} · נשלח ${esc(ago(p.released_at))}</small></span>
+      <span class="tags">${p.seen_at ? `<span class="chip">פתח/ה את הדף</span>` : `<span class="chip warn">עוד לא פתח/ה</span>`}${pres && pres.has(s.student_id + "|" + gr.id) ? `<span class="chip ok">נוכח/ת</span>` : ""}</span></button>`).join("") + `</div>`;
+}
+function liveBar(list){
+  const now = new Date(), gs = AD.groups || [];
+  const live = gs.filter(gr => isLive(gr, now));
+  if (!live.length) {
+    const today = DAY_L[now.getDay()], hm = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+    const next = gs.filter(gr => gr.day === today && String(gr.start || gr.time) > hm).sort((a, b) => String(a.start).localeCompare(String(b.start)))[0];
+    return next ? `<div class="live-bar idle"><span class="muted">אין קבוצה פעילה עכשיו · הבאה היום: <b>${esc(next.loc)} ${esc(next.time)}</b></span></div>` : "";
+  }
+  const inLesson = (gr) => list.filter(w => { const x = doneInGroup(w.s.student_id, w.done_at); return x && x.id === gr.id && new Date(w.done_at).toDateString() === now.toDateString(); }).length;
+  return `<div class="live-bar"><div class="lb-h"><span class="live-dot"></span><b>${live.length === 1 ? "קבוצה פעילה עכשיו" : "קבוצות פעילות עכשיו"}</b></div><div class="lb-list">` +
+    live.map(gr => { const w = list.filter(x => gr.kids.has(x.s.student_id)).length, n = inLesson(gr);
+      return `<button class="lb-g" data-golive="${esc(gr.id)}" data-city="${esc(gr.city)}"><span class="t"><b>${esc(gr.loc)}</b> · <span class="nw">${esc(gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span><small>${esc(gr.city)}</small></span>
+        <span class="c"><b>${w}</b> ממתינים${n ? `<small>${n} סיימו בשיעור</small>` : ""}</span></button>`; }).join("") + `</div></div>`;
+}
+async function waitGroupsHtml(g, list, fresh){
+  const [groups, pres] = await Promise.all([loadGroups(), presentAllToday()]);
+  const today = DAY_L[new Date().getDay()];
+  // כל מי שמחכה: סיים/ה דף (ממתין) + יש חשבון ועוד לא נשלח דף
+  const items = list.map(w => ({ s: w.s, subj: w.subj, hot: true, sub: `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`, at: w.done_at || "" }))
+    .concat(fresh.map(s => ({ s, subj: (s.subjects || [])[0], hot: false, sub: "עוד לא נשלח דף", at: "" })));
+  if (!groups.length) return `<div class="card muted">לא הצלחנו לטעון את הקבוצות של השנה. אפשר לעבור ל"רשימה".</div>`;
+  const cities = [...new Set(groups.filter(gr => items.some(it => gr.kids.has(it.s.student_id))).map(gr => gr.city))];
+  if (AD.waitCity && AD.waitCity !== "*" && !cities.includes(AD.waitCity)) AD.waitCity = "*";
+  const city = AD.waitCity || "*";
+  let h = `<div class="wg-bar">${cities.length > 1 ? `<div class="bk-cities wg-cities"><button data-wcity="*" class="${city === "*" ? "on" : ""}">כל הערים</button>${cities.map(c => `<button data-wcity="${esc(c)}" class="${c === city ? "on" : ""}">${esc(c)}</button>`).join("")}</div>` : ""}
+    <div class="wg-opts"><label class="chk"><input type="checkbox" id="wgToday" ${AD.waitToday ? "checked" : ""}> רק קבוצות של היום (יום ${today}')</label>
+    ${pres.ok ? `<label class="chk"><input type="checkbox" id="wgPresent" ${AD.waitPresent ? "checked" : ""}> רק מי שסומן/ה נוכח/ת היום</label>` : ""}</div></div>`;
+  let gs = groups.filter(gr => city === "*" || gr.city === city);
+  if (AD.waitToday) gs = gs.filter(gr => gr.day === today);
+  const placed = new Set();
+  let lastCity = null, lastLoc = null, shown = 0;
+  const now = new Date(), liveIds = new Set(gs.filter(gr => isLive(gr, now)).map(gr => gr.id));
+  // קבוצה שמתנהלת עכשיו – ראשונה, בנפרד
+  gs.filter(gr => liveIds.has(gr.id)).forEach(gr => {
+    let its = items.filter(it => gr.kids.has(it.s.student_id));
+    its.forEach(it => placed.add(it.s.student_id));
+    const inLesson = (it) => { const x = doneInGroup(it.s.student_id, it.at); return x && x.id === gr.id && new Date(it.at).toDateString() === now.toDateString(); };
+    const isPres = (it) => pres.set.has(it.s.student_id + "|" + gr.id);
+    if (AD.waitPresent) its = its.filter(isPres);
+    its.sort((a, b) => (inLesson(b) - inLesson(a)) || (isPres(b) - isPres(a)) || (b.hot - a.hot) || String(a.at).localeCompare(String(b.at)));
+    const nIn = its.filter(inLesson).length;
+    const rel = its.filter(inLesson).map(it => queueOf(it.s.student_id, it.subj)[0]).filter(Boolean).map(p => p.id);
+    h += `<section class="wg live" id="live-${esc(gr.id)}"><div class="wg-h"><b><span class="live-dot" style="display:inline-block;margin-inline-end:8px"></span>מתנהלת עכשיו · ${esc(gr.loc)} <span class="nw">${esc(gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span> · ${esc(gr.city)}</b>
+        <span class="wg-n">${its.length} ממתינים · ${nIn} סיימו בשיעור הזה${pres.ok ? ` · ${its.filter(isPres).length} נוכחים` : ""}</span>
+        ${rel.length > 1 ? `<button class="btn sm primary" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכל מי שסיים בשיעור (${rel.length})</button>` : ""}</div>
+      ${its.length ? `<div class="wait-grid">${its.map(it => waitCard(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at, gr) + (isPres(it) ? `<span class="chip ok">נוכח/ת היום</span>` : ""))).join("")}</div>` : `<div class="muted small" style="padding:4px 6px 8px">אין כרגע ממתינים בקבוצה הזו.</div>`}${workingHtml(gr, g)}</section>`;
+    shown++;
+  });
+  gs.filter(gr => !liveIds.has(gr.id)).sort((a, b) => a.city.localeCompare(b.city) || a.loc.localeCompare(b.loc) || (DAY_L.indexOf(a.day) - DAY_L.indexOf(b.day)) || String(a.start).localeCompare(String(b.start))).forEach(gr => {
+    let its = items.filter(it => gr.kids.has(it.s.student_id));
+    its.forEach(it => placed.add(it.s.student_id));
+    const isPres = (it) => pres.set.has(it.s.student_id + "|" + gr.id);
+    if (AD.waitPresent) its = its.filter(isPres);
+    if (!its.length) return;
+    its.sort((a, b) => (isPres(b) - isPres(a)) || (b.hot - a.hot) || String(a.at).localeCompare(String(b.at)));
+    if (city === "*" && gr.city !== lastCity) { h += `<div class="wg-city">${esc(gr.city || "בלי עיר")}</div>`; lastCity = gr.city; lastLoc = null; }
+    if (gr.loc !== lastLoc) { h += `<div class="wg-loc">${IC.pin || ""}<span>${esc(gr.loc || "בלי מקום")}</span></div>`; lastLoc = gr.loc; }
+    const nP = its.filter(isPres).length;
+    const rel = its.map(it => queueOf(it.s.student_id, it.subj)[0]).filter(Boolean).map(p => p.id);
+    h += `<section class="wg"><div class="wg-h"><b>יום ${esc(gr.day)}' · ${esc(gr.time)}</b>${gr.day === today ? `<span class="chip new">היום</span>` : ""}
+        <span class="wg-n">${its.length} ממתינים${pres.ok && gr.day === today ? ` · ${nP} נוכחים` : ""}</span>
+        ${rel.length > 1 ? `<button class="btn sm" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכולם (${rel.length})</button>` : ""}</div>
+      <div class="wait-grid">${its.map(it => waitCard(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at, gr) + (isPres(it) ? `<span class="chip ok">נוכח/ת היום</span>` : ""))).join("")}</div></section>`;
+    shown++;
+  });
+  // מי שלא משובץ/ת לאף קבוצה
+  if (city === "*" && !AD.waitToday && !AD.waitPresent) {
+    const none = items.filter(it => !groups.some(gr => gr.kids.has(it.s.student_id)));
+    if (none.length) { h += `<div class="wg-city">בלי קבוצה</div><section class="wg"><div class="wg-h"><b>לא משובצים לקבוצה השנה</b><span class="wg-n">${none.length}</span></div>
+      <div class="wait-grid">${none.map(it => waitCard(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at))).join("")}</div></section>`; shown++; }
+  }
+  if (!shown) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים ${AD.waitPresent ? "שנוכחים היום" : AD.waitToday ? "בקבוצות של היום" : "כאן"}</h2></div>`;
+  return h;
+}
+function waitCard(g, s, subj, sub, hot, chip){
   const nx = queueOf(s.student_id, subj)[0];
   const two = (s.subjects || []).length > 1;
   return `<div class="wcard ${hot ? "hot" : ""}">
     <div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div><div class="sub">${sub}</div></div>
-      ${two ? `<span class="subj-chip ${subjCls(subj)} on">${esc(subj)}</span>` : ""}</div>
+      <div class="wc-tags">${chip || ""}${two ? `<span class="subj-chip ${subjCls(subj)} on">${esc(subj)}</span>` : ""}</div></div>
     ${nx ? `<div class="next-box">${thumbOf(g, nx.worksheet_id)}<div class="t"><small>הבא בתור</small>${esc(wsTitle(nx.worksheet_id))}<small>${esc(wsTopicName(nx.worksheet_id))}</small></div></div>`
          : `<div class="next-box"><div class="t" style="padding:6px"><span class="chip warn">אין דפים בתור</span></div></div>`}
     <div class="acts">
@@ -1764,6 +1997,12 @@ function sendCodeSheet(s, phone, code, reset){
     <button class="btn block" id="cpMsg" style="margin-bottom:8px">${IC.copy} העתקת ההודעה</button>
     <button class="btn ghost block" onclick="closeSheet()">סגירה</button>`, (sh) => {
       sh.querySelector("#cpMsg").onclick = async () => { try { await navigator.clipboard.writeText(msg); toast("ההודעה הועתקה."); } catch(e) { toast("לא הצלחנו להעתיק."); } };
+    });
+}
+function confirmSheet(text, okLabel, onOk){
+  openSheet(`<h2>${esc(text)}</h2>
+    <div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeSheet()">ביטול</button><button class="btn primary" style="flex:1" id="cfGo">${esc(okLabel)}</button></div>`, (sh) => {
+      sh.querySelector("#cfGo").onclick = () => { closeSheet(); onOk(); };
     });
 }
 function deleteAccount(s){
@@ -2052,13 +2291,13 @@ async function loadGroups(){
   const yr = encodeURIComponent('תשפ"ז');
   try {
     const [ss, asg] = await Promise.all([
-      get("session_summary", "select=session_id,city,location,day,time_label,start_time,assigned_count&school_year=eq." + yr),
+      get("session_summary", "select=*&school_year=eq." + yr),
       getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")")
     ]);
     const kids = new Map(); (asg || []).forEach(a => { const k = String(a.session_id); if (!kids.has(k)) kids.set(k, new Set()); kids.get(k).add(String(a.student_id)); });
     const DO = { "א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6 };
     AD.groups = (ss || []).map(g => ({ id: String(g.session_id), city: g.city || "", day: g.day || "", time: g.time_label || String(g.start_time || "").slice(0, 5), loc: g.location || "",
-                                        start: g.start_time || "", kids: kids.get(String(g.session_id)) || new Set() }))
+                                        start: String(g.start_time || "").slice(0, 5), end: String(g.end_time || "").slice(0, 5), kids: kids.get(String(g.session_id)) || new Set() }))
       .filter(g => g.kids.size).sort((a, b) => a.city.localeCompare(b.city) || (DO[a.day] || 9) - (DO[b.day] || 9) || String(a.start).localeCompare(String(b.start)));
   } catch(e) { AD.groups = []; }
   return AD.groups;
