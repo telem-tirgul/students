@@ -570,6 +570,264 @@
   #studentView .top{ background:var(--side); }
   #studentView .top .ttl small{ color:var(--gold); opacity:1; }
   #studentView .tabs button.on{ border-bottom-color:var(--gold); }
+
+  /* ===== מאגר: עיצוב מהמאגר של מערכת הניהול ===== */
+  .rg-city-grid .lk-tbl tr{ display:flex; flex-direction:column; gap:6px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .rg-city-grid .lk-tbl tr:last-child{ border-bottom:0; } .rg-city-grid .lk-tbl td{ border:0; padding:0; }
+  .rg-city-grid .lk-act{ width:auto; text-align:start; white-space:normal; } .rg-city-grid .lk-btns{ flex-wrap:wrap; }
+  .rg-city-grid .lk-url{ word-break:break-all; }
+  .rg-mar-h{ display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
+  /* חיפוש במאגר */
+  .ws-search{ position:relative; margin:0 0 14px; max-width:680px; }
+  .ws-search input{ width:100%; box-sizing:border-box; font-size:16px; padding:12px 44px 12px 40px; border-radius:14px; border:1.5px solid var(--border); background:var(--paper); box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .ws-search input:focus{ border-color:var(--gold); outline:none; box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 25%, transparent); }
+  .ws-search input::-webkit-search-cancel-button{ display:none; }
+  .ws-s-ic{ position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%); font-size:16px; opacity:.55; pointer-events:none; }
+  .ws-s-x{ position:absolute; inset-inline-end:8px; top:50%; transform:translateY(-50%); border:0; background:var(--muted); color:var(--ink-soft); width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:13px; }
+  .ws-res-sum{ font-size:14px; color:var(--ink-soft); margin:0 0 6px; } .ws-res-sum b{ color:var(--ink); }
+  .ws-res-book{ font-size:16px; color:var(--accent); margin:16px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .ws-res{ display:grid; grid-template-columns:repeat(auto-fill, minmax(330px, 1fr)); gap:10px; }
+  .ws-rc{ display:grid; grid-template-columns:92px minmax(0,1fr); gap:12px; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:10px; cursor:pointer; text-align:start; }
+  .ws-rc:hover, .ws-rc:focus-visible{ border-color:var(--gold); box-shadow:0 2px 8px rgba(0,0,0,.07); outline:none; }
+  .ws-rc-th{ width:92px; height:118px; border-radius:6px; overflow:hidden; background:var(--muted); } .ws-rc-th img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+  .ws-rc-b{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .ws-rc-k{ align-self:flex-start; font-size:11.5px; font-weight:800; border-radius:999px; padding:0 8px; background:color-mix(in srgb, var(--kc, var(--gold)) 28%, var(--paper)); }
+  /* צבע לכל סוג דפים: סיכום זהב, לפי נושאים כחול-אפור, ובאנגלית - דקדוק ורוד, אנסין כחול, כללי אפור */
+  .k-summary{ --kc:var(--gold); } .k-topic{ --kc:#5B7FAE; } .k-grammar{ --kc:#C0607F; } .k-unseen{ --kc:#5B6BC0; } .k-general{ --kc:#8A817B; }
+  .ws-rc[class*="k-"]{ border-inline-start:5px solid var(--kc); }
+  #wsKind button[class*="k-"][aria-pressed="true"]{ background:color-mix(in srgb, var(--kc) 32%, var(--paper)); }
+  .ws-rc-t{ font-weight:800; font-size:15px; line-height:1.3; }
+  .ws-rc-hits{ list-style:none; margin:0; padding:0; font-size:13px; display:flex; flex-direction:column; gap:2px; }
+  .ws-rc-hits li[data-pg]{ cursor:pointer; border-radius:6px; padding:1px 4px; } .ws-rc-hits li[data-pg]:hover{ background:var(--muted); } .ws-rc-hits li.more{ color:var(--ink-soft); padding:1px 4px; }
+  .ws-rc-n{ margin-top:auto; font-size:12.5px; color:var(--accent); font-weight:700; }
+  .ws-rc-ks{ margin-top:auto; display:flex; flex-wrap:wrap; gap:6px; }
+  .ws-rc-kb{ border:1px solid color-mix(in srgb, var(--kc) 60%, var(--border)); background:color-mix(in srgb, var(--kc) 18%, var(--paper)); color:var(--ink); border-radius:999px; padding:3px 10px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+  .ws-rc-kb span{ font-weight:500; color:var(--ink-soft); } .ws-rc-kb:hover{ background:color-mix(in srgb, var(--kc) 32%, var(--paper)); }
+  @media (max-width:760px){ .ws-rc{ padding:8px 10px; gap:6px; } .ws-rc-t{ font-size:14.5px; } .ws-rc-hits{ font-size:12.5px; } }
+  .ws-empty{ background:var(--paper); border:1px dashed var(--border); border-radius:12px; padding:18px; text-align:center; font-size:15px; display:flex; flex-direction:column; gap:4px; }
+  @media (max-width:760px){ .ws-res{ grid-template-columns:1fr; } .ws-rc{ grid-template-columns:minmax(0,1fr); } .ws-rc-th{ display:none; } .ws-search input{ padding:10px 40px 10px 36px; } }
+  .ws-res mark, .ws-rc mark{ background:none; color:var(--accent,#7a1f2b); font-weight:700; text-decoration:underline; text-decoration-color:color-mix(in srgb, var(--accent,#7a1f2b) 55%, transparent); text-decoration-thickness:2px; text-underline-offset:3px; padding:0; }
+  .ws-books{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+  .ws-books button{ font:inherit; font-weight:700; font-size:14px; border:1px solid var(--border); background:var(--card, #fff); color:inherit; border-radius:999px; padding:8px 16px; cursor:pointer; }
+  .ws-books button[aria-pressed="true"]{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .ws-kind{ margin-bottom:10px; }
+  /* סוג הדפים (סיכום / לפי נושאים...) - בזהב, כדי שלא יתבלבל עם בחירת הספר */
+  .ws-bar{ flex-wrap:wrap; } .ws-bar-sub{ display:block; font-size:13px; font-weight:600; color:var(--ink-soft); } .ws-kind-in button[disabled]{ opacity:.4; cursor:not-allowed; } .ws-kind-in button[aria-pressed="true"]{ background:color-mix(in srgb, var(--gold) 35%, var(--paper)); color:var(--ink); }
+  #wsKind{ border-color:color-mix(in srgb, var(--gold) 50%, var(--border)); }
+  #wsKind button[aria-pressed="true"]{ background:color-mix(in srgb, var(--gold) 35%, var(--paper)); color:var(--ink); }
+  .ws-pick{ display:flex; flex-wrap:wrap; gap:8px 10px; margin-bottom:10px; align-items:center; }
+  /* 5.19.14: בטלפון - פס קבוע למעלה: מתמטיקה/אנגלית + ספר/חלק + נושא. נשאר גם כשדף פתוח */
+  /* 5.19.19: בנייד - החלק העליון נשאר קבוע כשגוללים (נוכחות: תאריך + ערים + מתרגל; דף קבוצה: כותרת + חזרה + קבוצה קודמת/הבאה; תלמידים: חיפוש) */
+  @media (max-width:760px){
+    .att-stick, .sh-stick{ position:sticky; top:var(--side-h, 0px); z-index:9; background:var(--att-bg, var(--bg)); padding:6px 0 4px; margin-top:-6px; box-shadow:0 6px 8px -8px rgba(0,0,0,.25); }
+    .att-stick .att-date{ margin-bottom:6px; } .att-stick .att-filt{ margin-bottom:0; }
+    .sh-stick .sh-head{ margin-bottom:4px; } .sh-stick .sh-h1row h1{ font-size:18px; } .sh-stick .sh-nav{ margin:4px 0 0; }
+    /* 5.19.25: נוכחות בנייד - פס עליון דק יותר (קבוצה קודמת/הבאה בשורה קטנה), ו"שמירה" בסוף הרשימה ולא צפה (לא מסתירה ילדים ולא "קופצת") */
+    .sh-stick .sh-nav .btn{ padding:6px 12px !important; font-size:14px !important; min-height:0; border-radius:999px; border:1.5px solid var(--accent) !important; color:var(--accent); background:var(--paper); }   /* 5.19.29: ברור יותר ומעט גדול יותר */
+    .sh-stick .sh-nav .btn small{ color:var(--accent); opacity:.8; }
+    .sh-stick{ padding:4px 0 3px !important; }
+    #attSheet .sh-actions{ position:static; padding-block:6px 4px; }
+    /* 5.19.25: נוכחות בנייד - בלי התפריט המשני (קבוצות / דוח לפי קבוצה - במחשב), ושורת היום נמוכה יותר */
+    #view-att > .subnav{ display:none !important; }
+    .att-date.card{ padding:4px 6px !important; margin-bottom:6px; }
+    #attMark .att-date-row > .btn:not(.today-btn), .att-date-row > .btn{ height:38px !important; min-height:0 !important; min-width:56px; padding:0 12px !important; font-size:22px !important; }
+    #attMark .att-dlbl{ height:38px !important; min-height:0 !important; font-size:14px !important; }
+    #attMark .att-filt #attCities .tab{ height:36px; min-height:0 !important; padding-block:0 !important; } #attMark .att-filt select{ height:38px; padding-block:0 !important; }
+    #view-leads .filters-card{ position:sticky; top:var(--side-h, 0px); z-index:9; }
+  }
+  .ws-quick{ display:none; }
+  @media (max-width:760px){
+    .ws-stick{ position:sticky; top:var(--side-h, 0px); z-index:8; background:var(--bg); padding:6px 0 6px; margin:-4px 0 6px; border-bottom:1px solid var(--border); }
+    .ws-stick .ws-search{ margin:6px 0 0; } .ws-stick .ws-search input{ padding-block:7px; }
+    .ws-quick{ display:flex; flex-direction:column; gap:5px; }
+    .ws-quick .wq-row{ display:flex; gap:6px; } .ws-quick .wq-row:empty{ display:none; }
+    .ws-quick .wq-row{ gap:5px; } .ws-quick .gseg{ display:flex; flex:1 1 auto; min-width:0; } .ws-quick .gseg button{ flex:1 1 auto; min-width:0; padding:4px 5px !important; font-size:14.5px; min-height:0 !important; height:36px; white-space:nowrap; }
+    #view-ws .ws-pick{ display:none; }
+    #view-ws .ws-bar{ top:calc(var(--side-h, 0px) + var(--wsq, 48px)); }
+    body.ws-vopen .ws-stick{ position:fixed; top:var(--side-h, 0px); left:0; right:0; z-index:210; padding:6px 10px; margin:0; background:#161118; border-color:#333; } body.ws-vopen #wsTop{ display:none; }
+    body.ws-vopen .ws-quick .gseg{ background:rgba(255,255,255,.12); } body.ws-vopen .ws-quick .gseg button{ color:#fff; } body.ws-vopen .ws-quick .gseg button[aria-pressed="true"]{ background:#fff; color:#161118; }
+    body.ws-vopen .ws-viewer{ top:calc(var(--side-h, 0px) + var(--wsqv, 48px)); }   /* 5.19.21: התפריט הקבוע נשאר גלוי גם כשדף פתוח */
+  }
+  /* 5.19.14: לחיצה ארוכה על דף - חלון קטן: שליחה / פתיחה */
+  .ws-pop{ position:fixed; inset:0; z-index:220; background:rgba(0,0,0,.35); display:flex; align-items:flex-end; justify-content:center; }
+  .ws-pop[hidden]{ display:none; }
+  .ws-pop-in{ background:var(--paper); width:min(100%, 420px); border-radius:16px 16px 0 0; padding:14px 16px max(16px, env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:8px; box-shadow:0 -6px 24px rgba(0,0,0,.2); }
+  .ws-pop-t{ font-weight:800; text-align:center; margin-bottom:2px; } .ws-pop-in .btn{ justify-content:center; height:46px; font-size:16px; }
+  .ws-pg img, .ws-st img{ -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; } .ws-pg{ -webkit-user-select:none; user-select:none; }
+  /* ⭐ דפים חשובים בראש הנושא - שליחה ישירה בלי לפתוח את הדף */
+  .ws-stars{ background:#fff8d6; border:1.5px solid #e9cf62; border-radius:12px; padding:8px 10px; margin:8px 0 12px; }
+  .ws-stars-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:800; color:#7a5a00; margin-bottom:6px; }
+  .ws-stars-row{ display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; }
+  .ws-st{ flex:none; width:118px; background:var(--paper); border:1px solid var(--border); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+  .ws-st .th{ height:120px; overflow:hidden; background:#fff; cursor:pointer; } .ws-st .th img{ width:100%; display:block; }
+  .ws-st .cp{ font-size:12px; padding:3px 6px; line-height:1.25; height:32px; overflow:hidden; } .ws-st .cp b{ color:var(--accent); }
+  .ws-st .th{ position:relative; } .ws-st-n{ position:absolute; bottom:4px; inset-inline-start:4px; background:var(--accent); color:#fff; font-size:11.5px; font-weight:800; border-radius:6px; padding:1px 6px; }
+  .ws-st-g{ width:132px; } .ws-st-g .cp{ font-weight:600; }
+  .ws-st .cp.cp2{ height:auto; min-height:44px; display:flex; flex-direction:column; gap:1px; } .ws-st .cp.cp2 b{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:12.5px; } .ws-st .cp.cp2 span{ color:var(--ink-soft); font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ws-st button.go{ margin:4px 6px 6px; padding:5px 0; border:0; border-radius:8px; background:#25d366; color:#0b2b17; font-weight:800; font-size:13.5px; cursor:pointer; }
+  .ws-seg button{ padding:7px 16px; font-size:14.5px; }
+  .ws-seg button[aria-pressed="true"]{ background:var(--accent); color:#fff; box-shadow:none; }
+  @media (max-width:760px){
+    .ws-pick{ flex-direction:column; align-items:stretch; gap:6px; margin-bottom:6px; } .ws-seg{ display:flex; } .ws-seg button{ flex:1; padding:8px 4px !important; font-size:15px; min-height:0 !important; height:38px; line-height:1.2; }
+    #wsKind{ display:flex; width:100%; } #wsKind button{ flex:1; padding:9px 6px; font-size:15px; }
+    .ws-how{ display:none; }
+    /* רשימת הנושאים בטלפון: שורה לכל נושא, בלי תמונה */
+    #wsBody .ws-albums{ display:flex; flex-direction:column; gap:6px; }
+    #wsBody .ws-album{ display:block; border-radius:10px; }
+    #wsBody .ws-album .cv{ display:none; }
+    #wsBody .ws-album .mt{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:0 8px; align-items:baseline; padding:9px 12px; }
+    #wsBody .ws-album .ch{ grid-column:2; }
+  } .ws-how{ font-size:12.5px; margin-bottom:14px; }
+  /* מחשב: הבחירה בעמודה קבועה מימין (כמו בטלפון - שורה מתחת לשורה), והנושאים משמאל */
+  @media (min-width:900px){
+    .ws-layout{ display:grid; grid-template-columns:250px minmax(0,1fr); gap:22px; align-items:start; }
+    .ws-side{ position:sticky; top:84px; background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:12px; }
+    .ws-side[hidden]{ display:none; } .ws-layout:has(.ws-side[hidden]){ display:block; }
+    .ws-side .ws-pick{ flex-direction:column; align-items:stretch; gap:8px; margin-bottom:8px; }
+    .ws-side .ws-seg{ display:flex; } .ws-side .ws-seg button{ flex:1; padding:0 4px !important; height:36px; min-height:0 !important; line-height:1.2; font-size:14.5px; }
+    .ws-side #wsKind button{ height:34px; min-height:0 !important; padding:0 8px !important; }
+    .ws-side #wsKind{ display:flex; flex-direction:column; border-radius:12px; margin-bottom:10px; }
+    .ws-side #wsKind button{ border-radius:9px; text-align:center; }
+    .ws-side .ws-how{ margin:4px 2px 0; line-height:1.55; }
+  }
+  /* 5.19.23: מחשב - בחירת מקצוע / כיתה / חלק בשורה אחת ליד החיפוש, והתוצאות על כל רוחב הדף */
+  @media (min-width:900px){
+    #wsTop{ display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap; margin-bottom:14px; } #wsTop .ws-search{ flex:1 1 340px; margin:0; order:2; } #wsTop .ws-side{ order:1; }   /* הבחירה מימין, החיפוש משמאל */
+    #wsTop .ws-side{ position:static; background:none; border:0; padding:0; border-radius:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    #wsTop .ws-side .ws-pick{ flex-direction:row; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
+    #wsTop .ws-side .ws-seg button{ flex:none; padding:0 14px !important; }
+    #wsTop .ws-side #wsKind{ flex-direction:row; margin:0; } #wsTop .ws-side .ws-how{ display:none; }
+    .ws-layout{ display:block; }
+  }
+  /* ייבוא דפים - רק במחשב */
+  @media (max-width:760px){ #wsImportBtn, #wsImport{ display:none !important; } }
+  .ws-albums{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; }
+  .ws-album{ all:unset; cursor:pointer; display:flex; flex-direction:column; background:var(--card, #fff); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .ws-album .cv{ aspect-ratio:210/150; overflow:hidden; background:#fff; border-bottom:1px solid var(--border); } .ws-album .cv img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+  .ws-album .mt{ padding:8px 10px 10px; display:flex; flex-direction:column; gap:2px; }
+  .ws-album .no{ color:var(--accent); font-size:12px; font-weight:700; } .ws-album .nm{ font-weight:700; line-height:1.25; } .ws-album .ch{ font-size:12.5px; color:var(--ink-soft, #777); }
+  .ws-bar{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; background:var(--bg); padding:8px 0; margin-bottom:8px; border-bottom:1px solid var(--border); }
+  .ws-bar h2{ margin:0; font-size:18px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ws-tabs{ display:flex; gap:6px; margin:0; }
+  .ws-sw{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin:4px 0 12px; } .ws-sw:empty{ display:none; } 
+  .ws-tabs button{ font:inherit; font-weight:700; font-size:14px; border:1px solid var(--border); background:var(--card, #fff); color:inherit; border-radius:999px; padding:6px 14px; cursor:pointer; }
+  .ws-tabs button[aria-selected="true"]{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .ws-gh{ font-weight:700; margin:16px 0 8px; display:flex; gap:8px; align-items:baseline; } .ws-gh small{ color:var(--accent); font-weight:700; }
+  .ws-pages{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; }
+  .ws-pg{ all:unset; cursor:pointer; background:var(--card, #fff); border:1px solid var(--border); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+  .ws-pg .th{ aspect-ratio:210/297; overflow:hidden; background:#fff; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; } .ws-pg img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .ws-pgw{ position:relative; display:flex; } .ws-pgw > .ws-pg{ flex:1; min-width:0; }
+  .ws-ck{ position:absolute; bottom:4px; inset-inline-end:4px; z-index:2; width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.92); border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+  .ws-ck input{ width:20px; height:20px; margin:0; accent-color:var(--accent); cursor:pointer; }
+  .ws-pgw:has(.ws-ck) .cap{ padding-inline-end:46px; min-height:32px; align-items:center; }
+  .ws-pgw.sel > .ws-pg{ outline:3px solid var(--accent); outline-offset:-1px; }
+  .ws-lnk{ all:unset; cursor:pointer; color:var(--accent); font-weight:700; font-size:13.5px; text-decoration:underline; text-underline-offset:3px; padding:4px 2px; white-space:nowrap; }
+  .ws-sw .ws-selall{ margin-inline-start:auto; } .ws-sw .ws-selall[hidden]{ display:none; } .ws-sw:has(.ws-selall){ display:flex !important; } .ws-gh .ws-gsel{ margin-inline-start:auto; }
+  .ws-gh:has(.ws-gsel){ display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .ws-gh > span{ display:flex; gap:8px; align-items:baseline; }
+  .ws-selbar{ position:sticky; bottom:10px; z-index:20; margin-top:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; background:var(--paper, #fff); border:2px solid var(--accent); border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.18); }
+  .ws-selbar span{ font-weight:800; flex:1; }
+  /* 5.19.7: מסך נושא - חזרה כחץ ליד הכותרת, "בחירה לשליחה" כמו בגלריה */
+  .ws-bar .ws-back{ all:unset; cursor:pointer; flex:none; display:inline-flex; align-items:center; gap:4px; padding:7px 12px; border:1.5px solid var(--border); border-radius:999px; background:var(--paper); font-weight:800; font-size:14px; color:var(--accent); }
+  .ws-tabs small{ font-weight:600; opacity:.75; margin-inline-start:2px; }
+  .ws-sw .ws-selbtn{ margin-inline-start:auto; display:inline-flex; align-items:center; gap:6px; border-color:var(--accent); color:var(--accent); font-weight:800; }
+  .ws-kind-in .ks{ display:none; }
+  .ws-pg .th{ position:relative; }
+  .ws-tick{ position:absolute; bottom:8px; left:8px; width:26px; height:26px; border-radius:50%; border:2px solid #fff; background:rgba(0,0,0,.28); box-shadow:0 1px 4px rgba(0,0,0,.35); }
+  .ws-pgw.sel .ws-tick{ background:var(--accent); }
+  .ws-pgw.sel .ws-tick::after{ content:""; position:absolute; left:8px; top:3.5px; width:6px; height:12px; border:solid #fff; border-width:0 2.5px 2.5px 0; transform:rotate(45deg); }
+  .ws-selmode .ws-pgw:not(.sel) .ws-pg img{ opacity:.82; }
+  .ws-selmode .ws-pgw.sel > .ws-pg{ outline:3px solid var(--accent); outline-offset:-1px; }
+  .ws-selbar .btn.primary:disabled{ opacity:.45; }
+  .ws-gpick{ all:unset; cursor:pointer; display:flex; align-items:center; gap:10px; -webkit-tap-highlight-color:transparent; }
+  .ws-gpick.ws-gh{ width:100%; box-sizing:border-box; padding:6px 8px; margin:12px 0 8px; border-radius:10px; background:color-mix(in srgb, var(--accent) 6%, transparent); }
+  .ws-tpick{ min-width:0; flex:1; }
+  .ws-gtick{ flex:none; position:relative; width:24px; height:24px; border-radius:50%; border:2px solid var(--accent); background:var(--paper, #fff); box-sizing:border-box; }
+  .ws-gtick.on{ background:var(--accent); }
+  .ws-gtick.on::after{ content:""; position:absolute; left:7px; top:3px; width:5px; height:11px; border:solid #fff; border-width:0 2.5px 2.5px 0; transform:rotate(45deg); }
+  /* תתי-נושאים / יחידות - כרטיסים; במחשב זה לצד זה */
+  .ws-grp{ min-width:0; } .ws-grp + .ws-grp{ margin-top:6px; }
+  /* 5.19.20: נושא גדול - תתי-נושאים נפתחים בלחיצה */
+  .ws-grp.fold.closed .ws-pages{ display:none; }
+  .ws-grp.fold .ws-gh{ background:var(--paper, #fff); border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin:6px 0; }
+  .ws-grp.fold:not(.closed) .ws-gh{ border-color:var(--gold); }
+  .ws-car{ font-style:normal; color:var(--accent); font-size:13px; width:14px; display:inline-block; }
+  .ws-gn{ font-style:normal; font-weight:500; font-size:12.5px; color:var(--ink-soft); }
+  @media (min-width:900px){ .ws-grp.ws-sumg{ grid-column:1/-1; background:none; border:0; padding:0; } .ws-grps.ws-fold{ display:block; } .ws-fold .ws-grp{ background:none; border:0; padding:0; } .ws-fold .ws-grp + .ws-grp{ margin-top:0; } .ws-fold .ws-grp .ws-pages{ margin:4px 0 12px; } }
+  @media (min-width:900px){
+    .ws-grps{ display:grid; grid-template-columns:repeat(auto-fill, minmax(460px, 1fr)); gap:14px; align-items:start; }
+    .ws-grps-unit{ grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); }
+    .ws-grp{ background:var(--paper, #fff); border:1px solid var(--border); border-radius:14px; padding:4px 12px 12px; } .ws-grp + .ws-grp{ margin-top:0; }
+    .ws-grp.wide{ grid-column:1 / -1; }
+    .ws-grp .ws-gh{ margin:6px 0 8px; } .ws-grp .ws-pages{ grid-template-columns:repeat(auto-fill, minmax(118px, 1fr)); gap:10px; }
+    .ws-grps-unit .ws-grp .ws-pages{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+  }
+  .ws-grp.on{ outline:2.5px solid var(--accent); outline-offset:1px; background:color-mix(in srgb, var(--accent) 5%, var(--paper, #fff)); }
+  .ws-grp .ws-gh[data-gsel].on{ box-shadow:none; background:none; padding-inline:0; }
+  .ws-selmode .ws-grp.on .ws-pgw.sel > .ws-pg{ outline:none; }
+  .ws-gh .ws-gstar{ all:unset; cursor:pointer; margin-inline-start:auto; font-size:19px; line-height:1; padding:2px 6px; color:var(--ink-soft); } .ws-gh .ws-gstar.on{ color:inherit; }
+  .ws-gh[data-gsel]{ display:flex; align-items:center; gap:8px; }
+  .ws-pstar{ position:absolute; top:6px; left:6px; z-index:1; font-size:18px; line-height:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+  .ws-star-btn{ font-size:20px; min-width:46px; } .ws-star-btn.on{ background:#FFF4CC; border-color:#E0A100; }
+  .ws-bar .ws-tstar{ margin-inline-start:auto; flex:none; } .ws-bar .ws-back2{ flex:none; } .ws-bar h2 + .ws-back2{ margin-inline-start:auto; } .ws-bar .ws-tstar.on{ background:#FFF4CC; border-color:#E0A100; }
+  .ws-selhint{ font-size:12.5px; color:var(--ink-soft, #777); margin:-4px 0 6px; }
+  [data-gsel]{ -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; cursor:pointer; transition:background .15s; border-radius:10px; }
+  [data-gsel].press{ background:color-mix(in srgb, var(--accent) 12%, transparent); }
+  .ws-gh[data-gsel].on, .ws-bar h2[data-gsel].on{ background:color-mix(in srgb, var(--accent) 14%, transparent); box-shadow:inset 0 0 0 2px var(--accent); padding-inline:8px; }
+  @media (max-width:760px){
+    #view-ws.ws-topic .page-head{ display:none; }   /* 5.19.15: שורת החיפוש נשארת תמיד למעלה (גם בתוך נושא) */
+    .ws-bar .ws-back-t{ display:none; } .ws-bar .ws-back{ padding:6px 12px; font-size:17px; }
+    .ws-bar h2{ font-size:17px; }
+    .ws-sw{ gap:8px; margin:2px 0 10px; } .ws-sw .gseg button, .ws-tabs button{ padding:7px 12px !important; font-size:14px !important; min-height:0 !important; }
+    .ws-kind-in .kl{ display:none; } .ws-kind-in .ks{ display:inline; }
+    .ws-sw .ws-selbtn{ margin-inline-start:0; }
+    .ws-pages{ gap:10px; }
+    /* אנסין: כל יחידה (3 דפים) בשורה אחת */
+    .ws-pages.ws-unit{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; }
+    .ws-pages.ws-unit .ws-pg .cap{ font-size:11.5px; padding:4px 5px 5px; } .ws-pages.ws-unit .ws-pg .cap span{ display:none; }
+    .ws-pages.ws-unit .ws-tick{ width:22px; height:22px; bottom:5px; left:5px; } .ws-pages.ws-unit .ws-pgw.sel .ws-tick::after{ left:6.5px; top:2.5px; width:5px; height:10px; }
+  }
+  @media (max-width:760px){ .ws-selbar{ flex-wrap:nowrap; gap:8px; padding:8px 10px; bottom:8px; } .ws-selbar span{ font-size:14px; white-space:nowrap; } .ws-selbar .btn.primary{ flex:none; padding:8px 12px; font-size:14px; } #wsSelClr{ padding:6px 8px; font-size:12.5px; } }
+  .ws-pg .cap{ padding:6px 8px 8px; font-size:13px; line-height:1.3; display:flex; gap:6px; } .ws-pg .cap b{ color:var(--accent); }
+  .ws-viewer{ position:fixed; inset:0; z-index:200; background:#161118; display:flex; flex-direction:column; }
+  .ws-vtop{ display:flex; align-items:center; gap:10px; padding:10px 14px; color:#fff; } .ws-vt{ flex:1; min-width:0; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ws-x, .ws-nav{ background:rgba(255,255,255,.15); color:#fff; border:0; border-radius:12px; width:46px; height:44px; font-size:20px; cursor:pointer; } .ws-nav:disabled{ opacity:.3; }
+  .ws-vimg{ flex:1; overflow:auto; display:flex; justify-content:center; align-items:flex-start; padding:4px 10px; -webkit-overflow-scrolling:touch; }
+  .ws-vimg img{ max-width:min(100%, 820px); height:auto; background:#fff; border-radius:4px; -webkit-touch-callout:default; transform-origin:center top; transition:transform .05s; }
+  .ws-vimg{ touch-action:pan-y; } .ws-vimg:has(img.zoomed){ touch-action:none; overflow:hidden; }
+  .ws-vbot{ display:flex; gap:8px; padding:10px 14px max(14px, env(safe-area-inset-bottom)); justify-content:center; align-items:center; flex-wrap:nowrap; }
+  @media (max-width:600px){ .ws-vbot{ gap:6px; padding-inline:10px; } .ws-vbot .ws-copy{ flex:1 1 auto; min-width:0; padding-inline:8px; } .ws-vbot > *{ flex-shrink:0; } .ws-vbot .ws-nav{ width:42px; } .ws-vbot .ws-star-btn{ min-width:42px; padding-inline:6px; } .ws-vbot #wsDl{ padding-inline:10px; } }
+  .ws-copy{ background:#25d366 !important; color:#0b2b17 !important; font-weight:800; font-size:17px; min-width:9em; border:0; }
+  .ws-sec{ background:rgba(255,255,255,.15) !important; color:#fff !important; border:0; text-decoration:none; }
+  .ws-warn{ background:var(--muted); border-radius:10px; padding:8px 12px; font-size:13.5px; margin-bottom:12px; }
+  /* מסך הבית, הפרטים שלי, בתי הספר שלי */
+  body:not(.instructor) [data-inst]{ display:none !important; }
+  body.instructor .nav .lbl-a, body:not(.instructor) .nav .lbl-i{ display:none; }
+  .info-wrap{ position:relative; display:inline-flex; }
+
+  /* 1.8: תוספות לבחירת דפים (סימון / בתוכנית) על כרטיסי המאגר */
+  #wsBody .ws-pg{ position:relative; }
+  .pk-tick{ position:absolute; top:8px; inset-inline-start:8px; width:28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; display:none; place-items:center; box-shadow:0 2px 6px rgba(0,0,0,.25); z-index:2; }
+  .pk-tick svg{ width:16px; height:16px; }
+  .ws-pgw.sel .pk-tick, .ws-st.sel .pk-tick{ display:grid; }
+  .ws-pgw.sel .ws-pg{ outline:3px solid var(--accent); outline-offset:-1px; border-radius:10px; }
+  .ws-pgw.sel .ws-pstar{ display:none; }
+  .ws-st{ position:relative; } .ws-st .th{ position:relative; }
+  .ws-st.sel{ outline:3px solid var(--accent); outline-offset:-1px; }
+  .ws-st.sel button.go{ background:var(--accent); color:#fff; }
+  .pk-st{ position:absolute; top:8px; inset-inline-end:8px; z-index:2; }
+  .ws-pgw.inplan{ opacity:.6; }
+  .ws-album .cv{ position:relative; }
+  .al-sel{ position:absolute; top:8px; inset-inline-end:8px; background:var(--accent); color:#fff; border-radius:20px; padding:0 8px; font-weight:800; font-size:12.5px; }
+  .ws-album.here{ border-color:var(--gold); box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 45%, transparent); }
+  .al-here{ margin-top:4px; align-self:flex-start; }
+  .ws-album .mt{ display:flex; flex-direction:column; }
+  #adminView #wsTop{ display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap; margin-bottom:14px; }
+  #adminView #wsTop .ws-search{ flex:1 1 340px; margin:0; order:2; }
+  #adminView #wsTop .ws-side{ order:1; position:static; background:none; border:0; padding:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  #adminView #wsTop .ws-side .ws-pick{ flex-direction:row; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
+  @media (max-width:760px){ #adminView #wsTop .ws-side, #adminView #wsTop .ws-side .ws-pick{ width:100%; flex-direction:column; align-items:stretch; } }
+  .drawer #wsTop .ws-search{ max-width:none; }
+  .from-note{ margin:0 2px 10px; }
 </style>
 </head>
 <body>
@@ -692,7 +950,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.7",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.8",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1557,142 +1815,199 @@ function bankBooks(){
   if (AD.bank.pick) arr = arr.filter(b => wsSubject(b[0]) === AD.bank.pick.subj);
   return arr;
 }
-function bankTopics(){
+// ======================================================================
+// מאגר – באותו מבנה ועיצוב כמו "מאגר תרגולים" במערכת הניהול (1.8)
+// בחירה: מקצוע → כיתה → חלק · חיפוש בכל הספרים · ⭐ חשובים · כרטיסי נושא עם תמונה
+// בתוך נושא: דפים / פתרונות, ⭐ חשובים בנושא, תתי-נושאים, ו"📘 דפי סיכום" בסוף
+// עיון: לחיצה על דף פותחת אותו · בחירה לתלמיד / שליחה: לחיצה מסמנת
+// ======================================================================
+const WS_KIND = { summary: "דפי סיכום", topic: "תרגול לפי נושאים", grammar: "דקדוק", unseen: "אנסין", vocab: "אוצר מילים", general: "כללי" };
+const WS_KIND_ORD = ["topic", "summary", "grammar", "unseen", "vocab", "general"];
+const wsNorm = (s) => String(s || "").toLowerCase().replace(/[ךםןףץ]/g, c => ({ "ך":"כ", "ם":"מ", "ן":"נ", "ף":"פ", "ץ":"צ" }[c]));
+function bankInfo(){
+  const info = {}; (AD.ws || []).forEach(r => { if (!info[r.book]) info[r.book] = { subj: /^ENG/i.test(r.book) ? "eng" : "math", grade: r.grade || "", part: r.part || ({ A: "א", B: "ב" })[String(r.book).slice(-1)] || "", label: r.book_label || r.book }; });
+  return info;
+}
+function bankTopicsOf(kind){
   const m = new Map();
-  (AD.ws || []).filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind).forEach(r => {
-    if (!m.has(r.topic_no)) m.set(r.topic_no, { no: r.topic_no, name: r.topic_name, chapters: r.chapters, pages: 0, star: false });
-    if (r.is_star) m.get(r.topic_no).star = true;
-    if (r.type === "page") m.get(r.topic_no).pages++;
+  AD.ws.filter(r => r.book === AD.bank.book && r.kind === kind).forEach(r => {
+    if (!m.has(r.topic_no)) m.set(r.topic_no, { no: r.topic_no, name: r.topic_name, chapters: r.chapters, kind, pages: [], answers: [] });
+    m.get(r.topic_no)[r.type === "page" ? "pages" : "answers"].push(r);
   });
   return [...m.values()];
 }
+const bankTopics = () => bankTopicsOf(AD.bank.kind).map(t => Object.assign(t, { star: t.pages.some(r => r.is_star) }));
+// נושא מקביל בסוג אחר (תרגול ↔ סיכום) – לפי שם הנושא, כמו במערכת הניהול
+function bankMatch(t, k){
+  if (k === t.kind) return t.no;
+  const cand = new Map(); AD.ws.filter(r => r.book === AD.bank.book && r.kind === k).forEach(r => { if (!cand.has(r.topic_no)) cand.set(r.topic_no, r.topic_name); });
+  const nm = (x) => wsNorm(x).replace(/[–\-,]/g, " ").replace(/\s+/g, " ").trim(), words = (x) => new Set(nm(x).split(/\s+/).filter(w => w.length >= 3));
+  for (const [no, name] of cand) if (nm(name) === nm(t.name)) return no;
+  if (cand.has(t.no)) { const a = words(t.name), b = words(cand.get(t.no)); if ([...a].some(w => b.has(w) || [...b].some(v => v.startsWith(w) || w.startsWith(v)))) return t.no; }
+  return null;
+}
 async function renderBank(T){
   const pick = AD.bank.pick, ps = pick ? stById(pick.sid) : null;
-  const wide = isDesk();   // במחשב: נושאים בצד ודפים לידם (גם בחלונית הבחירה)
   if (!AD.ws || !AD.ws.length) { T.innerHTML = "<div class='card muted'>המאגר ריק או עוד נטען…</div>"; return; }
-  const books = bankBooks();
-  if (!books.some(b => b[0] === AD.bank.book)) AD.bank.book = books.length ? books[0][0] : null;
-  const kinds = [...new Set(AD.ws.filter(r => r.book === AD.bank.book).map(r => r.kind))];
+  const info = bankInfo();
+  let books = [...new Set(AD.ws.map(r => r.book))].sort((a, b) => bookRank(a) - bookRank(b) || a.localeCompare(b));
+  if (pick) books = books.filter(b => wsSubject(b) === pick.subj);
+  if (!books.includes(AD.bank.book)) AD.bank.book = books[0];
+  const kinds = [...new Set(AD.ws.filter(r => r.book === AD.bank.book).map(r => r.kind))].sort((a, b) => WS_KIND_ORD.indexOf(a) - WS_KIND_ORD.indexOf(b));
+  const kindOut = /^ENG/i.test(AD.bank.book);   // אנגלית: דקדוק / אנסין / כללי – בחירה בחוץ (כמו במערכת הניהול)
   if (!kinds.includes(AD.bank.kind)) AD.bank.kind = kinds[0];
-  const allTopics = bankTopics();
-  // בבחירה לתלמיד/ה: רק מהנושא האחרון שנשלח/תוכנן והלאה (אפשר להציג גם קודמים)
-  const fr = pick && AD.bank.from && AD.bank.from.book === AD.bank.book && AD.bank.from.kind === AD.bank.kind ? AD.bank.from : null;
-  const tnum = (x) => parseInt(x, 10) || 0;
-  const topics = fr && !AD.bank.showAll ? allTopics.filter(t => tnum(t.no) >= tnum(fr.topic)) : allTopics;
-  const hiddenN = allTopics.length - topics.length;
-  const q = (AD.bank.q || "").trim();
-  const searching = q.length >= 2;
-  if (wide && !searching && (!AD.bank.topic || !topics.some(t => t.no === AD.bank.topic)) && topics.length) AD.bank.topic = topics[0].no;
-  const kindName = (k) => k === "summary" ? "סיכומים" : k === "topic" ? "לפי נושאים" : k;
-  const multi = !pick && AD.bank.multi;
-  const pagesMode = pick || multi;   // רק דפי תלמיד (בלי פתרונות)
-  let h = "";
+  const multi = !pick && AD.bank.multi, selMode = !!(pick || multi);
+  const q = (AD.bank.q || "").trim(), searching = q.length >= 2;
+  const inPlan = pick ? new Map(planOf(pick.sid).map(p => [String(p.worksheet_id), p.status])) : new Map();
+  T._inPlan = inPlan;
 
-  // ---- כותרת ----
-  if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:220px"><h1>מאגר</h1><p>${pick ? "בחירת דפים לתוכנית" : multi ? "מסמנים דפים, ואז בוחרים למי לשלוח." : "לחיצה על דף פותחת אותו בגדול."}</p></div>
+  // ---- בחירה: מקצוע → כיתה → חלק ----
+  const cur = info[AD.bank.book] || {};
+  const subjs = [...new Set(books.map(b => info[b].subj))];
+  const inSubj = books.filter(b => info[b].subj === cur.subj);
+  const grades = [...new Set(inSubj.map(b => info[b].grade).filter(Boolean))];
+  const parts = inSubj.filter(b => info[b].grade === cur.grade);
+  const seg = (cls, items) => items.length > 1 ? `<div class="gseg ws-seg ${cls}">${items.map(x => `<button type="button" ${x.a} aria-pressed="${x.on}">${esc(x.t)}</button>`).join("")}</div>` : "";
+  const pickHtml = seg("ws-subj", subjs.map(x => ({ a: `data-ws="${x}"`, on: x === cur.subj, t: x === "eng" ? "אנגלית" : "מתמטיקה" }))) +
+    seg("ws-grade", grades.map(g => ({ a: `data-wg="${esc(g)}"`, on: g === cur.grade, t: "כיתה " + g + "'" }))) +
+    seg("ws-part", parts.map(b => ({ a: `data-b="${esc(b)}"`, on: b === AD.bank.book, t: info[b].part ? "חלק " + info[b].part + "'" : info[b].label }))) +
+    (!grades.length && inSubj.length > 1 ? seg("ws-part", inSubj.map(b => ({ a: `data-b="${esc(b)}"`, on: b === AD.bank.book, t: info[b].label }))) : "") +
+    (kindOut ? seg("ws-part", kinds.map(k => ({ a: `data-wk="${esc(k)}"`, on: k === AD.bank.kind, t: WS_KIND[k] || k }))) : "");
+
+  let h = "";
+  if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:200px"><h1>מאגר תרגולים</h1></div>
     ${pick ? "" : `<div class="mode-sw" role="tablist"><button data-mode="0" class="${multi ? "" : "on"}">${IC.book} עיון</button><button data-mode="1" class="${multi ? "on" : ""}">${IC.send} שליחה לתלמידים</button></div>`}</div>`;
   if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subj)}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
   if (multi) h += `<div class="multi-hint">${IC.send}<span>מצב שליחה: לחיצה על דף מסמנת אותו. אפשר לסמן מכמה נושאים, ואז "בחירת תלמידים" למטה.</span></div>`;
+  h += `<div id="wsTop"><div class="ws-search"><span class="ws-s-ic" aria-hidden="true">🔍</span><input id="bkSearch" type="search" placeholder="${pick ? "חיפוש נושא או דף" : "חיפוש נושא או דף בכל הספרים - למשל: שברים, פרבולה, Past simple"}" value="${esc(AD.bank.q || "")}" autocomplete="off">${q ? `<button type="button" class="ws-s-x" id="clrSearch" aria-label="ניקוי">✕</button>` : ""}</div>
+    ${searching || AD.bank.topic ? "" : `<aside class="ws-side"><div class="ws-pick">${pickHtml}</div></aside>`}</div>`;
 
-  // ---- ספרים + סוג + חיפוש ----
-  const bookStats = (b) => { const rs = AD.ws.filter(r => r.book === b && r.type === "page"); return { topics: new Set(rs.map(r => r.kind + r.topic_no)).size, pages: rs.length }; };
-  h += `<div class="bank-tools">
-    <div class="book-cards">${books.map(([b, l]) => { const st = bookStats(b), sj = wsSubject(b);
-      return `<button data-b="${esc(b)}" class="book-card ${sj === "אנגלית" ? "eng" : "math"} ${b === AD.bank.book ? "on" : ""}"><b>${esc(l)}</b><small>${st.topics} נושאים · ${st.pages} דפים</small></button>`; }).join("")}</div>
-    <div class="bank-row2">
-      ${kinds.length > 1 ? `<div class="seg kind-seg">${kinds.map(k => `<button data-k="${esc(k)}" class="${k === AD.bank.kind ? "on" : ""}">${esc(kindName(k))}</button>`).join("")}</div>` : ""}
-      <label class="bank-search">${IC.search}<input id="bkSearch" type="search" placeholder="חיפוש נושא או דף בספר הזה" value="${esc(AD.bank.q || "")}"></label>
-    </div></div>`;
+  // כרטיס דף (כמו במערכת הניהול) + סימון בבחירה
+  const card = (r) => { const st = inPlan.get(r.id);
+    return `<div class="ws-pgw${AD.bank.sel.has(r.id) ? " sel" : ""}${st ? " inplan" : ""}"><button type="button" class="ws-pg" data-w="${esc(r.id)}"><div class="th">${r.is_star ? `<span class="ws-pstar" title="דף חשוב">⭐</span>` : ""}<img data-p="${esc(r.storage_path)}" alt="" loading="lazy">
+      ${selMode ? `<span class="pk-tick">${IC.check}</span>` : ""}${st ? `<span class="pk-st chip ${st === "הושלם" ? "ok" : st === "נשלח" ? "new" : "acc"}">${st === "מתוכנן" ? "בתור" : st === "נשלח" ? "נשלח" : "סיים"}</span>` : ""}</div>
+      <div class="cap"><b>${r.type === "answers" ? "" : esc(String(r.page_no || ""))}</b><span>${esc(r.title || "")}</span></div></button></div>`; };
+  const stTile = (r, label, sub) => `<div class="ws-st${AD.bank.sel.has(r.id) ? " sel" : ""}"><div class="th" data-w="${esc(r.id)}"><img data-p="${esc(r.storage_path)}" alt="" loading="lazy">${selMode ? `<span class="pk-tick">${IC.check}</span>` : ""}</div><div class="cp cp2"><b>${esc(label)}</b>${sub ? `<span>${esc(sub)}</span>` : ""}</div>
+    <button type="button" class="go" data-${selMode ? "w" : "cp"}="${esc(r.id)}">${selMode ? (AD.bank.sel.has(r.id) ? "✓ נבחר" : "בחירה") : "העתקה"}</button></div>`;
 
-  // ---- נושאים ----
-  const topicsHtml = `<div class="tp-head"><b>נושאים</b><span class="cnt">${topics.length}</span></div>` +
-    (fr ? `<div class="from-note">${AD.bank.showAll ? "כל הנושאים" : "מהנושא האחרון בתוכנית והלאה"}${hiddenN || AD.bank.showAll ? ` · <button class="linkish small" id="showAllT">${AD.bank.showAll ? "רק מהנושא האחרון" : "להציג גם " + hiddenN + " קודמים"}</button>` : ""}</div>` : "") +
-    topics.map(t => { const selN = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === t.no && AD.bank.sel.has(r.id)).length;
-      return `<button class="topic-row ${AD.bank.topic === t.no && wide && !searching ? "on" : ""}" data-t="${esc(t.no)}"><span class="no">${esc(String(Number(t.no) || t.no))}</span>
-      <span class="nm">${esc(t.name)}${t.chapters ? `<small>${esc(t.chapters)}</small>` : ""}${fr && fr.topic === t.no ? `<span class="chip new here">כאן נמצא/ת עכשיו</span>` : ""}</span>
-      <span class="tmeta">${t.star ? `<span class="tstar" title="יש בנושא דפים חשובים">⭐</span>` : ""}${selN ? `<span class="selcnt">${selN} ✓</span>` : `<span class="cnt">${t.pages}</span>`}</span>${wide ? "" : IC.chev}</button>`; }).join("");
-
-  // ---- דפים ----
-  let pagesHtml = "", show = [];
-  const inPlan = pick ? new Map(planOf(pick.sid).map(p => [String(p.worksheet_id), p.status])) : new Map();
-  T._inPlan = inPlan;
-  const tile = (r, mini) => { const st = inPlan.get(r.id);
-    return `<button class="ws-tile ${mini ? "ws-mini" : ""} ${AD.bank.sel.has(r.id) ? "sel" : ""} ${st ? "dim" : ""}" data-w="${esc(r.id)}">
-      <span class="thumb" data-p="${esc(r.storage_path)}"></span><span class="tick">${IC.check}</span>
-      ${r.page_no && r.type === "page" ? `<span class="pno">${esc(r.page_no)}</span>` : ""}
-      ${st ? `<span class="inplan chip ${st === "הושלם" ? "ok" : st === "נשלח" ? "new" : "acc"}">${st === "מתוכנן" ? "בתור" : st === "נשלח" ? "נשלח" : "סיים"}</span>` : ""}
-      ${r.is_star && !mini ? `<span class="wstar" title="דף חשוב">⭐</span>` : ""}<span class="cap">${esc(r.title)}</span></button>`; };
+  let body = "";
   if (searching) {
-    const ql = q.toLowerCase();
-    show = AD.ws.filter(r => r.book === AD.bank.book && r.type === "page" && ((r.title || "").toLowerCase().includes(ql) || (r.topic_name || "").toLowerCase().includes(ql)));
-    pagesHtml += `<div class="pp-head"><div class="pp-title"><span class="pp-no">${IC.search}</span><div><h2>תוצאות חיפוש</h2><small>"${esc(q)}" · ${show.length} דפים</small></div></div>
-      <button class="btn sm ghost" id="clrSearch">${IC.x} ניקוי</button></div>`;
-    let last = null;
-    pagesHtml += show.length ? `<div class="ws-grid">` + show.map(r => { let hd = ""; const k = r.kind + r.topic_no;
-        if (k !== last) { hd = `<div class="grid-sub">${esc(kindName(r.kind))} · ${esc(String(Number(r.topic_no) || r.topic_no))} ${esc(r.topic_name)}</div>`; last = k; }
-        return hd + tile(r); }).join("") + `</div>` : `<div class="pages-empty">לא נמצאו דפים</div>`;
-  } else if (AD.bank.topic) {
-    const rows = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic);
-    const hasAns = rows.some(r => r.type !== "page");
-    show = rows.filter(r => pagesMode ? r.type === "page" : (AD.bank.tab === "page" ? r.type === "page" : r.type !== "page"));
-    const t0 = rows[0] || {};
-    const pagesOnly = rows.filter(r => r.type === "page"), allStar = pagesOnly.length > 0 && pagesOnly.every(r => r.is_star);
-    const starBtn = !pagesMode ? `<button class="btn sm star-btn ${allStar ? "on" : ""}" id="tStar" title="סימון כל הנושא כחשוב">${allStar ? "⭐ חשוב" : "☆ חשוב"}</button>` : "";
-    const selAll = pagesMode ? `<button class="btn sm" id="selTopic">${pagesOnly.filter(r => !inPlan.has(r.id)).every(r => AD.bank.sel.has(r.id)) && pagesOnly.length ? "ביטול סימון הנושא" : "סימון כל הנושא"}</button>` : "";
-    pagesHtml += `<div class="pp-head">${wide ? "" : `<button class="btn sm ghost" id="tBack">${IC.back}</button>`}
-      <div class="pp-title"><span class="pp-no">${esc(String(Number(t0.topic_no) || t0.topic_no || ""))}</span><div><h2>${esc(t0.topic_name || "")}</h2>
-        <small>${[t0.chapters, pagesOnly.length + " דפים", hasAns && !pagesMode ? rows.length - pagesOnly.length + " דפי פתרונות" : ""].filter(Boolean).map(esc).join(" · ")}</small></div></div>
-      <div class="pp-acts">${starBtn}${selAll}</div></div>`;
-    if (!pagesMode && hasAns) pagesHtml += `<div class="seg ans-seg"><button data-tab="page" class="${AD.bank.tab === "page" ? "on" : ""}">דפים</button><button data-tab="ans" class="${AD.bank.tab !== "page" ? "on" : ""}">פתרונות</button></div>`;
-    // רצועת "דפים חשובים" בראש הנושא (כמו במערכת הניהול)
-    const starred = show.filter(r => r.is_star);
-    if (starred.length && !(allStar && show.length === starred.length)) pagesHtml += `<div class="ws-stars"><div class="ws-stars-h">⭐ דפים חשובים בנושא · ${starred.length}</div><div class="ws-stars-row">` + starred.map(r => tile(r, true)).join("") + `</div></div>`;
-    let lastSub = null;
-    pagesHtml += `<div class="ws-grid">` + show.map(r => { let sub = "";
-      if (r.sub && r.sub !== lastSub) { sub = `<div class="grid-sub">${esc(r.sub)}</div>`; lastSub = r.sub; }
-      return sub + tile(r); }).join("") + `</div>`;
+    // ---- חיפוש בכל הספרים (בבחירה לתלמיד/ה – רק במקצוע שלו/ה) ----
+    const qn = wsNorm(q), m = new Map();
+    AD.ws.filter(r => r.type === "page" && books.includes(r.book)).forEach(r => {
+      const k = r.book + "|" + r.kind + "|" + r.topic_no;
+      if (!m.has(k)) m.set(k, { r, n: 0, topic: false, hits: [], first: null });
+      const t = m.get(k); t.n++; if (!t.first || (r.sort_order || 0) < (t.first.sort_order || 0)) t.first = r;
+      if (wsNorm(r.topic_name).includes(qn)) t.topic = true; else if (wsNorm(r.sub).includes(qn) || wsNorm(r.title).includes(qn)) t.hits.push(r);
+    });
+    const res = [...m.values()].filter(t => t.topic || t.hits.length)
+      .sort((a, b) => bookRank(a.r.book) - bookRank(b.r.book) || a.r.book.localeCompare(b.r.book) || WS_KIND_ORD.indexOf(a.r.kind) - WS_KIND_ORD.indexOf(b.r.kind) || a.r.topic_no.localeCompare(b.r.topic_no, undefined, { numeric: true }));
+    const hl = (s) => { s = String(s || ""); const i = wsNorm(s).indexOf(qn); return i < 0 ? esc(s) : esc(s.slice(0, i)) + "<mark>" + esc(s.slice(i, i + qn.length)) + "</mark>" + esc(s.slice(i + qn.length)); };
+    if (!res.length) body = `<div class="ws-empty">לא נמצא נושא או דף עם <b>"${esc(q)}"</b>.<div class="muted">אפשר לנסות מילה קצרה יותר.</div></div>`;
+    else { let book = null; body = `<div class="ws-res-sum">נמצאו <b>${res.length}</b> נושאים</div>`;
+      res.forEach(t => { const r = t.r;
+        if (r.book !== book) { if (book !== null) body += "</div>"; book = r.book; body += `<h3 class="ws-res-book">${esc(r.book_label)}</h3><div class="ws-res">`; }
+        const cover = t.hits[0] || t.first;
+        body += `<div class="ws-rc k-${esc(r.kind)}" data-go="${esc(r.book + "|" + r.kind + "|" + r.topic_no)}" role="button" tabindex="0">
+          <div class="ws-rc-th"><img data-p="${esc(cover.storage_path)}" alt="" loading="lazy"></div>
+          <div class="ws-rc-b"><div class="ws-rc-t">נושא ${esc(String(Number(r.topic_no) || r.topic_no))} · ${hl(r.topic_name)}</div>
+            ${t.hits.length ? `<ul class="ws-rc-hits">${t.hits.slice(0, 2).map(x => `<li>דף ${esc(String(x.page_no))} · ${hl(x.title || x.sub || "")}</li>`).join("")}${t.hits.length > 2 ? `<li class="more">ועוד ${t.hits.length - 2} דפים</li>` : ""}</ul>` : ""}
+            <div class="ws-rc-n">${t.n} ${esc(r.kind === "summary" ? "דפי סיכום" : r.kind === "topic" ? "דפי תרגול" : WS_KIND[r.kind] || r.kind)} ←</div></div></div>`; });
+      body += "</div>"; }
+  } else if (!AD.bank.topic) {
+    // ---- רשימת הנושאים: "לפי נושאים" קודם, ובסוף נושאים שיש רק בסוג אחר ----
+    if (!kindOut) AD.bank.kind = kinds[0];
+    let tops = bankTopicsOf(AD.bank.kind);
+    if (!kindOut) kinds.slice(1).forEach(k => bankTopicsOf(k).forEach(t => { if (!bankMatch(t, kinds[0])) tops.push(t); }));
+    // בבחירה לתלמיד/ה: מהנושא האחרון בתוכנית והלאה
+    const fr = pick && AD.bank.from && AD.bank.from.book === AD.bank.book ? AD.bank.from : null;
+    let frNo = null;
+    if (fr) { const ft = tops.find(t => t.kind === fr.kind && t.no === fr.topic) || tops.find(t => bankMatch(t, fr.kind) === fr.topic); frNo = ft ? ft.kind + "|" + ft.no : null; }
+    const frIdx = frNo ? tops.findIndex(t => t.kind + "|" + t.no === frNo) : -1;
+    const hiddenN = frIdx > 0 && !AD.bank.showAll ? frIdx : 0;
+    if (hiddenN) tops = tops.slice(frIdx);
+    const stars = []; tops.forEach(t => t.pages.filter(r => r.is_star).forEach(r => stars.push(stTile(r, String(Number(t.no) || t.no) + ". " + t.name, (r.page_no ? r.page_no + " · " : "") + (r.title || "")))));
+    if (stars.length) body += `<div class="ws-stars ws-stars-top"><div class="ws-stars-h"><span>⭐ חשובים${kindOut ? " · " + esc(WS_KIND[AD.bank.kind] || "") : ""}</span></div><div class="ws-stars-row">${stars.join("")}</div></div>`;
+    if (fr) body += `<div class="from-note">${hiddenN ? `מהנושא האחרון בתוכנית והלאה · <button class="linkish small" id="showAllT">להציג גם ${hiddenN} נושאים קודמים</button>` : AD.bank.showAll && frIdx > 0 ? `כל הנושאים · <button class="linkish small" id="showAllT">רק מהנושא האחרון</button>` : ""}</div>`;
+    body += `<div class="ws-albums">${tops.map(t => { const selN = t.pages.filter(r => AD.bank.sel.has(r.id)).length;
+      return `<button type="button" class="ws-album${t.kind + "|" + t.no === frNo ? " here" : ""}" data-t="${esc(t.no)}" data-tk="${esc(t.kind)}">
+      <div class="cv">${t.pages[0] ? `<img data-p="${esc(t.pages[0].storage_path)}" alt="" loading="lazy">` : ""}${selN ? `<span class="al-sel">${selN} ✓</span>` : ""}</div>
+      <div class="mt"><span class="no">נושא ${esc(String(Number(t.no) || t.no))}</span><span class="nm">${t.pages.some(r => r.is_star) ? `<span class="ws-tst" title="יש בנושא דפים חשובים">⭐</span> ` : ""}${esc(t.name)}</span>
+        <span class="ch">${esc([t.kind !== AD.bank.kind ? (WS_KIND[t.kind] || t.kind) : "", t.chapters, t.pages.length + " דפים"].filter(Boolean).join(" · "))}</span>
+        ${t.kind + "|" + t.no === frNo ? `<span class="chip new al-here">כאן נמצא/ת עכשיו</span>` : ""}</div></button>`; }).join("")}</div>`;
+  } else {
+    // ---- בתוך נושא ----
+    const t = bankTopicsOf(AD.bank.kind).find(x => x.no === AD.bank.topic);
+    if (!t) { AD.bank.topic = null; return renderBank(T); }
+    if (selMode || !t.answers.length) AD.bank.tab = "page";
+    const sumNo = AD.bank.tab === "page" && AD.bank.kind === "topic" && !kindOut ? bankMatch(t, "summary") : null;
+    const sumT = sumNo ? bankTopicsOf("summary").find(x => x.no === sumNo) : null;
+    const list = AD.bank.tab === "page" ? t.pages.concat(sumT ? sumT.pages.map(r => Object.assign({}, r, { _sumG: true })) : []) : t.answers;
+    const allStar = t.pages.length && t.pages.every(r => r.is_star);
+    const bl = (info[AD.bank.book] || {}).label || "";
+    body += `<div class="ws-bar"><h2><span class="ws-bar-sub">${esc(bl)} · נושא ${esc(String(Number(t.no) || t.no))}</span>${esc(t.name)}${t.pages.some(r => r.is_star) ? " ⭐" : ""}</h2>
+      ${selMode ? `<button type="button" class="btn small" id="selTopic">${(() => { const fr = t.pages.filter(r => !inPlan.has(r.id)); return fr.length && fr.every(r => AD.bank.sel.has(r.id)) ? "ביטול סימון הנושא" : "סימון כל הנושא"; })()}</button>`
+                : `<button type="button" class="btn small ws-tstar${allStar ? " on" : ""}" id="tStar" title="סימון כל הנושא כחשוב">${allStar ? "⭐ חשוב" : "☆ חשוב"}</button>`}
+      <button type="button" class="btn small ws-back2" id="tBack" title="חזרה לכל הנושאים">→ חזרה<span class="lg-t"> לנושאים</span></button></div>`;
+    if (!selMode && t.answers.length) body += `<div class="ws-sw"><div class="ws-tabs" role="tablist"><button type="button" role="tab" data-tab="page" aria-selected="${AD.bank.tab === "page"}">דפים <small>${t.pages.length}</small></button><button type="button" role="tab" data-tab="ans" aria-selected="${AD.bank.tab !== "page"}">פתרונות <small>${t.answers.length}</small></button></div></div>`;
+    const st = list.filter(r => r.is_star && r.type === "page");
+    if (st.length && !(allStar && !sumT)) body += `<div class="ws-stars"><div class="ws-stars-h"><span>⭐ חשובים בנושא</span></div><div class="ws-stars-row">${st.map(r => stTile(r, String(r.page_no || ""), r.title || "")).join("")}</div></div>`;
+    if (AD.bank.tab !== "page") body += `<div class="ws-warn">פתרונות – לשימוש הצוות בלבד. תלמידים לא מקבלים פתרונות באפליקציה.</div>`;
+    const SUMG = "📘 דפי סיכום";
+    const grpOf = (r) => r._sumG ? "|" + SUMG : (r.chapter || "") + "|" + (r.sub || "");
+    const groups = [];
+    list.forEach(r => { const k = grpOf(r);
+      if (!groups.length || groups[groups.length - 1].k !== k) groups.push({ k, sum: !!r._sumG, title: r._sumG ? SUMG : (r.sub || ""), chapter: r._sumG ? "" : (r.chapter || ""), rows: [] });
+      groups[groups.length - 1].rows.push(r); });
+    AD.bank.openG = AD.bank.openG && AD.bank.openG.t === AD.bank.book + AD.bank.kind + AD.bank.topic ? AD.bank.openG : { t: AD.bank.book + AD.bank.kind + AD.bank.topic, s: new Set() };
+    if (groups.some(g => g.title || g.chapter)) body += `<div class="ws-grps">` + groups.map(g => { const fd = g.sum, cl = fd && !AD.bank.openG.s.has(g.k);
+        const head = g.title || g.chapter ? `<div class="ws-gh" ${fd ? `data-fold="${esc(g.k)}"` : ""}><span>${fd ? `<i class="ws-car" aria-hidden="true">${cl ? "◂" : "▾"}</i>` : ""}<bdi>${esc(g.title)}</bdi>${g.chapter ? `<small>פרק ${esc(g.chapter)}</small>` : ""}${fd ? `<em class="ws-gn">${g.rows.length} דפים</em>` : ""}</span></div>` : "";
+        return `<section class="ws-grp${g.rows.length > 4 ? " wide" : ""}${fd ? " fold ws-sumg" : ""}${cl ? " closed" : ""}">${head}<div class="ws-pages">${g.rows.map(card).join("")}</div></section>`; }).join("") + `</div>`;
+    else body += `<div class="ws-pages">${list.map(card).join("")}</div>`;
   }
-  if (wide) h += `<div class="bank wide"><div class="bank-body"><div class="topics-col panel-lite">${topicsHtml}</div><div class="pages-col">${pagesHtml || `<div class="pages-empty">לבחור נושא</div>`}</div></div></div>`;
-  else h += (AD.bank.topic || searching) ? `<div class="pages-col">${pagesHtml}</div>` : `<div class="topics-col panel-lite">${topicsHtml}</div>`;
+  h += `<div id="wsBody">${body}</div>`;
   T.innerHTML = h;
 
   // ---- חיבורים ----
   const W = (sel) => T.querySelectorAll(sel), one = (sel) => T.querySelector(sel);
-  W("[data-b]").forEach(b => b.onclick = () => { AD.bank.book = b.dataset.b; AD.bank.topic = null; AD.bank.q = ""; renderBank(T); });
-  W("[data-k]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.k; AD.bank.topic = null; renderBank(T); });
-  W("[data-t]").forEach(b => b.onclick = () => { AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; AD.bank.q = ""; renderBank(T); if (!wide) (T.id === "adBody" ? window : T).scrollTo(0, 0); });
+  const reset = () => { AD.bank.topic = null; AD.bank.q = ""; AD.bank.showAll = false; };
+  W("[data-ws]").forEach(b => b.onclick = () => { const nb = books.find(x => info[x].subj === b.dataset.ws); if (nb) { AD.bank.book = nb; reset(); renderBank(T); } });
+  W("[data-wg]").forEach(b => b.onclick = () => { const nb = books.find(x => info[x].subj === cur.subj && info[x].grade === b.dataset.wg); if (nb) { AD.bank.book = nb; reset(); renderBank(T); } });
+  W("[data-b]").forEach(b => b.onclick = () => { AD.bank.book = b.dataset.b; reset(); renderBank(T); });
+  W("[data-wk]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.wk; AD.bank.topic = null; renderBank(T); });
+  W("[data-t]").forEach(b => b.onclick = () => { AD.bank.listKind = AD.bank.kind; AD.bank.kind = b.dataset.tk; AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(T); (T.id === "adBody" ? window : T).scrollTo(0, 0); });
+  W("[data-go]").forEach(b => b.onclick = () => { const [bk, k, no] = b.dataset.go.split("|"); AD.bank.book = bk; AD.bank.kind = k; AD.bank.topic = no; AD.bank.q = ""; AD.bank.tab = "page"; renderBank(T); (T.id === "adBody" ? window : T).scrollTo(0, 0); });
   W("[data-tab]").forEach(b => b.onclick = () => { AD.bank.tab = b.dataset.tab; renderBank(T); });
+  W("[data-fold]").forEach(b => b.onclick = () => { const s = AD.bank.openG.s; s.has(b.dataset.fold) ? s.delete(b.dataset.fold) : s.add(b.dataset.fold); renderBank(T); });
   W("[data-mode]").forEach(b => b.onclick = () => { const m = b.dataset.mode === "1"; if (m === !!AD.bank.multi) return; AD.bank.multi = m; AD.bank.sel.clear(); AD.bank.tab = "page"; renderBank(T); });
+  W("[data-cp]").forEach(b => b.onclick = async () => { const w = AD.wsById.get(b.dataset.cp); if (!w) return; const g = await sign([w.storage_path]); copyImage(g(w.storage_path)); });
   const si = one("#bkSearch");
-  if (si) si.oninput = () => { clearTimeout(renderBank._t); renderBank._t = setTimeout(() => { const pos = si.selectionStart; AD.bank.q = si.value; renderBank(T).then(() => { const n = T.querySelector("#bkSearch"); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch(e) {} } }); }, 250); };
+  if (si) si.oninput = () => { clearTimeout(renderBank._t); renderBank._t = setTimeout(() => { const pos = si.selectionStart; AD.bank.q = si.value; if (AD.bank.q.trim().length >= 2) AD.bank.topic = null; renderBank(T).then(() => { const n = T.querySelector("#bkSearch"); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch(e) {} } }); }, 250); };
   if (one("#clrSearch")) one("#clrSearch").onclick = () => { AD.bank.q = ""; renderBank(T); };
   if (one("#tStar")) one("#tStar").onclick = async () => {
     const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page");
-    const on = !pg.every(r => r.is_star); if (await setStar(pg.map(r => r.id), on)) { toast(on ? "כל הנושא סומן כחשוב." : "הסימון הוסר."); renderBank(T); } };
+    const on = !pg.every(r => r.is_star); if (await setStar(pg.map(r => r.id), on)) { toast(on ? "כל הנושא סומן כחשוב ⭐" : "הסימון הוסר מהנושא"); renderBank(T); } };
   if (one("#selTopic")) one("#selTopic").onclick = () => {
     const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page" && !inPlan.has(r.id));
     const all = pg.every(r => AD.bank.sel.has(r.id)); pg.forEach(r => all ? AD.bank.sel.delete(r.id) : AD.bank.sel.add(r.id)); renderBank(T); };
   if (one("#showAllT")) one("#showAllT").onclick = () => { AD.bank.showAll = !AD.bank.showAll; renderBank(T); };
-  if (one("#tBack")) one("#tBack").onclick = () => { AD.bank.topic = null; renderBank(T); };
+  if (one("#tBack")) one("#tBack").onclick = () => { AD.bank.topic = null; if (AD.bank.listKind) AD.bank.kind = AD.bank.listKind; renderBank(T); };
   if (one("#pickCancel")) one("#pickCancel").onclick = () => { const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; AD.bank.sel.clear(); AD.view = "students"; openStudent(sid, subj); };
   W("[data-w]").forEach(b => b.onclick = () => {
     const id = b.dataset.w;
-    if (!pagesMode) return previewWs(id);
+    if (!selMode) return previewWs(id);
     if (inPlan.has(id)) { toast("הדף הזה כבר בתוכנית."); return; }
     AD.bank.sel.has(id) ? AD.bank.sel.delete(id) : AD.bank.sel.add(id);
-    T.querySelectorAll(`[data-w="${CSS.escape(id)}"]`).forEach(x => x.classList.toggle("sel", AD.bank.sel.has(id)));
-    // מספר המסומנים ליד הנושא
-    const tr = T.querySelector(`.topic-row.on .tmeta`); if (tr && AD.bank.topic) { const n = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && AD.bank.sel.has(r.id)).length;
-      const t = topics.find(x => x.no === AD.bank.topic); tr.innerHTML = (t && t.star ? `<span class="tstar">⭐</span>` : "") + (n ? `<span class="selcnt">${n} ✓</span>` : `<span class="cnt">${t ? t.pages : ""}</span>`); }
+    const on = AD.bank.sel.has(id);
+    T.querySelectorAll(`.ws-pg[data-w="${CSS.escape(id)}"]`).forEach(x => x.parentElement.classList.toggle("sel", on));
+    T.querySelectorAll(`.ws-st .th[data-w="${CSS.escape(id)}"], .ws-st .go[data-w="${CSS.escape(id)}"]`).forEach(x => { const st = x.closest(".ws-st"); st.classList.toggle("sel", on); const go = st.querySelector(".go"); if (go) go.textContent = on ? "✓ נבחר" : "בחירה"; });
     pickBar();
   });
   pickBar();
-  const all = [...new Set([...T.querySelectorAll(".ws-tile .thumb[data-p]")].map(t => t.dataset.p))];
-  if (all.length) {
-    const g = await sign(all);
-    T.querySelectorAll(".ws-tile .thumb[data-p]").forEach(t => { t.style.backgroundImage = `url('${g(t.dataset.p)}')`; });
-  }
+  const imgs = [...T.querySelectorAll("img[data-p]")];
+  if (imgs.length) { const g = await sign([...new Set(imgs.map(i => i.dataset.p))]); imgs.forEach(i => { i.src = g(i.dataset.p); }); }
 }
+
 function pickBar(){
   const pick = AD.bank.pick;
   if (!pick && AD.bank.multi) {
