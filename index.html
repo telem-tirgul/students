@@ -302,7 +302,7 @@
   .wk-row .t b{ font-family:var(--font-display); font-size:15px; } .wk-row .t small{ color:var(--ink-soft); font-size:12.5px; }
   .wk-row .tags{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; }
   .kpi-row{ display:flex; flex-wrap:wrap; gap:4px 6px; align-items:center; margin:-4px 0 12px; font-size:13px; color:var(--ink-soft); }
-  .kpi{ border:none; background:var(--paper); border:1px solid var(--border); border-radius:999px; padding:3px 10px; font:inherit; color:inherit; cursor:pointer; white-space:nowrap; }
+  .kpi{ border:none; background:var(--paper); border:1px solid var(--border); border-radius:999px; padding:3px 10px; font:inherit; color:inherit; white-space:nowrap; }
   .kpi b{ font-family:var(--font-display); font-size:14px; color:var(--ink); }
   .kpi.k-gold b{ color:var(--warn); } .kpi.k-acc b{ color:var(--accent); } .kpi.k-ok b{ color:var(--ok); }
   .live-bar{ background:var(--ok-bg); border:2px solid var(--ok); border-radius:18px; padding:10px 12px; margin:0 0 16px; }
@@ -923,6 +923,8 @@
   .staff-foot{ text-align:center; margin-top:56px; padding-bottom:calc(16px + var(--safe-b)); }
   .staff-foot .linkish{ font-size:12.5px; color:var(--ink-soft); text-decoration:none; opacity:.8; }
   .staff-foot .linkish:hover{ text-decoration:underline; opacity:1; }
+  .inst-note{ font-size:14.5px; font-weight:600; color:var(--ink); background:var(--accent-soft); border-radius:12px; padding:10px 12px; margin:10px 0 14px; }
+  @media (max-width:760px){ .kpi-row{ flex-wrap:nowrap; overflow-x:auto; gap:4px; font-size:12px; scrollbar-width:none; } .kpi-row::-webkit-scrollbar{ display:none; } .kpi{ padding:2px 8px; } .kpi b{ font-size:13px; } }
 </style>
 </head>
 <body>
@@ -1020,6 +1022,7 @@
       <div class="brand"><img class="brand-logo" src="logo.png" alt="תלם"><span class="brand-t">תלם שלי<small>מערכת ניהול · דפי תרגול</small></span></div>
       <nav class="nav" id="adNav" aria-label="תפריט"></nav>
       <div class="who"><span id="adWho"></span>
+        <button class="btn small ghost hdr-btn" id="adNotify" title="התראות" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="ib-t">התראות</span></button>
         <button class="btn small ghost hdr-btn" id="adRefresh" title="רענון"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="ib-t">רענון</span></button>
         <button class="btn small ghost" id="adLogout">יציאה</button></div>
     </header>
@@ -1046,7 +1049,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.10",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.11",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1068,7 +1071,14 @@ function ago(iso){
   const h = m / 60; if (h < 24) return "לפני " + Math.round(h) + (Math.round(h) === 1 ? " שעה" : " שעות");
   const d = Math.round(h / 24); return d === 1 ? "אתמול" : "לפני " + d + " ימים";
 }
-function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { el.hidden = true; }, 3200); }
+// צליל קצר להתראה (בלי קובץ)
+let AUDIO = null;
+function beep(){
+  try { AUDIO = AUDIO || new (window.AudioContext || window.webkitAudioContext)(); const o = AUDIO.createOscillator(), g = AUDIO.createGain();
+    o.type = "sine"; o.frequency.value = 880; g.gain.setValueAtTime(0.0001, AUDIO.currentTime); g.gain.exponentialRampToValueAtTime(0.25, AUDIO.currentTime + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, AUDIO.currentTime + 0.35); o.connect(g); g.connect(AUDIO.destination); o.start(); o.stop(AUDIO.currentTime + 0.4); } catch(e) {}
+}
+function toast(t, ms){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { el.hidden = true; }, ms || 3200); }
 function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e) { return null; } }
 const IC = {
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>',
@@ -1316,7 +1326,12 @@ async function loadStudentPages(quiet){
   if (!ST.pages && !quiet) $("stBody").innerHTML = "<div class='card muted'>טוען…</div>";
   try {
     const rows = await rpc("portal_my_pages");
+    const had = ST.pages ? new Set(ST.pages.filter(p => p.status === "נשלח").map(p => p.item_id)) : null;
+    const sig = (L) => JSON.stringify((L || []).map(p => [p.item_id, p.status]));
+    if (quiet && ST.pages && sig(rows) === sig(ST.pages)) return;   // בדיקה ברקע – אין שינוי
     ST.pages = rows || [];
+    const fresh = had ? ST.pages.filter(p => p.status === "נשלח" && !had.has(p.item_id)) : [];
+    if (fresh.length) { toast(fresh.length === 1 ? "📄 הגיע דף חדש!" : `📄 הגיעו ${fresh.length} דפים חדשים!`, 6000); try { navigator.vibrate && navigator.vibrate([120, 60, 120]); } catch(e) {} beep(); }
     const g = await sign(ST.pages.map(r => r.storage_path));
     ST.url = g;
     renderStudent();
@@ -1405,6 +1420,8 @@ $("stMenu").onclick = () => openSheet(`
     sh.querySelector("#mOut").onclick = () => { closeSheet(); logout(); };
   });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("studentView").hidden && !VIEWER) loadStudentPages(true); });
+// בדיקה אוטומטית כל 20 שניות כשהאפליקציה פתוחה – דף שנשלח מופיע לבד
+setInterval(() => { if (!document.hidden && !$("studentView").hidden && !VIEWER && ST.me) loadStudentPages(true); }, 20000);
 
 // ---------- צפייה בדף ----------
 let VIEWER = null;
@@ -1513,7 +1530,7 @@ function showInstallHelp(){
   openSheet(`<h2>הוספה למסך הבית</h2>
     ${INSTALL_EVT ? `<button class="btn primary block" id="doInstall" style="margin-bottom:8px">התקנה בלחיצה אחת</button><p class="muted small" style="margin:0 0 6px">או ידנית:</p>` : ""}
     <ol class="steps">${steps.map(s => `<li><span>${s}</span></li>`).join("")}</ol>
-    <p class="muted small">אחרי זה יופיע הסמל של תלם במסך הבית, ונכנסים ממנו לדפים.</p>
+    <p class="inst-note">לאחר ההוספה למסך הבית תוכל/י להיכנס ל"תלם שלי" בקלות דרך מסך הבית בטלפון.</p>
     <div style="display:flex;gap:8px"><button class="btn primary" style="flex:1" id="instOk">הבנתי</button><button class="btn" id="instLater">אחר כך</button></div>`, (sh) => {
       if (sh.querySelector("#doInstall")) sh.querySelector("#doInstall").onclick = async () => { const e = INSTALL_EVT; INSTALL_EVT = null; closeSheet(); e.prompt(); const r = await e.userChoice.catch(() => null); if (r && r.outcome === "accepted") store("telem_portal_installed", "1"); updateInstallBanner(); };
       sh.querySelector("#instOk").onclick = () => closeSheet();
@@ -1526,7 +1543,7 @@ function showInstallHelp(){
 // ותצוגה לנייד (תפריט תחתון, מסך אחרי מסך)
 // ======================================================================
 const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
-             st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "groups" ? "groups" : "list", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, present: null,
+             st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "list" ? "list" : "groups", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
 const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
@@ -1557,11 +1574,52 @@ function adminStart(){
   $("drawerClose").onclick = $("drawerBg").onclick = () => closeDrawer();
   renderNav();
   adLoad();
+  notifyBtn();
+}
+// ---------- התראות במסך הניהול: בדיקה כל 15 שניות ----------
+// מי שלחץ/ה "סיימתי" או ביקש/ה קוד חדש – צליל, הודעה, מספר בכותרת הלשונית, והתראת דפדפן (אם אושרה)
+let AD_POLLING = false;
+async function adPoll(){
+  if (AD_POLLING || $("adminView").hidden || !AD.loaded || !auth) return;
+  AD_POLLING = true;
+  try {
+    const plan = (await getAll("portal_plan_items", "select=id,student_id,worksheet_id,subject,position,status,released_at,done_at,seen_at&order=position,id"))
+      .map(p => Object.assign(p, { student_id: String(p.student_id) }));
+    let reqs = AD.codeReqs || [];
+    try { reqs = (await get("portal_code_requests", "select=id,student_id,phone,created_at&handled_at=is.null&matched=is.true&order=created_at"))
+            .map(r => Object.assign(r, { student_id: String(r.student_id) })).filter(r => stById(r.student_id)); } catch(e) {}
+    const sig = (P, R) => JSON.stringify([P.map(p => [p.id, p.status, p.seen_at ? 1 : 0]), R.map(r => r.id)]);
+    if (sig(plan, reqs) === sig(AD.plan, AD.codeReqs || [])) return;
+    const beforeW = new Set(waitingList().map(w => w.s.student_id + "|" + w.subj)), beforeR = new Set((AD.codeReqs || []).map(r => r.id));
+    AD.plan = plan; AD.codeReqs = reqs; refreshWaitingLocal();
+    const newW = waitingList().filter(w => !beforeW.has(w.s.student_id + "|" + w.subj)), newR = AD.codeReqs.filter(r => !beforeR.has(r.id));
+    if (newW.length || newR.length) {
+      const names = [...newW.map(w => stName(w.s).trim()), ...newR.map(r => stName(stById(r.student_id)).trim() + " (קוד)")];
+      const msg = newW.length && !newR.length ? (newW.length === 1 ? `🔔 ${names[0]} סיים/ה דף ומחכה לדף הבא` : `🔔 ${newW.length} תלמידים מחכים לדף: ${names.join(", ")}`)
+                : `🔔 ${names.join(", ")}`;
+      toast(msg, 9000); beep();
+      try { if (window.Notification && Notification.permission === "granted" && document.hidden) new Notification("תלם שלי", { body: msg.replace("🔔 ", ""), icon: "icon-192.png", tag: "telem-wait" }); } catch(e) {}
+    }
+    // מרעננים את המסך רק כשאין חלון פתוח (כדי לא להפריע באמצע עבודה)
+    if (!SHEET && $("drawer").hidden && AD.view === "wait" && !AD.st) renderWait();
+  } catch(e) {}
+  finally { AD_POLLING = false; updateTitle(); }
+}
+function updateTitle(){ const n = AD.loaded ? waitingList().length + (AD.codeReqs || []).length : 0; document.title = (n ? `(${n}) ` : "") + "תלם שלי"; }
+setInterval(adPoll, 15000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) adPoll(); });
+// כפתור "התראות" – התראה של הדפדפן גם כשהלשונית ברקע (במחשב)
+function notifyBtn(){
+  const b = $("adNotify"); if (!b) return;
+  const ok = "Notification" in window && Notification.permission === "default";
+  b.hidden = !ok;
+  b.onclick = async () => { try { const r = await Notification.requestPermission(); toast(r === "granted" ? "מעולה – תקבלי התראה כשמישהו מחכה לדף." : "ההתראות לא אושרו. אפשר לשנות בהגדרות הדפדפן."); } catch(e) {} notifyBtn(); };
 }
 DESK.addEventListener("change", () => { if (!$("adminView").hidden) { if (!isDesk()) closeDrawer(true); adRender(); } });
 
 function renderNav(){
   const n = waitingList().length + (AD.codeReqs || []).length;
+  try { if (AD.loaded) document.title = (n ? `(${n}) ` : "") + "תלם שלי"; } catch(e) {}
   $("adNav").innerHTML = NAV.map(([v, l, ic, sl]) => `<button data-v="${v}" data-sl="${sl}" ${AD.view === v ? 'aria-current="page"' : ""}>${ic}<span>${l}</span>${v === "wait" && n ? `<span class="badge">${n}</span>` : ""}</button>`).join("");
   $("adNav").querySelectorAll("button").forEach(b => b.onclick = () => adGo(b.dataset.v));
 }
@@ -1650,10 +1708,10 @@ async function renderWait(){
   const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
   const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
   const byGroup = AD.waitMode === "groups";
-  const kpi = (v, l, cls, go, f) => `<button class="kpi ${cls}" data-go="${go}"${f ? ` data-f="${f}"` : ""}><b>${v}</b> ${l}</button>`;
+  const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
   let h = `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
     <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "מי שמחכה לדף – לפי עיר, מקום תרגול וקבוצה." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
-      <div class="mode-sw" role="tablist"><button data-wm="list" class="${byGroup ? "" : "on"}">${IC.list || ""} רשימה</button><button data-wm="groups" class="${byGroup ? "on" : ""}">${IC.users || ""} לפי קבוצות</button></div></div>
+      <div class="mode-sw" role="tablist"><button data-wm="groups" class="${byGroup ? "on" : ""}">${IC.users || ""} לפי קבוצות</button><button data-wm="list" class="${byGroup ? "" : "on"}">${IC.list || ""} רשימה</button></div></div>
 `;
   const reqs = AD.codeReqs || [];
   if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
