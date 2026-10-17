@@ -899,6 +899,30 @@
   }
 
   .from-note{ margin:0 2px 10px; }
+
+  /* ===== מסך המאגר בצבעי תלם (1.10): נייר חם עם משבצות, בורדו, זהב – לפי "מאגר דפים בצבעי תלם" ===== */
+  :root{ --grid:#EBE2D8; --accent-2:#8B1E23; --mark:#E9C77E; }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; } }
+  :root[data-theme="dark"]{ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; }
+  body.v-bank, .drawer{ background-color:var(--bg); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px; }
+  .bank-h h1 .hl{ background:linear-gradient(transparent 58%, var(--mark) 58%); padding-inline:4px; }
+  body.v-bank .ws-quick .gseg, .drawer .ws-quick .gseg{ background:var(--paper); border:1.5px solid var(--border); padding:3px; gap:3px; }
+  body.v-bank .ws-quick .gseg button, .drawer .ws-quick .gseg button{ border-radius:999px; font-weight:600; color:var(--ink); }
+  body.v-bank .ws-quick .gseg button[aria-pressed="true"], .drawer .ws-quick .gseg button[aria-pressed="true"]{ background:var(--accent); color:#fff; }
+  .ws-albums{ gap:16px; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); }
+  .ws-album{ background:var(--paper); border-color:var(--border); border-radius:14px; transition:transform .15s, border-color .15s; }
+  .ws-album:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .ws-album .mt{ padding:12px 14px 14px; }
+  .ws-album .no{ font-family:var(--font-display); font-weight:700; font-size:13.5px; color:var(--accent-2); }
+  .ws-album .nm{ font-family:var(--font-display); font-weight:700; font-size:18px; line-height:1.25; }
+  .ws-album .ch{ font-size:14.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums; } .ws-album .star{ color:var(--gold); }
+  .ws-pg{ background:var(--paper); border-radius:10px; } .ws-pg .cap b{ color:var(--accent-2); font-family:var(--font-display); }
+  .ws-grp:not(.fold) .ws-gh > span{ padding-inline-start:10px; border-inline-start:3px solid var(--gold); font-family:var(--font-display); font-weight:600; }
+  @media (prefers-reduced-motion:reduce){ .ws-album{ transition:none; } }
+  @media (max-width:760px){ .ws-albums{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; } .ws-album .nm{ font-size:16px; } }
+  .staff-foot{ text-align:center; margin-top:56px; padding-bottom:calc(16px + var(--safe-b)); }
+  .staff-foot .linkish{ font-size:12.5px; color:var(--ink-soft); text-decoration:none; opacity:.8; }
+  .staff-foot .linkish:hover{ text-decoration:underline; opacity:1; }
 </style>
 </head>
 <body>
@@ -928,9 +952,10 @@
       <button class="btn primary block" id="lgBtn" type="submit">כניסה</button>
     </form>
     <div style="text-align:center" id="forgotNote"><button class="linkish small" id="forgotBtn" type="button">שכחתי את הקוד</button></div>
-    <div style="text-align:center"><button class="linkish small" id="staffToggle" type="button">כניסת צוות</button></div>
     <p class="muted small" style="text-align:center;margin:0">גרסה <span class="appVer"></span></p>
   </div>
+  <!-- כניסת צוות – קטנה ורחוקה מהכניסה של התלמידים, כדי שלא יתבלבלו. לצוות יש גם קישור ישיר: …/students/#staff -->
+  <div class="staff-foot"><button class="linkish" id="staffToggle" type="button">כניסת צוות</button></div>
 </section>
 
 <!-- ===================== החלפת קוד ===================== -->
@@ -1021,7 +1046,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.9.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.10",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1157,7 +1182,7 @@ let STAFF_MODE = false, LAST_CODE = "";
 function showLogin(msg){
   showView("loginView"); closeSheet(); closeViewer();
   $("lgErr").textContent = msg || "";
-  setStaffMode(store("telem_portal_staff") === "1");
+  setStaffMode(store("telem_portal_staff") === "1" || /^#staff\b/i.test(location.hash));
 }
 function setStaffMode(on){
   STAFF_MODE = on; $("studentFields").hidden = on; $("staffFields").hidden = !on; $("forgotNote").hidden = on;
@@ -1199,6 +1224,8 @@ $("forgotBtn").onclick = () => openSheet(`<h2>שכחתי את הקוד</h2>
     };
   });
 $("staffToggle").onclick = () => { setStaffMode(!STAFF_MODE); $("lgErr").textContent = ""; };
+// קישור ישיר לצוות: https://telem-tirgul.github.io/students/#staff
+window.addEventListener("hashchange", () => { if (/^#staff\b/i.test(location.hash) && !$("loginView").hidden) { setStaffMode(true); $("lgErr").textContent = ""; } });
 $("loginForm").onsubmit = async (ev) => {
   ev.preventDefault();
   const err = $("lgErr"); err.textContent = "";
@@ -1579,6 +1606,7 @@ function adGo(v){
 }
 function adRender(){
   renderNav(); setActionBar(null);
+  document.body.classList.toggle("v-bank", AD.view === "bank" && !AD.st);
   if (!AD.loaded) return;
   const titles = { wait: "ממתינים לדף", students: "תלמידים", bank: "מאגר" };
 
@@ -2130,7 +2158,7 @@ async function renderBank(T){
       : seg(grades.map(g => ({ a: `data-wg="${esc(g)}"`, on: g === cur.grade, t: g + "'" }))) + seg(parts.map(b => ({ a: `data-b="${esc(b)}"`, on: b === AD.bank.book, t: (info[b].part || info[b].label) + (info[b].part ? "'" : "") }))));
 
   let h = "";
-  if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:200px"><h1>מאגר תרגולים</h1></div>
+  if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:200px"><h1>מאגר <span class="hl">דפי תרגול</span></h1></div>
     ${pick ? "" : `<div class="mode-sw" role="tablist"><button data-mode="0" class="${multi ? "" : "on"}">${IC.book} עיון</button><button data-mode="1" class="${multi ? "on" : ""}">${IC.send} שליחה לתלמידים</button></div>`}</div>`;
   if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subj)}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
   if (multi) h += `<div class="multi-hint">${IC.send}<span>מצב שליחה: לחיצה על דף מסמנת אותו. אפשר לסמן מכמה נושאים, ואז "בחירת תלמידים" למטה.</span></div>`;
@@ -2187,8 +2215,8 @@ async function renderBank(T){
     body += `<div class="ws-albums">${tops.map(t => { const selN = t.pages.filter(r => AD.bank.sel.has(r.id)).length;
       return `<button type="button" class="ws-album${t.kind + "|" + t.no === frNo ? " here" : ""}" data-t="${esc(t.no)}" data-tk="${esc(t.kind)}">
       <div class="cv">${t.pages[0] ? `<img data-p="${esc(t.pages[0].storage_path)}" alt="" loading="lazy">` : ""}${selN ? `<span class="al-sel">${selN} ✓</span>` : ""}</div>
-      <div class="mt"><span class="no">נושא ${esc(String(Number(t.no) || t.no))}</span><span class="nm">${t.pages.some(r => r.is_star) ? `<span class="ws-tst" title="יש בנושא דפים חשובים">⭐</span> ` : ""}${esc(t.name)}</span>
-        <span class="ch">${esc([t.kind !== AD.bank.kind ? (WS_KIND[t.kind] || t.kind) : "", t.chapters, t.pages.length + " דפים"].filter(Boolean).join(" · "))}</span>
+      <div class="mt"><span class="no">${t.chapters ? esc(/פרק/.test(t.chapters) ? t.chapters : "פרקים " + t.chapters).replace(/(\d+\s*[–-]\s*\d+)/g, '<span dir="ltr">$1</span>') : "נושא " + esc(String(Number(t.no) || t.no))}</span><span class="nm">${esc(t.name)}</span>
+        <span class="ch">${esc([t.kind !== AD.bank.kind ? (WS_KIND[t.kind] || t.kind) : "", (t.pages.length === 1 ? "דף אחד" : t.pages.length + " דפים")].filter(Boolean).join(" · "))}${(n => n ? ` · <span class="star">⭐</span> ${n === 1 ? "חשוב אחד" : n + " חשובים"}` : "")(t.pages.filter(r => r.is_star).length)}</span>
         ${t.kind + "|" + t.no === frNo ? `<span class="chip new al-here">כאן נמצא/ת עכשיו</span>` : ""}</div></button>`; }).join("")}</div>`;
   } else {
     // ---- בתוך נושא ----
