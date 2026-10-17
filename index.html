@@ -904,8 +904,32 @@
   :root{ --grid:#EBE2D8; --accent-2:#8B1E23; --mark:#E9C77E; }
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; } }
   :root[data-theme="dark"]{ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; }
-  body.v-bank, .drawer{ background-color:var(--bg); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px; }
-  .bank-h h1 .hl{ background:linear-gradient(transparent 58%, var(--mark) 58%); padding-inline:4px; }
+  body.v-bank, body.v-student, .drawer{ background-color:var(--bg); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px; }
+  /* מסך התלמיד בצבעי תלם (1.12) */
+  .st-h{ font-family:var(--font-display); font-weight:900; font-size:22px; margin:18px 2px 12px; }
+  .st-h .hl, .bank-h h1 .hl{ background:linear-gradient(transparent 58%, var(--mark) 58%); padding-inline:4px; }
+  .kick{ display:block; color:var(--accent-2); font-weight:800; font-size:13px; line-height:1.35; }
+  .now-card{ display:block; width:100%; text-align:start; background:var(--paper); border:1.5px solid var(--gold); border-radius:18px; overflow:hidden; margin-bottom:14px; padding:0; cursor:pointer; color:inherit;
+    box-shadow:0 4px 14px color-mix(in srgb, var(--accent-2) 10%, transparent); }
+  .now-img{ position:relative; display:block; height:160px; background:#fff center top / 92% auto no-repeat; border-bottom:1px solid var(--border); }
+  .now-img .chip.new{ position:absolute; top:10px; inset-inline-start:10px; }
+  .now-tx{ display:block; padding:12px 14px 14px; }
+  .now-tx .t{ display:block; font-family:var(--font-display); font-weight:900; font-size:20px; line-height:1.3; margin:2px 0 2px; }
+  .now-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:8px; }
+  .now-row .s{ font-size:13px; color:var(--ink-soft); }
+  .st-sum{ display:flex; align-items:baseline; gap:10px; margin-top:24px; }
+  .st-sum .st-h{ margin:0 2px 10px; }
+  .dv-seg{ margin-bottom:6px; }
+  .wk-h{ font-family:var(--font-display); font-size:13px; font-weight:800; color:var(--ink-soft); margin:14px 4px 6px; }
+  .dr{ display:flex; gap:12px; align-items:center; width:100%; text-align:start; background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:8px 10px; margin-bottom:8px; cursor:pointer; color:inherit; }
+  .dr .mi{ width:52px; height:64px; flex:none; border-radius:7px; border:1px solid var(--border); background:#fff center top / cover no-repeat; }
+  .dr .nm{ flex:1; min-width:0; }
+  .dr .nm b{ display:block; font-family:var(--font-display); font-weight:700; font-size:16px; line-height:1.3; }
+  .dr .dd{ flex:none; text-align:center; font-size:12px; color:var(--ink-soft); min-width:44px; }
+  .dr .dd i{ display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--ok); color:#fff; font-style:normal; font-size:14px; margin:0 auto 2px; }
+  body.v-student .dt-no{ border-radius:50%; background:var(--paper); border:2px solid var(--gold); color:var(--accent-2); width:34px; height:34px; min-width:34px; padding:0; }
+  body.v-student details.dt[open]{ border-color:var(--gold); }
+  body.v-student .dt-sub{ color:var(--accent-2); font-weight:800; }
   body.v-bank .ws-quick .gseg, .drawer .ws-quick .gseg{ background:var(--paper); border:1.5px solid var(--border); padding:3px; gap:3px; }
   body.v-bank .ws-quick .gseg button, .drawer .ws-quick .gseg button{ border-radius:999px; font-weight:600; color:var(--ink); }
   body.v-bank .ws-quick .gseg button[aria-pressed="true"], .drawer .ws-quick .gseg button[aria-pressed="true"]{ background:var(--accent); color:#fff; }
@@ -1049,7 +1073,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.11",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.12",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1180,14 +1204,16 @@ async function sign(paths){
       (res || []).forEach(r => { if (r.signedURL) URLS[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + 3600 * 1000 }; });
     } catch(e) {}
   }
-  return (p) => URLS[p] ? URLS[p].url : "";
+  return (p) => URLS[p] ? URLS[p].url + (WS_VER[p] ? "&v=" + WS_VER[p] : "") : "";
 }
+// גרסת הקובץ (file_at) – כדי שדף שיובא מחדש לא יוצג מהמטמון הישן (כמו במערכת הניהול 5.19.50)
+const WS_VER = {};
 
 // ======================================================================
 // מסכים: כניסה
 // ======================================================================
 const VIEWS = ["loginView", "codeView", "msgView", "studentView", "adminView"];
-function showView(id){ VIEWS.forEach(v => { $(v).hidden = v !== id; }); window.scrollTo(0, 0); }
+function showView(id){ VIEWS.forEach(v => { $(v).hidden = v !== id; }); document.body.classList.toggle("v-student", id === "studentView"); window.scrollTo(0, 0); }
 let STAFF_MODE = false, LAST_CODE = "";
 function showLogin(msg){
   showView("loginView"); closeSheet(); closeViewer();
@@ -1353,18 +1379,17 @@ function renderStudent(){
   const mine = ST.pages.filter(p => subs.length < 2 || p.subject === ST.subj);
   const open = mine.filter(p => p.status === "נשלח"), done = mine.filter(p => p.status === "הושלם");
   let h = "";
+  const kick = (p) => { const no = p.topic_no ? String(Number(p.topic_no) || p.topic_no) : ""; return [no ? "נושא " + no : "", p.topic_name || ""].filter(Boolean).join(" · "); };
   if (open.length) {
-    h += `<div class="sec-h">לעבודה עכשיו</div>`;
+    h += `<h2 class="st-h"><span class="hl">לעבודה עכשיו</span></h2>`;
     h += open.map(p => `
-      <button class="page-card ${p.is_new ? "is-new" : ""}" data-i="${p.item_id}">
-        <span class="thumb" style="background-image:url('${esc(ST.url(p.storage_path))}')"></span>
-        <span style="min-width:0">
-          ${p.is_new ? `<span class="chip new">חדש</span>` : ""}
-          <div class="t">${esc(p.title)}</div>
-          <div class="s">${esc(p.topic_name || "")}</div>
-          <div class="s">נשלח ${esc(ago(p.released_at))}</div>
+      <button class="now-card ${p.is_new ? "is-new" : ""}" data-i="${p.item_id}">
+        <span class="now-img" style="background-image:url('${esc(ST.url(p.storage_path))}')">${p.is_new ? `<span class="chip new">חדש</span>` : ""}</span>
+        <span class="now-tx">
+          ${kick(p) ? `<span class="kick">${esc(kick(p))}</span>` : ""}
+          <span class="t">${esc(p.title)}</span>
+          <span class="now-row"><span class="s">נשלח ${esc(ago(p.released_at))}</span><span class="btn primary sm">לפתיחת הדף ←</span></span>
         </span>
-        <span class="go">${IC.chev}</span>
       </button>`).join("");
   } else {
     h += `<div class="card empty">
@@ -1372,10 +1397,34 @@ function renderStudent(){
       <h2 style="margin-top:8px">${done.length ? "כל הכבוד, סיימת הכול!" : "עוד אין דפים"}</h2>
       <p class="muted">${done.length ? "עדכנו שסיימת. דף חדש יגיע לכאן בקרוב." : "כשיישלח אליך דף תרגול, הוא יופיע כאן."}</p></div>`;
   }
-  if (done.length) h += `<div class="sec-h">סיימתי (${done.length})</div>` + doneByTopic(done);
+  if (done.length) {
+    const dv = store("telem_portal_done_view") === "topics" ? "topics" : "order";
+    h += `<div class="st-sum"><h2 class="st-h"><span class="hl">סיימתי</span></h2><span class="muted">${done.length === 1 ? "דף אחד" : done.length + " דפים"} · כל הכבוד!</span></div>`;
+    h += `<div class="seg dv-seg"><button data-dv="order" class="${dv === "order" ? "on" : ""}">לפי הסדר</button><button data-dv="topics" class="${dv === "topics" ? "on" : ""}">לפי נושאים</button></div>`;
+    h += dv === "topics" ? doneByTopic(done) : doneByOrder(done, kick);
+  }
   $("stBody").innerHTML = h;
   $("stBody").querySelectorAll("[data-i]").forEach(b => b.onclick = () => openStudentPage(Number(b.dataset.i)));
+  $("stBody").querySelectorAll("[data-dv]").forEach(b => b.onclick = () => { store("telem_portal_done_view", b.dataset.dv); renderStudent(); });
   $("stBody").querySelectorAll("details.dt").forEach(d => d.ontoggle = () => { d.open ? ST.openT.add(d.dataset.k) : ST.openT.delete(d.dataset.k); });
+}
+// "סיימתי" לפי סדר ההגעה (ברירת המחדל): האחרון שהגיע למעלה, מחולק לשבועות
+function doneByOrder(done, kick){
+  const rows = done.slice().sort((a, b) => String(b.released_at || "").localeCompare(String(a.released_at || "")) || String(b.done_at || "").localeCompare(String(a.done_at || "")) || b.item_id - a.item_id);
+  const wk0 = new Date(); wk0.setHours(0, 0, 0, 0); wk0.setDate(wk0.getDate() - wk0.getDay());   // ראשון של השבוע
+  const wkOf = (iso) => { if (!iso) return 99; const d = new Date(iso); return Math.max(0, Math.floor((wk0 - d) / 864e5 / 7) + 1); };
+  const lbl = (w, iso) => { if (w === 0) return "השבוע"; if (w === 1) return "שבוע שעבר"; if (w === 99) return "מוקדם יותר";
+    const d = new Date(iso); d.setDate(d.getDate() - d.getDay()); return "השבוע של " + fmtDay(d.toISOString()); };
+  let h = "", last = null;
+  rows.forEach(p => {
+    const w = wkOf(p.released_at);
+    if (w !== last) { h += `<div class="wk-h">${esc(lbl(w, p.released_at))}</div>`; last = w; }
+    const k = kick(p);
+    h += `<button class="dr" data-i="${p.item_id}"><span class="mi" style="background-image:url('${esc(ST.url(p.storage_path))}')"></span>
+      <span class="nm">${k ? `<span class="kick">${esc(k)}</span>` : ""}<b>${esc(p.title)}</b></span>
+      <span class="dd"><i>✓</i>${esc(fmtDay(p.done_at))}</span></button>`;
+  });
+  return h;
 }
 // "סיימתי" מסודר כמו במאגר: ספר → נושא → תת-נושא, ובתוכם לפי סדר הדפים
 function doneByTopic(done){
@@ -1546,9 +1595,13 @@ const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: 
              st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "list" ? "list" : "groups", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
-const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
+const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star,file_at&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
 // דפים "חשובים" (כוכבית) – אותו סימון כמו במאגר של מערכת הניהול (עמודה is_star)
-const wsFetch = () => getAll("worksheets", WSQ).catch(e => /is_star/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",is_star", "")) : Promise.reject(e));
+const wsVer = (rows) => { (rows || []).forEach(w => { const t = w.file_at && Date.parse(w.file_at); if (t && w.storage_path) WS_VER[w.storage_path] = t; }); return rows; };
+const wsFetch = () => getAll("worksheets", WSQ)
+  .catch(e => /file_at/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",file_at", "")) : Promise.reject(e))
+  .catch(e => /is_star/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",is_star", "").replace(",file_at", "")) : Promise.reject(e))
+  .then(wsVer);
 async function setStar(ids, on){
   ids = ids.map(String);
   try { await patch("worksheets", "id=in.(" + ids.join(",") + ")", { is_star: on }); }
