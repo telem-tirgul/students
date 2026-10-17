@@ -1078,7 +1078,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.12.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.12.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1582,7 +1582,10 @@ window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); INST
 window.addEventListener("appinstalled", () => { store("telem_portal_installed", "1"); updateInstallBanner(); });
 function updateInstallBanner(){
   const b = $("installBanner"); if (!b) return;
-  b.hidden = isStandalone() || store("telem_portal_installed") === "1" || Number(store("telem_portal_hide_install") || 0) > Date.now();
+  b.hidden = true;   // 1.12.3: בלי פס קבוע במסך – ההסבר נפתח פעם אחת בכניסה הראשונה, ואחר כך רק מהתפריט (⋮)
+  if (isStandalone() || store("telem_portal_installed") === "1" || store("telem_portal_install_shown") === "1") return;
+  store("telem_portal_install_shown", "1");
+  setTimeout(() => { if (!$("studentView").hidden && !SHEET) showInstallHelp(); }, 900);
 }
 $("installHow").onclick = () => showInstallHelp();
 function showInstallHelp(){
@@ -2193,7 +2196,8 @@ function startPick(s){
   // ברירת מחדל: אם כבר יש דפים בתוכנית – נפתח על הנושא של הדף האחרון, ומוצגים רק הנושאים ממנו והלאה.
   // אם עוד אין – על הספר של הכיתה (חלק א'), מהנושא הראשון (תחילת השנה).
   const gradeBook = { "ז'": "7A", "ח'": "8A", "ט'": "9A" }[s.grade] || null;
-  AD.bank.pick = { sid: s.student_id, subj: AD.subj };
+  // 1.12.4: מי שרשום/ה לשני המקצועות – המאגר נפתח עם שניהם, והדף נכנס לתוכנית לפי המקצוע של הדף
+  AD.bank.pick = { sid: s.student_id, subj: AD.subj, subjs: (s.subjects && s.subjects.length ? s.subjects : [AD.subj]) };
   AD.bank.sel = new Set(); AD.bank.topic = null; AD.bank.tab = "page"; AD.bank.from = null; AD.bank.showAll = false;
   const books = bankBooks();
   const last = planOf(s.student_id, AD.subj).filter(p => AD.wsById.has(String(p.worksheet_id)))
@@ -2205,7 +2209,7 @@ function startPick(s){
   } else if (AD.subj === "אנגלית") { AD.bank.book = (books.find(b => wsSubject(b[0]) === "אנגלית") || [null])[0]; AD.bank.kind = "summary"; }
   else { AD.bank.book = gradeBook && books.some(b => b[0] === gradeBook) ? gradeBook : (books.find(b => wsSubject(b[0]) === "מתמטיקה") || [null])[0]; AD.bank.kind = "summary"; }
   if (isDesk()) {
-    $("drawerTitle").innerHTML = `הוספת דפים ל<b>${esc(stName(s))}</b> · ${esc(AD.subj)}`;
+    $("drawerTitle").innerHTML = `הוספת דפים ל<b>${esc(stName(s))}</b> · ${esc(AD.bank.pick.subjs.join(" ו"))}`;
     $("drawer").hidden = false; $("drawerBg").hidden = false; document.body.style.overflow = "hidden";
     renderBank($("drawerBody"));
   } else {
@@ -2223,7 +2227,7 @@ const bookRank = (b) => /^\d/.test(b) ? 0 : b === "GEN" ? 1 : /^ENG/i.test(b) ? 
 function bankBooks(){
   const m = new Map(); (AD.ws || []).forEach(r => { if (!m.has(r.book)) m.set(r.book, r.book_label || r.book); });
   let arr = [...m.entries()].sort((a, b) => bookRank(a[0]) - bookRank(b[0]) || a[0].localeCompare(b[0]));
-  if (AD.bank.pick) arr = arr.filter(b => wsSubject(b[0]) === AD.bank.pick.subj);
+  if (AD.bank.pick) arr = arr.filter(b => AD.bank.pick.subjs.includes(wsSubject(b[0])));
   return arr;
 }
 // ======================================================================
@@ -2262,7 +2266,7 @@ async function renderBank(T){
   if (!AD.ws || !AD.ws.length) { T.innerHTML = "<div class='card muted'>המאגר ריק או עוד נטען…</div>"; return; }
   const info = bankInfo();
   let books = [...new Set(AD.ws.map(r => r.book))].sort((a, b) => bookRank(a) - bookRank(b) || a.localeCompare(b));
-  if (pick) books = books.filter(b => wsSubject(b) === pick.subj);
+  if (pick) books = books.filter(b => pick.subjs.includes(wsSubject(b)));
   if (!books.includes(AD.bank.book)) AD.bank.book = books[0];
   const kinds = [...new Set(AD.ws.filter(r => r.book === AD.bank.book).map(r => r.kind))].sort((a, b) => WS_KIND_ORD.indexOf(a) - WS_KIND_ORD.indexOf(b));
   const kindOut = /^ENG/i.test(AD.bank.book);   // אנגלית: דקדוק / אנסין / כללי – בחירה בחוץ (כמו במערכת הניהול)
@@ -2288,7 +2292,7 @@ async function renderBank(T){
   let h = "";
   if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:200px"><h1>מאגר <span class="hl">דפי תרגול</span></h1></div>
     ${pick ? "" : `<div class="mode-sw" role="tablist"><button data-mode="0" class="${multi ? "" : "on"}">${IC.book} עיון</button><button data-mode="1" class="${multi ? "on" : ""}">${IC.send} שליחה לתלמידים</button></div>`}</div>`;
-  if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subj)}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
+  if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subjs.join(" ו"))}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
   if (multi) h += `<div class="multi-hint">${IC.send}<span>מצב שליחה: לחיצה על דף מסמנת אותו. אפשר לסמן מכמה נושאים, ואז "בחירת תלמידים" למטה.</span></div>`;
   h += `<div id="wsTop">${pickHtml ? `<div class="ws-quick"><div class="wq-row">${pickHtml}</div></div>` : ""}<div class="ws-search"><span class="ws-s-ic" aria-hidden="true">🔍</span><input id="bkSearch" type="search" placeholder="${pick ? "חיפוש נושא או דף" : "חיפוש נושא או דף בכל הספרים - למשל: שברים, פרבולה, Past simple"}" value="${esc(AD.bank.q || "")}" autocomplete="off">${q ? `<button type="button" class="ws-s-x" id="clrSearch" aria-label="ניקוי">✕</button>` : ""}</div>
 </div>`;
@@ -2442,14 +2446,15 @@ function pickBar(){
 async function addToPlan(releaseNow){
   const pick = AD.bank.pick; if (!pick || !AD.bank.sel.size) return;
   const ids = AD.ws.filter(r => AD.bank.sel.has(r.id)).map(r => r.id);   // לפי סדר המאגר
-  const qq = queueOf(pick.sid, pick.subj); let pos = qq.length ? Math.max(...qq.map(x => x.position)) : 0;
-  const rows = ids.map(wid => ({ student_id: isNaN(Number(pick.sid)) ? pick.sid : Number(pick.sid), worksheet_id: isNaN(Number(wid)) ? wid : Number(wid),
-                                 subject: wsSubject((AD.wsById.get(wid) || {}).book), position: ++pos }));
+  const posBy = {};   // מקום בתור – לכל מקצוע בנפרד
+  const rows = ids.map(wid => { const subject = wsSubject((AD.wsById.get(wid) || {}).book);
+    if (!(subject in posBy)) { const qq = queueOf(pick.sid, subject); posBy[subject] = qq.length ? Math.max(...qq.map(x => x.position)) : 0; }
+    return { student_id: isNaN(Number(pick.sid)) ? pick.sid : Number(pick.sid), worksheet_id: isNaN(Number(wid)) ? wid : Number(wid), subject, position: ++posBy[subject] }; });
   try {
     const res = await insert("portal_plan_items", rows);
     (res || []).forEach(p => AD.plan.push(Object.assign(p, { student_id: String(p.student_id) })));
     AD.bank.sel.clear();
-    const sid = pick.sid, subj = pick.subj;
+    const sid = pick.sid, subj = (rows[0] && rows[0].subject) || pick.subj;   // חוזרים לתוכנית של המקצוע שנוסף
     closeDrawer(true); AD.bank.pick = null;
     if (releaseNow) await releaseItems((res || []).map(p => p.id));
     refreshWaitingLocal();
