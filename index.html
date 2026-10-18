@@ -1084,7 +1084,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.13",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.14",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1158,6 +1158,7 @@ async function tokenRequest(grant, body){
   saveAuth({ access_token: data.access_token, refresh_token: data.refresh_token,
              expires_at: data.expires_at || (Math.floor(Date.now()/1000) + (data.expires_in || 3600)),
              email: (data.user && data.user.email) || (auth && auth.email) || "" });
+  rtToken(data.access_token);
 }
 let REFRESHING = null;
 function refreshAuth(){
@@ -1193,6 +1194,58 @@ async function api(method, path, body, extra){
   if (res.status === 204) return null;
   const txt = await res.text(); return txt ? JSON.parse(txt) : null;
 }
+// ======================================================================
+// עדכון מיידי (Supabase Realtime – ערוץ Broadcast פרטי, TS-06)
+// השרת שולח "צלצול" בלי פרטים; האפליקציה מושכת את הנתונים כרגיל.
+// אם אין חיבור – נשארת הבדיקה הרגילה (כל 20 / 15 שניות).
+// ======================================================================
+const RT = { ws: null, topic: null, onPing: null, live: false, ref: 0, hb: null, retry: 0, rt: null, deb: null, want: false };
+function jwtSub(t){ try { const p = t.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"); return JSON.parse(atob(p + "===".slice((p.length + 3) % 4))).sub || null; } catch(e) { return null; } }
+function rtSend(o){ try { if (RT.ws && RT.ws.readyState === 1) RT.ws.send(JSON.stringify(o)); } catch(e) {} }
+function rtStart(topic, onPing){
+  if (RT.want && RT.topic === topic && RT.ws) { RT.onPing = onPing; return; }
+  rtStop(); RT.want = true; RT.topic = topic; RT.onPing = onPing; RT.retry = 0; rtConnect();
+}
+function rtStop(){
+  RT.want = false; RT.live = false; clearInterval(RT.hb); clearTimeout(RT.rt); clearTimeout(RT.deb);
+  if (RT.ws) { try { RT.ws.onclose = null; RT.ws.close(); } catch(e) {} RT.ws = null; }
+}
+async function rtConnect(){
+  if (!RT.want || typeof WebSocket === "undefined") return;
+  const t = await token().catch(() => null); if (!t || !RT.want) return;
+  let ws;
+  try { ws = new WebSocket(CONFIG.supabaseUrl.replace(/^http/, "ws") + "/realtime/v1/websocket?apikey=" + encodeURIComponent(CONFIG.anonKey) + "&vsn=1.0.0"); }
+  catch(e) { return rtLater(); }
+  RT.ws = ws;
+  const topic = "realtime:" + RT.topic;
+  ws.onopen = () => {
+    const r = String(++RT.ref); RT.joinRef = r;
+    rtSend({ topic, event: "phx_join", ref: r, join_ref: r,
+             payload: { config: { broadcast: { self: false, ack: false }, presence: { key: "" }, postgres_changes: [], private: true }, access_token: t } });
+    clearInterval(RT.hb);
+    RT.hb = setInterval(() => rtSend({ topic: "phoenix", event: "heartbeat", payload: {}, ref: String(++RT.ref) }), 25000);
+  };
+  ws.onmessage = (m) => {
+    let d; try { d = JSON.parse(m.data); } catch(e) { return; }
+    if (d.topic !== topic) return;
+    if (d.event === "phx_reply" && d.ref === RT.joinRef) {
+      if (d.payload && d.payload.status === "ok") { const was = RT.live; RT.live = true; RT.retry = 0; if (!was) rtPing(); }
+      else { RT.live = false; try { ws.close(); } catch(e) {} }
+      return;
+    }
+    if (d.event === "broadcast") rtPing();
+    if (d.event === "phx_error" || d.event === "phx_close") { RT.live = false; try { ws.close(); } catch(e) {} }
+  };
+  ws.onerror = () => {};
+  ws.onclose = () => { if (RT.ws === ws) { RT.ws = null; RT.live = false; clearInterval(RT.hb); rtLater(); } };
+}
+function rtLater(){ if (!RT.want) return; clearTimeout(RT.rt); RT.rt = setTimeout(rtConnect, Math.min(30000, 2000 * Math.pow(2, RT.retry++))); }
+// כמה הודעות ברצף (למשל שליחת כמה דפים) – רענון אחד
+function rtPing(){ clearTimeout(RT.deb); RT.deb = setTimeout(() => { try { RT.onPing && RT.onPing(); } catch(e) {} }, 400); }
+// טוקן חדש – מעדכנים את הערוץ (אחרת הוא נסגר כשהטוקן פג)
+function rtToken(t){ if (RT.live && RT.ws) rtSend({ topic: "realtime:" + RT.topic, event: "access_token", payload: { access_token: t }, ref: String(++RT.ref) }); }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && RT.want && !RT.ws) { RT.retry = 0; rtConnect(); } });
+window.addEventListener("online", () => { if (RT.want && !RT.ws) { RT.retry = 0; rtConnect(); } });
 const get = (table, q) => api("GET", "/rest/v1/" + table + "?" + q);
 async function getAll(table, q){
   const out = [], step = 1000;
@@ -1227,6 +1280,7 @@ const VIEWS = ["loginView", "codeView", "msgView", "studentView", "adminView"];
 function showView(id){ VIEWS.forEach(v => { $(v).hidden = v !== id; }); document.body.classList.toggle("v-student", id === "studentView"); window.scrollTo(0, 0); }
 let STAFF_MODE = false, LAST_CODE = "";
 function showLogin(msg){
+  rtStop();
   showView("loginView"); closeSheet(); closeViewer();
   $("lgErr").textContent = msg || "";
   setStaffMode(store("telem_portal_staff") === "1" || /^#staff\b/i.test(location.hash));
@@ -1359,6 +1413,8 @@ function studentStart(){
   if (!ST.subj || !subs.includes(ST.subj)) ST.subj = store("telem_portal_subj") && subs.includes(store("telem_portal_subj")) ? store("telem_portal_subj") : subs[0];
   updateInstallBanner();
   loadStudentPages();
+  const uid = auth && jwtSub(auth.access_token);
+  if (uid) rtStart("portal:u:" + uid, () => { if (!$("studentView").hidden && !VIEWER) loadStudentPages(true); else RT.pending = true; });
 }
 async function loadStudentPages(quiet){
   if (!ST.pages && !quiet) $("stBody").innerHTML = "<div class='card muted'>טוען…</div>";
@@ -1482,7 +1538,9 @@ $("stMenu").onclick = () => openSheet(`
   });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("studentView").hidden && !VIEWER) loadStudentPages(true); });
 // בדיקה אוטומטית כל 20 שניות כשהאפליקציה פתוחה – דף שנשלח מופיע לבד
-setInterval(() => { if (!document.hidden && !$("studentView").hidden && !VIEWER && ST.me) loadStudentPages(true); }, 20000);
+// עם עדכון מיידי פעיל – בדיקת גיבוי רק כל דקה
+let ST_TICK = 0;
+setInterval(() => { if (RT.live && (++ST_TICK % 3)) return; if (!document.hidden && !$("studentView").hidden && !VIEWER && ST.me) loadStudentPages(true); }, 20000);
 
 // ---------- צפייה בדף ----------
 let VIEWER = null;
@@ -1545,6 +1603,7 @@ function vwLock(on){
   }
 }
 function closeViewer(fromPop){ if (!VIEWER) return; $("viewerHost").innerHTML = ""; VIEWER = null; vwLock(false);
+  if (RT.pending && !$("studentView").hidden) { RT.pending = false; loadStudentPages(true); }
   if (STAR_DIRTY) { STAR_DIRTY = false; if (!$("adminView").hidden) { if (inDrawer()) renderBank($("drawerBody")); else if (AD.view === "bank") renderBank($("adBody")); } } if (!fromPop && history.state && history.state.v) history.back(); }
 window.addEventListener("popstate", () => { if (VIEWER) closeViewer(true); });   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
 async function fetchBlob(url){ const r = await fetch(url); if (!r.ok) throw new Error("fetch"); return r.blob(); }
@@ -1655,6 +1714,7 @@ function adminStart(){
   renderNav();
   adLoad();
   notifyBtn();
+  rtStart("portal:staff", () => adPoll());
 }
 // ---------- התראות במסך הניהול: בדיקה כל 15 שניות ----------
 // מי שלחץ/ה "סיימתי" או ביקש/ה קוד חדש – צליל, הודעה, מספר בכותרת הלשונית, והתראת דפדפן (אם אושרה)
@@ -1686,7 +1746,8 @@ async function adPoll(){
   finally { AD_POLLING = false; updateTitle(); }
 }
 function updateTitle(){ const n = AD.loaded ? waitingList().length + (AD.codeReqs || []).length : 0; document.title = (n ? `(${n}) ` : "") + "תלם שלי"; }
-setInterval(adPoll, 15000);
+let AD_TICK = 0;
+setInterval(() => { if (RT.live && (++AD_TICK % 4)) return; adPoll(); }, 15000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) adPoll(); });
 // כפתור "התראות" – התראה של הדפדפן גם כשהלשונית ברקע (במחשב)
 function notifyBtn(){
