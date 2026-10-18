@@ -915,7 +915,7 @@
   :root{ --grid:#EBE2D8; --accent-2:#8B1E23; --mark:#E9C77E; }
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; } }
   :root[data-theme="dark"]{ --grid:#241B18; --accent-2:#EF8C94; --mark:#8C6A2A; }
-  body.v-bank, body.v-student, .drawer{ background-color:var(--bg); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px; }
+  body.v-bank, body.v-student, body.v-stm, .drawer{ background-color:var(--bg); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px; }
   /* מסך התלמיד בצבעי תלם (1.12) */
   .st-h{ font-family:var(--font-display); font-weight:900; font-size:22px; margin:18px 2px 12px; }
   .st-h .hl, .bank-h h1 .hl{ background:linear-gradient(transparent 58%, var(--mark) 58%); padding-inline:4px; }
@@ -955,6 +955,58 @@
   .ws-grp:not(.fold) .ws-gh > span{ padding-inline-start:10px; border-inline-start:3px solid var(--gold); font-family:var(--font-display); font-weight:600; }
   @media (prefers-reduced-motion:reduce){ .ws-album{ transition:none; } }
   @media (max-width:760px){ .ws-albums{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; } .ws-album .nm{ font-size:16px; } }
+  /* ===== 1.15: מסך התלמיד/ה בנייד – כותרת קבועה, לשוניות, מאגר באותו מסך ===== */
+  .lv{ font-style:normal; font-size:13px; letter-spacing:1px; flex:none; white-space:nowrap; }
+  .ws-pg .cap .lv{ margin-inline-start:auto; padding-inline-start:4px; }
+  .lv-leg{ font-size:12px; color:var(--ink-soft); margin:10px 2px 4px; }
+  @media (max-width:899px){
+    body.v-stm #adminView .side{ display:none; }
+    body.v-stm .ad-ver{ display:none; }
+    body.v-stm #adminView .main{ padding-top:0; }
+  }
+  .stm-head{ position:sticky; top:0; z-index:30; background:var(--paper); margin:0 -10px 10px; padding:calc(6px + var(--safe-t)) 10px 8px;
+    border-bottom:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,.05); }
+  .stm-head .l1{ display:flex; align-items:center; gap:6px; min-width:0; }
+  .stm-back{ flex:none; width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink); display:grid; place-items:center; cursor:pointer; padding:0; }
+  .stm-back svg{ width:20px; height:20px; }
+  .stm-head .nm{ font-family:var(--font-display); font-weight:900; font-size:17px; white-space:nowrap; }
+  .stm-head .mt{ font-size:13px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1; }
+  .stm-head .l1 .subj-chip{ flex:none; }
+  .stm-head .l2{ display:flex; align-items:center; gap:6px; margin:5px 2px 0; font-size:13px; min-width:0; }
+  .stm-head .l2 .nw{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .stm-tabs{ display:flex; gap:3px; margin-top:7px; background:var(--muted); border-radius:12px; padding:3px; }
+  .stm-tabs button{ flex:1 1 0; min-width:0; border:0; background:transparent; border-radius:9px; padding:6px 2px; cursor:pointer; color:var(--ink-soft);
+    font-family:var(--font-display); font-weight:700; font-size:13.5px; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .stm-tabs button span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .stm-tabs button b{ flex:none; background:color-mix(in srgb, var(--ink-soft) 14%, transparent); border-radius:20px; padding:0 7px; font-size:12px; }
+  .stm-tabs button[aria-selected="true"]{ background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.15); }
+  .stm-tabs button[aria-selected="true"] b{ background:var(--accent); color:#fff; }
+  .stm-h{ font-family:var(--font-display); font-weight:900; font-size:15px; margin:4px 2px 1px; }
+  .stm-hint{ font-size:12.5px; color:var(--ink-soft); margin:0 2px 8px; }
+  .stm-sub{ display:flex; align-items:center; gap:6px; margin:12px 2px 6px; }
+  .stm-row{ display:flex; align-items:center; gap:6px; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:7px 8px; margin-bottom:6px; transition:background .6s; }
+  .stm-row .n{ flex:none; width:24px; height:24px; border-radius:50%; background:var(--muted); font-size:12.5px; font-weight:800; display:grid; place-items:center; font-family:var(--font-display); }
+  .stm-row.next .n{ background:var(--accent); color:#fff; }
+  .stm-row.next{ border-color:color-mix(in srgb, var(--accent) 35%, var(--border)); }
+  .stm-row .t{ flex:1; min-width:0; font-weight:700; line-height:1.3; cursor:zoom-in; }
+  .stm-row .t small{ display:flex; align-items:center; gap:5px; font-weight:400; color:var(--ink-soft); font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .stm-row .mini{ width:30px; height:30px; flex:none; }
+  .stm-row.hl{ background:#FFF4D6; border-color:var(--gold); }
+  :root[data-theme="dark"] .stm-row.hl{ background:#3a2f17; } @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .stm-row.hl{ background:#3a2f17; } }
+  .stm-row .ok-ic{ color:var(--ok); flex:none; display:flex; }
+  .stm-rel{ width:100%; justify-content:center; margin:2px 0 8px; }
+  .stm-empty{ color:var(--ink-soft); font-size:14px; padding:14px 4px; }
+  .stm-acc{ margin-top:22px; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:10px 12px; }
+  .stm-acc summary{ cursor:pointer; font-weight:700; color:var(--ink-soft); font-size:13.5px; }
+  .stm-acc .acc-line{ margin-top:10px; }
+  .stm-acc .danger-zone{ margin-top:12px; }
+  .stm-bank{ margin-top:16px; border-top:3px solid var(--gold); padding-top:10px; }
+  .stm-bank-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 2px 8px; }
+  .stm-bank-h > span{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-size:16px; color:var(--accent); }
+  .stm-bank-h svg{ width:20px; height:20px; }
+  #stBank .ws-quick .gseg{ background:var(--paper); border:1.5px solid var(--border); padding:3px; gap:3px; }
+  #stBank .ws-quick .gseg button{ border-radius:999px; font-weight:600; color:var(--ink); }
+  #stBank .ws-quick .gseg button[aria-pressed="true"]{ background:var(--accent); color:#fff; }
   .staff-foot{ text-align:center; margin-top:56px; padding-bottom:calc(16px + var(--safe-b)); }
   .staff-foot .linkish{ font-size:12.5px; color:var(--ink-soft); text-decoration:none; opacity:.8; }
   .staff-foot .linkish:hover{ text-decoration:underline; opacity:1; }
@@ -1084,7 +1136,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.14",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.15",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1604,8 +1656,15 @@ function vwLock(on){
 }
 function closeViewer(fromPop){ if (!VIEWER) return; $("viewerHost").innerHTML = ""; VIEWER = null; vwLock(false);
   if (RT.pending && !$("studentView").hidden) { RT.pending = false; loadStudentPages(true); }
-  if (STAR_DIRTY) { STAR_DIRTY = false; if (!$("adminView").hidden) { if (inDrawer()) renderBank($("drawerBody")); else if (AD.view === "bank") renderBank($("adBody")); } } if (!fromPop && history.state && history.state.v) history.back(); }
-window.addEventListener("popstate", () => { if (VIEWER) closeViewer(true); });   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
+  if (STAR_DIRTY) { STAR_DIRTY = false; if (!$("adminView").hidden) { if (inDrawer()) renderBank($("drawerBody")); else if ($("stBank")) renderBank($("stBank")); else if (AD.view === "bank") renderBank($("adBody")); } } if (!fromPop && history.state && history.state.v) history.back(); }
+window.addEventListener("popstate", () => {
+  if (VIEWER) return closeViewer(true);   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
+  if (typeof AD === "undefined" || $("adminView").hidden || isDesk()) return;
+  if (AD.skipPop) { AD.skipPop = false; return; }
+  if (SHEET) closeSheet();
+  if (AD.st && AD.bank.pick) return doCloseBank();   // קודם סוגרים את המאגר
+  if (AD.st) { AD.st = null; AD.stTab = null; adRender(); window.scrollTo(0, AD.listY || 0); }
+});   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
 async function fetchBlob(url){ const r = await fetch(url); if (!r.ok) throw new Error("fetch"); return r.blob(); }
 async function saveImage(url, title){
   try {
@@ -1681,13 +1740,21 @@ const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: 
              st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "list" ? "list" : "groups", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws";
-const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star,file_at&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
+const WSQ = "select=id,book,book_label,grade,part,kind,topic_no,topic_name,chapters,sub,page_no,type,title,storage_path,sort_order,is_star,file_at,level,is_word&is_active=eq.true&order=book,kind,topic_no,sort_order,page_no";
 // דפים "חשובים" (כוכבית) – אותו סימון כמו במאגר של מערכת הניהול (עמודה is_star)
 const wsVer = (rows) => { (rows || []).forEach(w => { const t = w.file_at && Date.parse(w.file_at); if (t && w.storage_path) WS_VER[w.storage_path] = t; }); return rows; };
-const wsFetch = () => getAll("worksheets", WSQ)
-  .catch(e => /file_at/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",file_at", "")) : Promise.reject(e))
-  .catch(e => /is_star/.test(String(e && e.message)) ? getAll("worksheets", WSQ.replace(",is_star", "").replace(",file_at", "")) : Promise.reject(e))
-  .then(wsVer);
+// עמודה שעוד לא קיימת (level / is_word / file_at / is_star) – מורידים אותה ומנסים שוב
+const wsFetch = async () => { let q = WSQ;
+  for (let i = 0; i < 5; i++) {
+    try { return wsVer(await getAll("worksheets", q)); }
+    catch(e) { const m = String(e && e.message), c = ["level", "is_word", "file_at", "is_star"].find(c => q.includes("," + c) && new RegExp("\\b" + c + "\\b").test(m)); if (!c) throw e; q = q.replace("," + c, ""); }
+  } };
+// רמת הדף – רק לצוות (החלטת נועה 17.10). לא נשלח ולא מוצג לתלמיד/ה.
+const LV = { 1: ["🟡", "בסיסי"], 2: ["🟣", "מתקדם"], 3: ["🧩", "אתגר"] };
+const lvOf = (w) => w ? ((LV[w.level] || [""])[0] + (w.is_word ? "📖" : "")) : "";
+const lvTip = (w) => w ? [(LV[w.level] || [])[1], w.is_word ? "מילולי" : ""].filter(Boolean).join(" · ") : "";
+const lvIc = (w) => { const t = lvOf(w); return t ? `<i class="lv" title="${esc(lvTip(w))}">${t}</i>` : ""; };
+const LV_LEG = `<div class="lv-leg">🟡 בסיסי · 🟣 מתקדם · 🧩 אתגר · 📖 מילולי – רק לצוות</div>`;
 async function setStar(ids, on){
   ids = ids.map(String);
   try { await patch("worksheets", "id=in.(" + ids.join(",") + ")", { is_star: on }); }
@@ -1742,6 +1809,7 @@ async function adPoll(){
     }
     // מרעננים את המסך רק כשאין חלון פתוח (כדי לא להפריע באמצע עבודה)
     if (!SHEET && $("drawer").hidden && AD.view === "wait" && !AD.st) renderWait();
+    else if (!SHEET && !VIEWER && $("drawer").hidden && AD.st && !AD.bank.pick) rerenderPlan();   // 1.15: גם מסך התלמיד/ה מתעדכן
   } catch(e) {}
   finally { AD_POLLING = false; updateTitle(); }
 }
@@ -1808,6 +1876,7 @@ function adGo(v){
 function adRender(){
   renderNav(); setActionBar(null);
   document.body.classList.toggle("v-bank", AD.view === "bank" && !AD.st);
+  document.body.classList.toggle("v-stm", !isDesk() && !!AD.st);
   if (!AD.loaded) return;
   const titles = { wait: "ממתינים לדף", students: "תלמידים", bank: "מאגר" };
 
@@ -2143,11 +2212,13 @@ function openStudent(sid, subj){
     document.querySelectorAll("#listCol .st-row").forEach(r => r.classList.toggle("on", r.dataset.open === AD.st));
     return renderStudentPlan($("planPane"), false);
   }
-  window.scrollTo(0, 0); adRender();
+  if (!isDesk() && !(history.state && history.state.ad)) { AD.listY = window.scrollY; history.pushState({ ad: "st" }, ""); }
+  AD.stTab = null; window.scrollTo(0, 0); adRender();
 }
 const rerenderPlan = () => { if (isDesk() && $("planPane")) renderStudentPlan($("planPane"), false); else adRender(); };
 async function renderStudentPlan(T, mobile){
   const s = stById(AD.st); if (!s) { AD.st = null; return adRender(); }
+  if (mobile) return renderStudentMobile(T, s);
   const subs = s.subjects || [];
   if (!subs.includes(AD.subj)) AD.subj = subs[0];
   const open = planOf(s.student_id, AD.subj).filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)));
@@ -2220,6 +2291,96 @@ async function renderStudentPlan(T, mobile){
   if (q("#accReset")) q("#accReset").onclick = () => accountSheet(s, true);
   if (q("#accDel")) q("#accDel").onclick = () => deleteAccount(s);
   selActions(T);
+}
+// ---------- 1.15: מסך התלמיד/ה בנייד ----------
+// למעלה (קבוע בגלילה): שם · כיתה · בית ספר · מקצוע, שורה שנייה – על מה עובד/ת עכשיו (מוסתרת כשהמאגר פתוח),
+// ולשוניות "הבאים בתור / אצל… / סיים/ה". "+ הוספת דפים" פותח את המאגר באותו מסך, מתחת.
+async function renderStudentMobile(T, s){
+  const subs = s.subjects || [], multi = subs.length > 1, first = (s.first_name || "").trim() || "התלמיד/ה";
+  const all = planOf(s.student_id);
+  const open = all.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)));
+  const done = all.filter(p => p.status === "הושלם").sort((a, b) => String(b.done_at).localeCompare(String(a.done_at)));
+  const queues = subs.map(x => [x, queueOf(s.student_id, x)]);
+  const qn = queues.reduce((n, x) => n + x[1].length, 0);
+  const pick = AD.bank.pick && AD.bank.pick.sid === s.student_id ? AD.bank.pick : null;
+  const tab = AD.stTab || "queue";
+  const W = (wid) => AD.wsById.get(String(wid));
+  const subTag = (p) => multi ? `<span class="subj-chip ${subjCls(p.subject)} on sm">${esc(p.subject === "מתמטיקה" ? "מת'" : p.subject === "אנגלית" ? "אנג'" : p.subject)}</span>` : "";
+  const waiting = (s.waiting_subjects || []).length > 0;
+
+  // שורה 2 – מה קורה עכשיו
+  let now = "";
+  if (!s.has_account) now = `<span class="chip">אין עדיין חשבון</span>`;
+  else if (open.length) now = `<span class="dot ${open[0].seen_at ? "seen" : "new"}"></span><span class="nw">עכשיו: <b>${esc(wsTitle(open[0].worksheet_id))}</b>${open.length > 1 ? ` ועוד ${open.length - 1}` : ""}</span>`;
+  else if (waiting) now = `<span class="chip new">ממתין/ה לדף</span>${done[0] ? `<span class="nw">סיים/ה: ${esc(wsTitle(done[0].worksheet_id))} · ${esc(ago(done[0].done_at))}</span>` : ""}`;
+  else if (done[0]) now = `<span class="nw">סיים/ה לאחרונה: ${esc(wsTitle(done[0].worksheet_id))} · ${esc(ago(done[0].done_at))}</span>`;
+  else now = `<span class="nw muted">עוד לא נשלחו דפים</span>`;
+
+  const tabs = [["queue", "הבאים בתור", qn], ["now", "אצל " + first, open.length], ["done", "סיים/ה", done.length]];
+  const row = (p, inner, cls) => `<div class="stm-row${cls || ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}">${inner}</div>`;
+  const tt = (p, sub) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
+
+  let body = "";
+  if (tab === "queue") {
+    body += `<div class="stm-h">הדפים הבאים – עוד לא נשלחו ל${esc(first)}</div>
+      <div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
+    queues.forEach(([x, q]) => {
+      if (multi && q.length) body += `<div class="stm-sub"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>`;
+      body += q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
+          <button class="mini" data-mv="${p.id}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="למעלה">${IC.up}</button>
+          <button class="mini" data-mv="${p.id}" data-d="1" ${i === q.length - 1 ? "disabled" : ""} aria-label="למטה">${IC.down}</button>
+          <button class="mini" data-rm="${p.id}" aria-label="הסרה מהתור">${IC.x}</button>`, i === 0 ? " next" : "")).join("");
+      if (multi && q.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא ב${esc(x)}</button>`;
+    });
+  } else if (tab === "now") {
+    body += `<div class="stm-h">הדפים שנשלחו ועוד לא סומנו "סיימתי"</div>`;
+    body += open.map(p => row(p, `${tt(p, (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · נשלח " + ago(p.released_at))}<span class="dot ${p.seen_at ? "seen" : "new"}"></span>
+        <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
+      || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
+  } else {
+    const show = AD.showDone ? done : done.slice(0, 8);
+    body += show.map(p => row(p, `${tt(p, wsTopicName(p.worksheet_id) + " · " + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`)).join("")
+      || `<div class="stm-empty">עוד לא סיים/ה דפים.</div>`;
+    if (done.length > show.length) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
+  }
+
+  const acc = !s.has_account
+    ? `<div class="acc-line"><span class="chip">אין עדיין חשבון</span><span style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button></div>`
+    : `<div class="acc-line"><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
+       <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
+       <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>
+       <div class="danger-zone"><div><b>מחיקת החשבון</b><div class="small muted">התוכנית והדפים נשמרים.</div></div><button class="btn sm danger" id="accDel">מחיקת חשבון</button></div>`;
+
+  T.innerHTML = `
+    <div class="stm-head${pick ? " picking" : ""}">
+      <div class="l1"><button class="stm-back" id="stBack" aria-label="חזרה לרשימה">${IC.back}</button>
+        <b class="nm">${esc(stName(s))}</b><span class="mt">${esc(stMeta(s))}</span>${subjBadge(subs, true)}</div>
+      ${pick ? "" : `<div class="l2">${now}</div>`}
+      <div class="stm-tabs" role="tablist">${tabs.map(([k, l, n]) => `<button role="tab" data-stab="${k}" aria-selected="${k === tab}"><span>${esc(l)}</span><b>${n}</b></button>`).join("")}</div>
+    </div>
+    <div class="stm-body">${body}</div>
+    ${pick ? `<section class="stm-bank" id="stBankSec"><div class="stm-bank-h"><span>${IC.plusBox}<b>הוספת דפים ל${esc(first)}</b></span><button class="btn sm ghost" id="bankClose">✕ סגירה</button></div><div id="stBank"></div></section>`
+           : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary>חשבון וקוד כניסה</summary>${acc}</details>`}`;
+
+  const q = (sel) => T.querySelector(sel);
+  q("#stBack").onclick = leaveStudent;
+  T.querySelectorAll("[data-stab]").forEach(b => b.onclick = () => { AD.stTab = b.dataset.stab; AD.showDone = false; renderStudentMobile(T, s); window.scrollTo(0, 0); });
+  T.querySelectorAll("[data-unrel]").forEach(b => b.onclick = () => unrelease(Number(b.dataset.unrel)));
+  T.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => movePlan(Number(b.dataset.mv), Number(b.dataset.d)));
+  T.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => removePlan(Number(b.dataset.rm)));
+  T.querySelectorAll(".stm-body [data-zoom]").forEach(t => t.onclick = () => previewWs(t.dataset.zoom));
+  T.querySelectorAll("[data-relnext]").forEach(b => b.onclick = () => { const qq = queueOf(s.student_id, b.dataset.relnext); if (qq[0]) releaseItems([qq[0].id]); });
+  if (q("#moreDoneAd")) q("#moreDoneAd").onclick = () => { AD.showDone = true; renderStudentMobile(T, s); };
+  if (q("#accCreate")) q("#accCreate").onclick = () => accountSheet(s, false);
+  if (q("#accReset")) q("#accReset").onclick = () => accountSheet(s, true);
+  if (q("#accDel")) q("#accDel").onclick = () => deleteAccount(s);
+  if (pick) { q("#bankClose").onclick = closeInlineBank; renderBank($("stBank")); return; }
+  // פס תחתון: הוספה מהמאגר + שליחת הדף הבא (כשיש מקצוע אחד)
+  const one1 = !multi && queues[0] && queues[0][1][0];
+  setActionBar(`<button class="btn" id="abAdd" style="flex:1">${IC.plusBox} הוספת דפים מהמאגר</button>${one1 && s.has_account ? `<button class="btn primary" id="abNext" style="flex:1">${IC.check} שליחת הדף הבא</button>` : ""}`, (b) => {
+    b.querySelector("#abAdd").onclick = () => { if (!s.has_account) { toast("קודם צריך ליצור חשבון."); return; } startPick(s); };
+    if (b.querySelector("#abNext")) b.querySelector("#abNext").onclick = () => releaseItems([one1.id]);
+  });
 }
 function selActions(T){
   const box = T.querySelector("#selActs"); if (!box) return;
@@ -2338,8 +2499,26 @@ function startPick(s){
     $("drawer").hidden = false; $("drawerBg").hidden = false; document.body.style.overflow = "hidden";
     renderBank($("drawerBody"));
   } else {
-    AD.st = null; AD.view = "bank"; window.scrollTo(0, 0); adRender();
+    // 1.15: בנייד המאגר נפתח בתוך המסך של התלמיד/ה, מתחת לתור (הפרטים והמצב נשארים למעלה)
+    if (!(history.state && history.state.ad === "bank")) history.pushState({ ad: "bank" }, "");
+    adRender(); setTimeout(scrollToBank, 30);
   }
+}
+function scrollToBank(){
+  const sec = $("stBankSec"), hd = document.querySelector(".stm-head"); if (!sec) return;
+  window.scrollTo(0, sec.getBoundingClientRect().top + window.scrollY - (hd ? hd.offsetHeight : 0) - 6);
+}
+// סגירת המאגר בנייד (כפתור ✕, כפתור החזרה של הטלפון, או אחרי הוספה)
+function closeInlineBank(){
+  if (history.state && history.state.ad === "bank") { history.back(); return; }   // popstate יסגור
+  doCloseBank();
+}
+function doCloseBank(){ AD.bank.pick = null; AD.bank.sel.clear(); adRender(); window.scrollTo(0, 0); }
+function leaveStudent(){
+  const n = history.state && history.state.ad === "bank" ? 2 : history.state && history.state.ad === "st" ? 1 : 0;
+  AD.bank.pick = null; AD.bank.sel.clear();
+  if (n) { history.go(-n); return; }
+  AD.st = null; adRender(); window.scrollTo(0, AD.listY || 0);
 }
 function closeDrawer(silent){
   if ($("drawer").hidden) return;
@@ -2417,7 +2596,7 @@ async function renderBank(T){
   let h = "";
   if (T.id === "adBody") h += `<div class="page-h bank-h"><div style="flex:1;min-width:200px"><h1>מאגר <span class="hl">דפי תרגול</span></h1></div>
     ${pick ? "" : `<div class="mode-sw" role="tablist"><button data-mode="0" class="${multi ? "" : "on"}">${IC.book} עיון</button><button data-mode="1" class="${multi ? "on" : ""}">${IC.send} שליחה לתלמידים</button></div>`}</div>`;
-  if (pick && ps && !inDrawer()) h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subjs.join(" ו"))}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
+  if (pick && ps && !inDrawer() && T.id !== "stBank") h += `<div class="pick-banner">${IC.plusBox}<span style="flex:1">בחירת דפים ל<b>${esc(stName(ps))}</b> · ${esc(pick.subjs.join(" ו"))}</span><button class="btn sm" id="pickCancel">ביטול</button></div>`;
   if (multi) h += `<div class="multi-hint">${IC.send}<span>מצב שליחה: לחיצה על דף מסמנת אותו. אפשר לסמן מכמה נושאים, ואז "בחירת תלמידים" למטה.</span></div>`;
   h += `<div id="wsTop">${pickHtml ? `<div class="ws-quick"><div class="wq-row">${pickHtml}</div></div>` : ""}<div class="ws-search"><span class="ws-s-ic" aria-hidden="true">🔍</span><input id="bkSearch" type="search" placeholder="${pick ? "חיפוש נושא או דף" : "חיפוש נושא או דף בכל הספרים - למשל: שברים, פרבולה, Past simple"}" value="${esc(AD.bank.q || "")}" autocomplete="off">${q ? `<button type="button" class="ws-s-x" id="clrSearch" aria-label="ניקוי">✕</button>` : ""}</div>
 </div>`;
@@ -2426,7 +2605,7 @@ async function renderBank(T){
   const card = (r) => { const st = inPlan.get(r.id);
     return `<div class="ws-pgw${AD.bank.sel.has(r.id) ? " sel" : ""}${st ? " inplan" : ""}"><button type="button" class="ws-pg" data-w="${esc(r.id)}"><div class="th">${r.is_star ? `<span class="ws-pstar" title="דף חשוב">⭐</span>` : ""}<img data-p="${esc(r.storage_path)}" alt="" loading="lazy">
       ${selMode ? `<span class="pk-tick">${IC.check}</span>` : ""}${st ? `<span class="pk-st chip ${st === "הושלם" ? "ok" : st === "נשלח" ? "new" : "acc"}">${st === "מתוכנן" ? "בתור" : st === "נשלח" ? "נשלח" : "סיים"}</span>` : ""}</div>
-      <div class="cap"><b>${r.type === "answers" ? "" : esc(String(r.page_no || ""))}</b><span>${esc(r.title || "")}</span></div></button></div>`; };
+      <div class="cap"><b>${r.type === "answers" ? "" : esc(String(r.page_no || ""))}</b><span>${esc(r.title || "")}</span>${r.type === "page" ? lvIc(r) : ""}</div></button></div>`; };
   const stTile = (r, label, sub) => `<div class="ws-st${AD.bank.sel.has(r.id) ? " sel" : ""}"><div class="th" data-w="${esc(r.id)}"><img data-p="${esc(r.storage_path)}" alt="" loading="lazy">${selMode ? `<span class="pk-tick">${IC.check}</span>` : ""}</div><div class="cp cp2"><b>${esc(label)}</b>${sub ? `<span>${esc(sub)}</span>` : ""}</div>
     <button type="button" class="go" data-${selMode ? "w" : "cp"}="${esc(r.id)}">${selMode ? (AD.bank.sel.has(r.id) ? "✓ נבחר" : "בחירה") : "העתקה"}</button></div>`;
 
@@ -2504,6 +2683,7 @@ async function renderBank(T){
         const head = g.title || g.chapter ? `<div class="ws-gh" ${fd ? `data-fold="${esc(g.k)}"` : ""}><span>${fd ? `<i class="ws-car" aria-hidden="true">${cl ? "◂" : "▾"}</i>` : ""}<bdi>${esc(g.title)}</bdi>${g.chapter ? `<small>פרק ${esc(g.chapter)}</small>` : ""}${fd ? `<em class="ws-gn">${g.rows.length} דפים</em>` : ""}</span></div>` : "";
         return `<section class="ws-grp${g.rows.length > 4 ? " wide" : ""}${fd ? " fold ws-sumg" : ""}${cl ? " closed" : ""}">${head}<div class="ws-pages">${g.rows.map(card).join("")}</div></section>`; }).join("") + `</div>`;
     else body += `<div class="ws-pages">${list.map(card).join("")}</div>`;
+    if (list.some(r => r.level || r.is_word)) body += LV_LEG;
   }
   h += `<div id="wsBody">${body}</div>`;
   T.innerHTML = h;
@@ -2515,8 +2695,8 @@ async function renderBank(T){
   W("[data-wg]").forEach(b => b.onclick = () => { const suf = String(AD.bank.book).slice(-1), g = b.dataset.wg; const nb = books.find(x => info[x].subj === cur.subj && info[x].grade === g && x.slice(-1) === suf) || books.find(x => info[x].subj === cur.subj && info[x].grade === g); if (nb) { AD.bank.book = nb; reset(); renderBank(T); } });
   W("[data-b]").forEach(b => b.onclick = () => { AD.bank.book = b.dataset.b; reset(); renderBank(T); });
   W("[data-wk]").forEach(b => b.onclick = () => { AD.bank.kind = b.dataset.wk; AD.bank.topic = null; renderBank(T); });
-  W("[data-t]").forEach(b => b.onclick = () => { AD.bank.listKind = AD.bank.kind; AD.bank.kind = b.dataset.tk; AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(T); (T.id === "adBody" ? window : T).scrollTo(0, 0); });
-  W("[data-go]").forEach(b => b.onclick = () => { const [bk, k, no] = b.dataset.go.split("|"); AD.bank.book = bk; AD.bank.kind = k; AD.bank.topic = no; AD.bank.q = ""; AD.bank.tab = "page"; renderBank(T); (T.id === "adBody" ? window : T).scrollTo(0, 0); });
+  W("[data-t]").forEach(b => b.onclick = () => { AD.bank.listKind = AD.bank.kind; AD.bank.kind = b.dataset.tk; AD.bank.topic = b.dataset.t; AD.bank.tab = "page"; renderBank(T); bankTop(T); });
+  W("[data-go]").forEach(b => b.onclick = () => { const [bk, k, no] = b.dataset.go.split("|"); AD.bank.book = bk; AD.bank.kind = k; AD.bank.topic = no; AD.bank.q = ""; AD.bank.tab = "page"; renderBank(T); bankTop(T); });
   W("[data-tab]").forEach(b => b.onclick = () => { AD.bank.tab = b.dataset.tab; renderBank(T); });
   W("[data-fold]").forEach(b => b.onclick = () => { const s = AD.bank.openG.s; s.has(b.dataset.fold) ? s.delete(b.dataset.fold) : s.add(b.dataset.fold); renderBank(T); });
   W("[data-mode]").forEach(b => b.onclick = () => { const m = b.dataset.mode === "1"; if (m === !!AD.bank.multi) return; AD.bank.multi = m; AD.bank.sel.clear(); AD.bank.tab = "page"; renderBank(T); });
@@ -2531,7 +2711,7 @@ async function renderBank(T){
     const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page" && !inPlan.has(r.id));
     const all = pg.every(r => AD.bank.sel.has(r.id)); pg.forEach(r => all ? AD.bank.sel.delete(r.id) : AD.bank.sel.add(r.id)); renderBank(T); };
   if (one("#showAllT")) one("#showAllT").onclick = () => { AD.bank.showAll = !AD.bank.showAll; renderBank(T); };
-  if (one("#tBack")) one("#tBack").onclick = () => { AD.bank.topic = null; if (AD.bank.listKind) AD.bank.kind = AD.bank.listKind; renderBank(T); };
+  if (one("#tBack")) one("#tBack").onclick = () => { AD.bank.topic = null; if (AD.bank.listKind) AD.bank.kind = AD.bank.listKind; renderBank(T); if (T.id === "stBank") scrollToBank(); };
   if (one("#pickCancel")) one("#pickCancel").onclick = () => { const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; AD.bank.sel.clear(); AD.view = "students"; openStudent(sid, subj); };
   W("[data-w]").forEach(b => b.onclick = () => {
     const id = b.dataset.w;
@@ -2548,6 +2728,7 @@ async function renderBank(T){
   if (imgs.length) { const g = await sign([...new Set(imgs.map(i => i.dataset.p))]); imgs.forEach(i => { i.src = g(i.dataset.p); }); }
 }
 
+const bankTop = (T) => T.id === "adBody" ? window.scrollTo(0, 0) : T.id === "stBank" ? scrollToBank() : T.scrollTo(0, 0);
 function pickBar(){
   const pick = AD.bank.pick;
   if (!pick && AD.bank.multi) {
@@ -2584,7 +2765,11 @@ async function addToPlan(releaseNow){
     if (releaseNow) await releaseItems((res || []).map(p => p.id));
     refreshWaitingLocal();
     toast(releaseNow ? (ids.length === 1 ? "הדף נוסף ונשלח לתלמיד/ה." : ids.length + " דפים נוספו ונשלחו.") : (ids.length === 1 ? "דף אחד נוסף לתור." : ids.length + " דפים נוספו לתור."));
-    const st = stById(sid); AD.view = "students"; AD.st = String(sid); AD.subj = subj; AD.sel.clear(); if (st) { window.scrollTo(0, 0); adRender(); }
+    const inline = !isDesk();
+    AD.hl = new Set((res || []).map(p => p.id)); setTimeout(() => { AD.hl = null; document.querySelectorAll(".stm-row.hl").forEach(x => x.classList.remove("hl")); }, 4000);
+    AD.stTab = releaseNow ? "now" : "queue";
+    if (inline && history.state && history.state.ad === "bank") { AD.skipPop = true; history.back(); }
+    const st = stById(sid); if (!inline) AD.view = "students"; AD.st = String(sid); AD.subj = subj; AD.sel.clear(); if (st) { window.scrollTo(0, 0); adRender(); }
   } catch(e) { toast(/duplicate|unique/i.test(e.message) ? "חלק מהדפים כבר בתוכנית." : errText(e)); }
 }
 // ---------- שליחה לכמה תלמידים (לפי קבוצה / יום ושעה, או ידנית) ----------
