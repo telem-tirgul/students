@@ -89,6 +89,12 @@
   .chip.ok{ background:var(--ok-bg); color:var(--ok); }
   .chip.warn{ background:var(--warn-bg); color:var(--warn); }
   .chip.acc{ background:var(--accent-soft); color:var(--accent); }
+  .chip.bad{ background:color-mix(in srgb, var(--bad) 14%, transparent); color:var(--bad); }
+  .ic-line{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:8px 12px; margin:0 0 10px; font-size:14px; }
+  .ic-line b.code{ font-family:ui-monospace,monospace; letter-spacing:2px; direction:ltr; }
+  .bulk-btn{ width:100%; margin:0 0 10px; }
+  .res-list{ margin:6px 0 12px; padding:0; list-style:none; max-height:40vh; overflow:auto; }
+  .res-list li{ padding:6px 2px; border-bottom:1px solid var(--border); font-size:14px; }
   .toast{ position:fixed; inset-inline:16px; bottom:calc(20px + var(--safe-b)); margin:0 auto; max-width:480px; background:#2B2320; color:#fff; border-radius:14px; padding:14px 16px; font-weight:700; z-index:100; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.25); }
   .empty{ text-align:center; padding:36px 16px; }
   .empty svg{ width:56px; height:56px; color:var(--gold); }
@@ -1078,7 +1084,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.12.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.13",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/students/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1316,6 +1322,7 @@ async function boot(){
   let me;
   try { me = await rpc("portal_me"); } catch(e) { showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לנסות שוב."); return; }
   if (!me || me.status === "no_account") { showMsg("אין גישה", "המשתמש הזה לא מוגדר כתלמיד/ה. אם זו טעות – לכתוב לנו."); return; }
+  if (me.status === "code_expired") { showMsg("הקוד הראשוני כבר לא בתוקף", "הקוד שקיבלת עבד רק " + (me.days || 5) + " ימים. צריך לבקש קוד חדש: ללחוץ \"יציאה\" ואז \"שכחתי את הקוד\", או לכתוב לנו בוואטסאפ."); return; }
   if (me.status === "inactive") { showMsg("החשבון לא פעיל כרגע", "הגישה לדפים פתוחה רק לתלמידים רשומים. לשאלות – לכתוב לנו בוואטסאפ."); return; }
   ST.me = me;
   if (me.must_change_code) { showCodeChange(); return; }
@@ -1705,6 +1712,8 @@ async function adLoad(){
     AD.students = (students || []).map(s => Object.assign(s, { student_id: String(s.student_id) }));
     AD.plan = (plan || []).map(p => Object.assign(p, { student_id: String(p.student_id) }));
     AD.loaded = true;
+    // קוד ראשוני לכולם (TS-05; אם לא הורץ – null)
+    try { AD.settings = await rpc("portal_settings_get"); } catch(e) { AD.settings = null; }
     // בקשות "שכחתי את הקוד" (קובץ 73.1; אם לא הורץ – פשוט אין)
     try { AD.codeReqs = (await get("portal_code_requests", "select=id,student_id,phone,created_at&handled_at=is.null&matched=is.true&order=created_at"))
             .map(r => Object.assign(r, { student_id: String(r.student_id) })).filter(r => stById(r.student_id)); }
@@ -1981,18 +1990,72 @@ function studentsListHtml(){
   if (AD.filter === "noq") list = list.filter(s => s.has_account && !s.planned);
   return `
     <input class="search" id="stSearch" type="search" placeholder="חיפוש לפי שם או טלפון" value="${esc(AD.q)}">
+    ${AD.settings ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${AD.settings.initial_code ? `<b class="code">${esc(AD.settings.initial_code)}</b><span class="muted small">· תקף ${esc(AD.settings.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${AD.settings.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
     <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${AD.filter === "noacc" && AD.settings && list.length ? `<button class="btn primary bulk-btn" id="bulkAcc" data-ids="${esc(list.map(x => x.student_id).join(","))}">יצירת חשבון לכל הרשימה (${list.length})</button>` : ""}
     <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
     <div class="list-scroll">${list.map(s => `<button class="st-row ${AD.st === s.student_id && isDesk() ? "on" : ""}" data-open="${esc(s.student_id)}">
       ${avatar(s)}<span style="min-width:0;flex:1"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}</div><div class="subj-tabs mini-tabs">${subjBadge(s.subjects, true)}</div></span>
       <span class="chips">
-        ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? `<span class="chip warn">לא נכנס/ה</span>` : ""}
+        ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? codeChip(s) : ""}
         ${(s.waiting_subjects || []).length ? `<span class="chip new">ממתין/ה</span>` : ""}
         ${s.open_pages ? `<span class="chip ok">${s.open_pages} פתוחים</span>` : ""}
         ${s.planned ? `<span class="chip acc">${s.planned} בתור</span>` : ""}
       </span></button>`).join("") || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
 }
+// מצב הקוד הראשוני: עוד לא נכנס/ה (עד מתי) / פג תוקף
+const codeExpired = (s) => !!(s.must_change_code && s.code_expires_at && new Date(s.code_expires_at) < new Date());
+const codeChip = (s) => codeExpired(s) ? `<span class="chip bad">הקוד פג – קוד חדש</span>`
+  : `<span class="chip warn">לא נכנס/ה${s.code_expires_at ? " · עד " + esc(fmtDay(s.code_expires_at)) : ""}</span>`;
+function initialCodeSheet(){
+  const st = AD.settings || {};
+  openSheet(`<h2>קוד ראשוני לכולם</h2>
+    <p class="muted small" style="margin-top:0">אותו קוד לכל החשבונות החדשים (וגם ל"קוד חדש"). התלמיד/ה חייב/ת לבחור קוד אישי בכניסה הראשונה, והקוד הראשוני עובד רק מספר ימים.</p>
+    <label class="field"><span>קוד ראשוני (6 ספרות)</span><input id="icCode" inputmode="numeric" maxlength="6" class="code-input" value="${esc(st.initial_code || "")}"></label>
+    <label class="field"><span>תקף כמה ימים</span><input id="icDays" inputmode="numeric" maxlength="2" class="ltr" value="${esc(st.initial_days || 5)}"></label>
+    <div class="err" id="icErr"></div>
+    <button class="btn primary block" id="icGo">שמירה</button>`, (sh) => {
+      sh.querySelector("#icGo").onclick = async () => {
+        const cd = sh.querySelector("#icCode").value.trim(), dy = Number(sh.querySelector("#icDays").value), er = sh.querySelector("#icErr");
+        if (!/^\d{6}$/.test(cd)) { er.textContent = "הקוד צריך להיות 6 ספרות."; return; }
+        if (!(dy >= 1 && dy <= 60)) { er.textContent = "מספר הימים צריך להיות בין 1 ל-60."; return; }
+        try { AD.settings = await rpc("portal_settings_set", { p_code: cd, p_days: dy }); closeSheet(); toast("הקוד הראשוני נשמר."); adRender(); }
+        catch(e) { er.textContent = errText(e); }
+      };
+    });
+}
+function bulkAccounts(ids){
+  const st = AD.settings || {};
+  if (!st.initial_code) { initialCodeSheet(); return; }
+  openSheet(`<h2>יצירת חשבון ל-${ids.length} תלמידים</h2>
+    <p>לכל אחד/ת נוצר חשבון עם <b>הנייד שבכרטיס</b> והקוד <b class="code ltr">${esc(st.initial_code)}</b>.</p>
+    <p class="muted small">מי שאין לו/לה נייד בכרטיס – לא ייווצר (תופיע רשימה). הקוד עובד ${esc(st.initial_days)} ימים, עד שבוחרים קוד אישי.</p>
+    <div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeSheet()">ביטול</button><button class="btn primary" style="flex:1" id="bkGo">יצירה</button></div>`, (sh) => {
+      sh.querySelector("#bkGo").onclick = async () => {
+        sh.querySelector("#bkGo").disabled = true; sh.querySelector("#bkGo").textContent = "יוצר…";
+        try {
+          const r = await rpc("portal_create_accounts", { p_students: ids, p_code: null });
+          await adLoad();
+          bulkResult(r, st);
+        } catch(e) { toast(errText(e)); sh.querySelector("#bkGo").disabled = false; sh.querySelector("#bkGo").textContent = "יצירה"; }
+      };
+    });
+}
+function bulkResult(r, st){
+  const ok = r.created || [], sk = r.skipped || [];
+  const msg = `היי! 👋\nדפי התרגול של תלם מגיעים עכשיו באפליקציה "תלם שלי":\n${CONFIG.appUrl}\n\nנכנסים עם מספר הנייד שלכם והקוד ${st.initial_code}.\nבכניסה הראשונה בוחרים קוד אישי.\nהקוד עובד ${r.days || st.initial_days} ימים – כדאי להיכנס כבר היום.`;
+  openSheet(`<h2>נוצרו ${ok.length} חשבונות ✓</h2>
+    ${sk.length ? `<p style="margin:0"><b>לא נוצרו (${sk.length}):</b></p><ul class="res-list">${sk.map(x => `<li>${esc(x.name || x.student_id)} – <span class="muted">${esc(x.reason)}</span></li>`).join("")}</ul>` : ""}
+    <p class="muted" style="margin:8px 0 0">הודעה לקבוצה (אחת לכולם):</p>
+    <pre class="msg">${esc(msg)}</pre>
+    <button class="btn primary block" id="cpBulk" style="margin-bottom:8px">${IC.copy} העתקת ההודעה</button>
+    <button class="btn ghost block" onclick="closeSheet()">סגירה</button>`, (sh) => {
+      sh.querySelector("#cpBulk").onclick = async () => { try { await navigator.clipboard.writeText(msg); toast("ההודעה הועתקה."); } catch(e) { toast("לא הצלחנו להעתיק."); } };
+    });
+}
 function wireStudentsList(root){
+  if (root.querySelector("#icEdit")) root.querySelector("#icEdit").onclick = initialCodeSheet;
+  if (root.querySelector("#bulkAcc")) root.querySelector("#bulkAcc").onclick = (e) => bulkAccounts(e.currentTarget.dataset.ids.split(","));
   const inp = root.querySelector("#stSearch");
   inp.oninput = () => { AD.q = inp.value; const pos = inp.selectionStart; const col = root; col.innerHTML = studentsListHtml(); wireStudentsList(col); const n = col.querySelector("#stSearch"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(e) {} };
   root.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { AD.filter = b.dataset.f; root.innerHTML = studentsListHtml(); wireStudentsList(root); });
@@ -2036,7 +2099,7 @@ async function renderStudentPlan(T, mobile){
   const acc = !s.has_account
     ? `<span class="chip">אין עדיין חשבון</span><span class="sp" style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button>`
     : `<span class="chip ok">יש חשבון</span><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
-       <span class="small muted">${s.must_change_code ? "עוד לא בחר/ה קוד אישי" : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
+       <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי" + (s.code_expires_at ? " · הקוד עובד עד " + esc(fmtDay(s.code_expires_at)) : "")) : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
        <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button>`;
   T.innerHTML = `
     ${mobile ? `<div class="crumb"><button class="btn sm ghost" id="stBack">${IC.back} חזרה</button></div>` : ""}
@@ -2138,7 +2201,7 @@ async function codeReqDone(sid, quiet){
 }
 const randCode = () => { let c; do { const a = new Uint32Array(1); crypto.getRandomValues(a); c = String(a[0] % 1000000).padStart(6, "0"); } while (/^(\d)\1{5}$/.test(c) || ["123456", "654321"].includes(c)); return c; };
 function accountSheet(s, reset){
-  const code = randCode();
+  const code = (AD.settings && AD.settings.initial_code) || randCode();
   openSheet(`<h2>${reset ? "קוד חדש ל" : "חשבון ל"}${esc(stName(s))}</h2>
     <label class="field"><span>הטלפון של התלמיד/ה</span><input id="acPhone" type="tel" class="ltr" value="${esc(fmtPhone(reset ? s.login_phone : s.phone))}"></label>
     <label class="field"><span>קוד ראשוני</span><input id="acCode" inputmode="numeric" maxlength="6" class="code-input" value="${code}"></label>
@@ -2153,6 +2216,7 @@ function accountSheet(s, reset){
         try {
           const r = await rpc("portal_create_account", { p_student: s.student_id, p_phone: ph, p_code: cd });
           s.has_account = true; s.login_phone = r.phone; s.must_change_code = true; if (!s.phone) s.phone = r.phone;
+          if (AD.settings) s.code_expires_at = new Date(Date.now() + (AD.settings.initial_days || 5) * 864e5).toISOString();
           if (reset) codeReqDone(s.student_id, true);
           if (AD.view === "wait" && !AD.st) adRender(); else rerenderPlan();
           sendCodeSheet(s, r.phone, cd, reset);
