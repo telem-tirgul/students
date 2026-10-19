@@ -1033,6 +1033,10 @@
   .stm-row .t{ flex:1; min-width:0; font-weight:700; line-height:1.3; cursor:zoom-in; }
   .stm-row .t small{ display:flex; align-items:center; gap:5px; font-weight:400; color:var(--ink-soft); font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .stm-row .mini{ width:30px; height:30px; flex:none; }
+  .stm-row .q-mv{ display:flex; flex-direction:column; gap:2px; flex:none; } .stm-row .q-mv .mini{ width:26px; height:17px; font-size:9px; padding:0; border-radius:5px; }
+  .stm-row .drag{ flex:none; width:26px; align-self:stretch; display:grid; place-items:center; color:var(--ink-soft); font-size:18px; letter-spacing:-3px; cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; }
+  .stm-row.dragging{ position:relative; z-index:5; box-shadow:0 8px 20px rgba(0,0,0,.18); opacity:.95; }
+  .stm-q .stm-row{ transition:transform .12s; } .stm-q .stm-row.dragging{ transition:none; }
   .stm-row.hl{ background:#FFF4D6; border-color:var(--gold); }
   :root[data-theme="dark"] .stm-row.hl{ background:#3a2f17; } @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .stm-row.hl{ background:#3a2f17; } }
   .stm-row .ok-ic{ color:var(--ok); flex:none; display:flex; }
@@ -1380,11 +1384,20 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
   .crmws .ws-vapp{ display:flex; gap:8px; padding:8px 10px 0; background:inherit; width:100%; max-width:560px; margin:0 auto; box-sizing:border-box; } .crmws .ws-vapp:empty{ display:none; }
   .crmws .ws-vapp .btn{ flex:1; justify-content:center; height:44px; font-size:15px; }
   .crmws .ws-vapp .btn:not(.primary){ background:#fff; color:#161118; border-color:#fff; }
+  .crmws .ws-vapp.small{ justify-content:center; } .crmws .ws-vapp.small .btn{ flex:0 1 auto; height:34px; font-size:13.5px; padding:0 12px; }
+  .crmws .ws-vapp.small .btn.primary{ flex:1 1 auto; max-width:200px; }
+  .crmws .ws-vapp .btn.pa-q{ background:#fff !important; color:#161118 !important; border-color:#fff !important; }
+  .crmws .ws-vapp .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .crmws .ws-vapp .btn.pa-rm{ background:transparent !important; color:#ff8a80 !important; border:1.5px solid #ff8a80 !important; flex:0 1 auto; padding:0 18px; }
+  .crmws .ws-vapp .pa-done{ color:#9be29b; font-weight:700; padding:10px; text-align:center; flex:1; }
+  body.ws-app-on .crmws .ws-vbot{ padding-top:6px; gap:6px; }
+  body.ws-app-on .crmws .ws-vbot .btn, body.ws-app-on .crmws .ws-vbot .ws-nav{ height:34px !important; min-height:0 !important; font-size:13px !important; padding:0 10px !important; flex:0 0 auto !important; }
   .crmws .ws-app .btn{ white-space:nowrap; }
   .crmws .cb-st{ position:absolute; bottom:6px; inset-inline-start:6px; z-index:2; font-size:11px; font-weight:800; border-radius:10px; padding:1px 7px; background:#F1EAE1; color:#5F5A57; }
   .crmws .cb-st.s-sent{ background:#FFF1C9; color:#7A5A10; } .crmws .cb-st.s-done{ background:#E6F4E6; color:#2E6B35; }
   .crmws .ws-pgw.cb-in .ws-pg{ opacity:.6; }
   #adminView .crmws .page-head h1{ font-size:21px; }
+.upd-bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);z-index:9999;background:var(--accent,#7a1f2b);color:#fff;border:0;border-radius:999px;padding:7px 16px;font:inherit;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
@@ -1510,7 +1523,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.18",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.18.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2852,10 +2865,10 @@ async function renderStudentMobile(T, s){
     body += `<div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
     queues.forEach(([x, q]) => {
       if (multi && q.length) body += `<div class="stm-sub"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>`;
-      body += q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
-          <button class="mini" data-mv="${p.id}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="למעלה">${IC.up}</button>
-          <button class="mini" data-mv="${p.id}" data-d="1" ${i === q.length - 1 ? "disabled" : ""} aria-label="למטה">${IC.down}</button>
-          <button class="mini" data-rm="${p.id}" aria-label="הסרה מהתור">${IC.x}</button>`, i === 0 ? " next" : "")).join("");
+      // 1.18.2: שינוי סדר בגרירה (⋮⋮ משמאל), או ▲▼
+      body += `<div class="stm-q" data-q="${esc(x)}">` + q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
+          <span class="q-mv"><button class="mini sm" data-mv="${p.id}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="למעלה">▲</button><button class="mini sm" data-mv="${p.id}" data-d="1" ${i === q.length - 1 ? "disabled" : ""} aria-label="למטה">▼</button></span>
+          <span class="drag" data-drag="${p.id}" title="גרירה לשינוי הסדר" aria-label="גרירה לשינוי הסדר">⋮⋮</span>`, i === 0 ? " next" : "")).join("") + `</div>`;
       if (multi && q.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא ב${esc(x)}</button>`;
     });
   } else if (tab === "now") {
@@ -2904,6 +2917,7 @@ async function renderStudentMobile(T, s){
   T.querySelectorAll("[data-stab]").forEach(b => b.onclick = () => { AD.stTab = b.dataset.stab; AD.showDone = false; renderStudentMobile(T, s); window.scrollTo(0, 0); });
   T.querySelectorAll("[data-unrel]").forEach(b => b.onclick = () => unrelease(Number(b.dataset.unrel)));
   T.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => movePlan(Number(b.dataset.mv), Number(b.dataset.d)));
+  T.querySelectorAll(".stm-q [data-drag]").forEach(h => dragQueue(h));
   T.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => removePlan(Number(b.dataset.rm)));
   T.querySelectorAll(".stm-body .stm-row[data-pid] .t").forEach(t => t.onclick = () => planView(Number(t.closest(".stm-row").dataset.pid), s));
   T.querySelectorAll("[data-relnext]").forEach(b => b.onclick = () => { const qq = queueOf(s.student_id, b.dataset.relnext); if (qq[0]) releaseItems([qq[0].id]); });
@@ -2921,18 +2935,43 @@ async function renderStudentMobile(T, s){
   });
 }
 // 1.17: לחיצה על דף בתוכנית – הדף נפתח מיד (כמו במאגר בנייד), והפעולות בפס למטה
-async function planView(id, s){
+// 1.18.2: גרירת דף בתור (⋮⋮) – משנה את הסדר; בסוף שומרים את המיקומים כמו ▲▼
+function dragQueue(h){
+  h.addEventListener("pointerdown", (e) => {
+    const row = h.closest(".stm-row"), box = row.parentElement; if (!box) return;
+    e.preventDefault(); h.setPointerCapture(e.pointerId);
+    const rows = [...box.querySelectorAll(".stm-row")], y0 = e.clientY, r0 = row.getBoundingClientRect();
+    const mids = rows.map(r => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+    let to = rows.indexOf(row); const from = to;
+    row.classList.add("dragging");
+    const move = (ev) => { const dy = ev.clientY - y0; row.style.transform = `translateY(${dy}px)`;
+      const c = r0.top + r0.height / 2 + dy; to = mids.filter((m, k) => k !== from && m < c).length;
+      rows.forEach((r, k) => { if (r === row) return; const k2 = k > from ? k - 1 : k; r.style.transform = k2 >= to && k < from ? `translateY(${r0.height + 6}px)` : k2 < to && k > from ? `translateY(${-(r0.height + 6)}px)` : ""; }); };
+    const up = () => { h.removeEventListener("pointermove", move); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up);
+      rows.forEach(r => r.style.transform = ""); row.classList.remove("dragging");
+      if (to !== from) reorderQueue(Number(row.dataset.pid), to); };
+    h.addEventListener("pointermove", move); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
+  });
+}
+async function reorderQueue(id, to){
   const p = AD.plan.find(x => x.id === id); if (!p) return;
-  const w = AD.wsById.get(String(p.worksheet_id)); if (!w) return planSheet(id, s);
-  const q = p.status === "מתוכנן" ? queueOf(p.student_id, p.subject) : null, i = q ? q.findIndex(x => x.id === id) : -1;
-  const g = await sign([w.storage_path]);
-  const B = (a, t, cls, dis) => `<button class="btn ${cls || "ghost"}" data-pa="${a}" ${dis ? "disabled" : ""}>${t}</button>`;
-  const bar = q ? B("up", IC.up + " למעלה", "", i === 0) + B("down", IC.down + " למטה", "", i === q.length - 1) + (s.has_account ? B("rel", IC.check + " שחרור הדף", "primary") : "") + B("rm", IC.x + " הסרה", "ghost pa-del")
-    : p.status === "נשלח" ? B("unrel", IC.undo + " ביטול שחרור (חזרה לתור)") : "";
-  openViewer({ title: [wsTitle(p.worksheet_id), lvOf(w)].filter(Boolean).join(" · "), path: w.storage_path, url: g(w.storage_path), bar,
-    wire: (v) => v.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { const a = b.dataset.pa; closeViewer();
-      if (a === "up") movePlan(id, -1); else if (a === "down") movePlan(id, 1); else if (a === "rel") releaseItems([id]);
-      else if (a === "unrel") unrelease(id); else if (a === "rm") removePlan(id); }) });
+  const qq = queueOf(p.student_id, p.subject), i = qq.findIndex(x => x.id === id); if (i < 0) return;
+  qq.splice(to, 0, qq.splice(i, 1)[0]);
+  const changes = []; qq.forEach((x, k) => { if (x.position !== k + 1) { x.position = k + 1; changes.push(x); } });
+  rerenderPlan();
+  try { await Promise.all(changes.map(x => patch("portal_plan_items", "id=eq." + x.id, { position: x.position }))); }
+  catch(e) { toast("הסדר לא נשמר. כדאי לרענן."); }
+}
+// 1.18.1: לחיצה על דף בתוכנית – נפתח בדיוק כמו דף במאגר (✕ למעלה, הקודם / הבא, ⭐, העתקה, הורדה),
+// ומעל הפס – פעולות התוכנית בקטן: שחרור / למעלה / למטה / הסרה (בעבודה: ביטול שחרור)
+function planView(id, s){
+  const p = AD.plan.find(x => x.id === id); if (!p) return;
+  const same = (x) => x.student_id === p.student_id && x.subject === p.subject;
+  const list = p.status === "מתוכנן" ? queueOf(p.student_id, p.subject)
+    : AD.plan.filter(x => same(x) && x.status === p.status).sort((a, b) => String(b[p.status === "נשלח" ? "released_at" : "done_at"]).localeCompare(String(a[p.status === "נשלח" ? "released_at" : "done_at"])));
+  CB.ctx = "plan"; CB.plan = { s, items: new Map(list.map(x => [String(x.worksheet_id), x.id])) };
+  document.documentElement.style.setProperty("--side-h", "0px"); document.documentElement.style.setProperty("--wsqv", "0px");   // אין פס מאגר מעל הדף
+  if (!CBM.openRows(list.map(x => x.worksheet_id), list.findIndex(x => x.id === id))) planSheet(id, s);
 }
 // חלון פעולות לדף בתוכנית (גיבוי – כשאין תמונה)
 function planSheet(id, s){
@@ -3818,7 +3857,13 @@ $("wsCopy").addEventListener("click", async () => {
     toast("ההעתקה לא עבדה בדפדפן הזה - לחיצה ארוכה על הדף ← העתקה");
   }
 });
-  return { WS, renderWs, loadWs, wsOpen, wsClose, wsViewerOff, wsSelUpd, wrap, viewerOpen: () => !$("wsViewer").hidden };
+  // 1.18.1: פתיחת דפים מהתוכנית של תלמיד/ה באותו חלון של המאגר (עם הקודם / הבא בתוך הרשימה)
+  const openRows = (wids, i) => {
+    if (!WS.rows && typeof AD !== "undefined" && AD.ws) WS.rows = wsPrep(AD.ws.map(r => Object.assign({}, r)));
+    const by = new Map((WS.rows || []).map(r => [String(r.id), r]));
+    WS.list = wids.map(w => by.get(String(w))).filter(Boolean); if (!WS.list.length) return false;
+    wsOpen(Math.max(0, Math.min(i, WS.list.length - 1))); return true; };
+  return { WS, renderWs, loadWs, wsOpen, wsClose, wsViewerOff, wsSelUpd, wrap, openRows, viewerOpen: () => !$("wsViewer").hidden };
 })();
 
 // המאגר בכל מקום (מסך "מאגר", בחירת דפים לתלמיד/ה בנייד ובמחשב) = אותו מסך של מערכת הניהול
@@ -3847,16 +3892,27 @@ function cbAdd(ids, releaseNow){
   CBM.wsClose(true); CBM.WS.sel = new Set(); AD.bank.sel = new Set(fresh); addToPlan(releaseNow);
 }
 function cbToStudents(ids){ if (!ids.length) return; CBM.wsViewerOff(); AD.bank.sel = new Set(ids); bulkSheet(); }
+// 1.18.2 (נועה): בדף פתוח – "הוסף לתור" / "הוסף ושחרר עכשיו" / "הסרה" בצבעים של פעם; העתקה / הורדה / ⭐ – קטנים למטה
 CB.onOpen = (r) => { const box = document.getElementById("wsAppBtns"); if (!box) return;
+  const tt = document.getElementById("wsVTitle"), lv = lvOf(r) ? " " + ((LV[r.level] || [""])[0] + (r.is_word ? "📖" : "")) : "";
+  if (tt && lv) tt.textContent += lv;
+  document.body.classList.toggle("ws-app-on", CB.ctx !== "browse" || r.type === "page");
   if (r.type !== "page") { box.innerHTML = ""; return; }
-  if (CB.ctx === "pick") { const st = cbPlanSt(r.id);
-    box.innerHTML = st ? `<span class="ws-sec btn" style="opacity:.8">${st === "מתוכנן" ? "כבר בתור" : st === "נשלח" ? "בעבודה" : "סיים/ה"}</span>`
-      : `<button type="button" class="btn" id="cbQ">+ לתור</button><button type="button" class="btn primary" id="cbRel">שחרור</button>`;
-    if (!st) { box.querySelector("#cbQ").onclick = () => cbAdd([String(r.id)], false); box.querySelector("#cbRel").onclick = () => cbAdd([String(r.id)], true); }
-  } else { box.innerHTML = `<button type="button" class="btn primary" id="cbStu">לתלמידים…</button>`; box.querySelector("#cbStu").onclick = () => cbToStudents([String(r.id)]); } };
+  if (CB.ctx === "browse") { box.innerHTML = `<button type="button" class="btn primary" id="cbStu">לתלמידים…</button>`; box.querySelector("#cbStu").onclick = () => cbToStudents([String(r.id)]); return; }
+  // תלמיד/ה (מהמאגר או מהתוכנית): לפי מצב הדף בתוכנית שלו/ה
+  const sid = CB.ctx === "plan" ? CB.plan.s.student_id : AD.bank.pick && AD.bank.pick.sid;
+  const p = AD.plan.find(x => x.student_id === String(sid) && String(x.worksheet_id) === String(r.id));
+  const hasAcc = (stById(sid) || {}).has_account;
+  const B = (a, t, cls) => `<button type="button" class="btn ${cls}" data-pa="${a}">${t}</button>`;
+  box.innerHTML = !p ? B("add", "הוסף לתור", "pa-q") + (hasAcc ? B("addrel", "הוסף ושחרר עכשיו", "primary") : "")
+    : p.status === "מתוכנן" ? (hasAcc ? B("rel", "שחרר עכשיו", "primary") : "") + B("rm", "הסרה", "pa-rm")
+    : p.status === "נשלח" ? B("unrel", "ביטול שחרור (חזרה לתור)", "pa-q") : `<span class="pa-done">✔ סיים/ה את הדף</span>`;
+  box.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { const a = b.dataset.pa;
+    if (a === "add" || a === "addrel") { if (CB.ctx === "pick") return cbAdd([String(r.id)], a === "addrel"); CBM.wsClose(); return; }
+    CBM.wsClose(); setTimeout(() => { if (a === "rel") releaseItems([p.id]); else if (a === "unrel") unrelease(p.id); else if (a === "rm") removePlan(p.id); }, 60); }); };
 CB.onSel = (n) => { const box = CBM.wrap.querySelector("#wsSelApp"); if (!box) return;
   if (!n) { box.innerHTML = ""; return; }
-  box.innerHTML = CB.ctx === "pick" ? `<button type="button" class="btn" id="cbSelQ">+ לתור</button><button type="button" class="btn" id="cbSelRel">שחרור</button>` : `<button type="button" class="btn" id="cbSelStu">לתלמידים…</button>`;
+  box.innerHTML = CB.ctx === "pick" ? `<button type="button" class="btn" id="cbSelQ">הוסף לתור</button><button type="button" class="btn primary" id="cbSelRel">הוסף ושחרר עכשיו</button>` : `<button type="button" class="btn" id="cbSelStu">לתלמידים…</button>`;
   if (box.querySelector("#cbSelQ")) { box.querySelector("#cbSelQ").onclick = () => cbAdd(cbIds(), false); box.querySelector("#cbSelRel").onclick = () => cbAdd(cbIds(), true); }
   if (box.querySelector("#cbSelStu")) box.querySelector("#cbSelStu").onclick = () => cbToStudents(cbIds()); };
 function pickBar(){
@@ -4045,7 +4101,23 @@ async function previewWs(wid){
 // התחלה
 // ======================================================================
 document.querySelectorAll(".appVer").forEach(x => { x.textContent = CONFIG.version; });
-if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+// עדכון אוטומטי: בכל חזרה לאפליקציה (וכל חצי שעה) בודקים אם יש גרסה חדשה.
+// כשיש – מרעננים מיד אם שום דבר לא פתוח; אחרת פס קטן "גרסה חדשה – לרענון".
+if ("serviceWorker" in navigator) window.addEventListener("load", () => {
+  const had = !!navigator.serviceWorker.controller; let done = false;
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    const chk = () => reg.update().catch(() => {});
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) chk(); });
+    setInterval(chk, 30 * 60 * 1000);
+  }).catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!had || done) return; done = true;
+    const busy = VIEWER || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
+    if (!busy) return location.reload();
+    const b = document.createElement("button"); b.className = "upd-bar"; b.textContent = "יש גרסה חדשה – לחצו לרענון";
+    b.onclick = () => location.reload(); document.body.appendChild(b);
+  });
+});
 boot();
 </script>
 </body>
