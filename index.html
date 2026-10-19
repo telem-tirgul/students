@@ -169,7 +169,33 @@
   .filters{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
   .filters button{ border:1px solid var(--border); background:var(--paper); border-radius:20px; padding:6px 12px; font-weight:700; cursor:pointer; font-size:14px; }
   .filters button.on{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
-  .st-row{ display:flex; align-items:center; gap:10px; width:100%; text-align:start; background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:8px; cursor:pointer; }
+  .st-row{ display:flex; flex-wrap:wrap; row-gap:4px; align-items:center; gap:8px; width:100%; text-align:start; background:var(--paper); border:1px solid var(--border); border-radius:10px; padding:5px 8px; margin-bottom:4px; cursor:pointer; min-height:44px; }
+  .st-row .sr-t{ flex:1 1 auto; min-width:70px; display:flex; align-items:baseline; gap:6px; overflow:hidden; }
+  .st-row .sr-t .n{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:0 0 auto; max-width:100%; }
+  .st-row .sr-t .school-chip{ flex:0 10 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .st-row .subj-mini{ flex:none; }
+  .st-row .sr-ic{ flex:none; display:flex; flex-wrap:nowrap; gap:3px; align-items:center; margin-inline-start:auto; }
+  .st-row .sr-ic:empty{ display:none; }
+  .school-chip{ display:inline-block; background:var(--scb); color:var(--sci); font-weight:700; border-radius:999px; padding:0 8px; line-height:1.5; font-size:12px; white-space:nowrap; }
+  .sc-rh1{ --l:#FFF0A6; --h:#5E4B00; } .sc-rh2{ --l:#FFC94D; --h:#5A3E00; } .sc-rh3{ --l:#F59A3C; --h:#4A2400; }
+  .sc-rh4{ --l:#C9663A; --h:#FFFFFF; --d:#7A3315; } .sc-rh5{ --l:#8A5530; --h:#FFFFFF; --d:#4A2A12; }
+  .sc-ks1{ --l:#D8F0B0; --h:#3A5A10; } .sc-ks2{ --l:#5FB35A; --h:#FFFFFF; --d:#2D6A29; } .sc-ks3{ --l:#2E6E4A; --h:#FFFFFF; --d:#173D27; } .sc-ks4{ --l:#9ED3C0; --h:#11493A; --d:#1C6B55; }
+  .sc-hs1{ --l:#CDE6FA; --h:#174A80; } .sc-hs2{ --l:#4F93D9; --h:#FFFFFF; --d:#1F5A9E; } .sc-hs3{ --l:#1E3F7A; --h:#FFFFFF; --d:#0D2147; } .sc-hs4{ --l:#B9B4EC; --h:#2E2670; --d:#4A3FA8; }
+  .sc-x{ --l:#ECE9E7; --h:#5F5A57; }
+  .sc{ --scb:var(--l); --sci:var(--h); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sc{ --scb:color-mix(in srgb, var(--l) 42%, #231B18); --sci:color-mix(in srgb, var(--l) 30%, #fff); } }
+  :root[data-theme="dark"] .sc{ --scb:color-mix(in srgb, var(--l) 42%, #231B18); --sci:color-mix(in srgb, var(--l) 30%, #fff); }
+  .si{ font-style:normal; font-size:12.5px; font-weight:800; line-height:1; min-width:22px; height:22px; padding:0 4px; border-radius:6px; display:inline-grid; place-items:center; background:var(--muted); color:var(--ink-soft); }
+  .si-here{ background:#2F6FD6; color:#fff; } .si-abs{ background:#D93A2F; color:#fff; } .si-here-l{ color:#2F6FD6; } .si-abs-l{ color:#D93A2F; } .si-wait{ background:#FFF4D6; } .si-q{ background:#F3E3E3; color:var(--accent); } .si-open{ background:#E7EEF8; color:#2F5E94; }
+  .si-bad{ background:#FBE3E1; } .si-noacc{ background:transparent; }
+  .si-ex{ background:var(--paper); border:1.5px solid var(--border); color:var(--ink); font-size:11.5px; cursor:pointer; } .si-ex.soon{ background:#FBE3E1; border-color:#E8A49D; color:#A3261D; } .si-ex.near{ background:#FCEFEE; border-color:#F0C5C0; color:#B84A42; }
+  .si-study{ background:transparent; cursor:pointer; } .si-ex-l{ font-weight:800; color:#A3261D; }
+  .st-leg{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:11.5px; color:var(--ink-soft); margin:0 2px 6px; }
+  .gbadge{ display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; font-weight:800; font-size:11.5px; letter-spacing:-.3px; flex:none; background:var(--gb); color:var(--gi); border:2px solid var(--gi); }
+  .g-ה, .g-ו{ --gb:#E2EEFA; --gi:#2F78C4; } .g-ז{ --gb:#DFF3E8; --gi:#24935F; } .g-ח{ --gb:#FCEBD9; --gi:#C86E14; } .g-ט{ --gb:#ECE5FA; --gi:#7B55C9; }
+  .g-י{ --gb:#F3F0C6; --gi:#857400; } .g-יא{ --gb:#F8E1EE; --gi:#B8327F; } .g-יב{ --gb:#EFE6DC; --gi:#6E5236; } .g-x{ --gb:transparent; --gi:var(--ink-soft); }
+  .subj-mini{ display:inline-block; font-size:12px; font-weight:700; line-height:1.5; border-radius:999px; padding:0 8px; }
+  .subj-mini.s-m{ background:#DDF5D6; color:#1F6B17; } .subj-mini.s-e{ background:#FFF6B8; color:#6B5600; } .subj-mini.s-b{ background:#DCEAFB; color:#1D4F91; } .subj-mini.s-x{ background:var(--muted); color:var(--ink-soft); }
   .st-row .n{ font-family:var(--font-display); font-weight:800; font-size:16px; }
   .st-row .meta{ font-size:13.5px; color:var(--ink-soft); }
   .st-row .chips{ display:flex; gap:4px; flex-wrap:wrap; margin-inline-start:auto; justify-content:flex-end; }
@@ -340,7 +366,7 @@
     .split .list-col{ position:sticky; top:26px; max-height:calc(100vh - 52px); display:flex; flex-direction:column; }
     .split .list-scroll{ overflow:auto; padding-inline-end:4px; margin-inline-end:-4px; }
   }
-  .st-row{ border-radius:14px; }
+  .st-row{ border-radius:10px; }
   .st-row.on{ border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
   .st-row .avatar{ width:38px; height:38px; font-size:15px; }
   .plan-empty{ display:grid; place-items:center; min-height:320px; text-align:center; color:var(--ink-soft); border:2px dashed var(--border); border-radius:18px; padding:24px; }
@@ -979,7 +1005,7 @@
   :root[data-theme="dark"] .ex-line.soon, :root[data-theme="dark"] .ex-line.near{ background:#3a1d1b; }
   .ex-topics-full{ font-size:15px; line-height:1.6; white-space:pre-wrap; margin-bottom:10px; }
   .st-det{ margin:6px 0 0; font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .day-h{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-weight:800; font-size:13.5px; color:var(--accent); margin:12px 2px 6px; }
+  .day-h{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--accent); margin:10px 2px 4px; }
   .day-h small{ color:var(--ink-soft); font-weight:600; }
   .chip.here{ background:#E6F4E6; color:#2E6B35; }
   .stm-head .l1{ display:flex; align-items:center; gap:6px; min-width:0; }
@@ -997,6 +1023,11 @@
   .stm-tabs button b{ flex:none; background:color-mix(in srgb, var(--ink-soft) 14%, transparent); border-radius:20px; padding:0 7px; font-size:12px; }
   .stm-tabs button[aria-selected="true"]{ background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.15); }
   .stm-tabs button[aria-selected="true"] b{ background:var(--accent); color:#fff; }
+  .stm-sec{ margin-bottom:14px; }
+  .stm-sec-h{ display:flex; align-items:baseline; gap:6px; font-family:var(--font-display); font-weight:900; font-size:15.5px; margin:4px 2px 4px; padding-bottom:4px; border-bottom:2px solid var(--border); }
+  .stm-sec-h .ic{ width:20px; text-align:center; } .stm-sec-h b{ font-size:12px; background:var(--accent); color:#fff; border-radius:20px; padding:0 7px; align-self:center; }
+  .stm-sec-h small{ font-family:var(--font-body, inherit); font-weight:500; font-size:12px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .sec-done .stm-sec-h b{ background:var(--ok); } .sec-now .stm-sec-h b{ background:#2F5E94; }
   .stm-h{ font-family:var(--font-display); font-weight:900; font-size:15px; margin:4px 2px 1px; }
   .stm-hint{ font-size:12.5px; color:var(--ink-soft); margin:0 2px 8px; }
   .stm-sub{ display:flex; align-items:center; gap:6px; margin:12px 2px 6px; }
@@ -1028,6 +1059,8 @@
   .stm-cols .stm-rel{ font-size:12.5px; padding:6px 4px; }
   .sheet-acts{ display:flex; flex-direction:column; gap:8px; } .sheet-acts .sa-row{ display:flex; gap:8px; } .sheet-acts .sa-row .btn{ flex:1; justify-content:center; }
   .sheet .acc-del{ color:var(--bad, #B3261E); }
+  .tl-h{ font-family:var(--font-display); font-size:15px; font-weight:800; margin:14px 0 6px; }
+  .tl-list{ max-height:50vh; overflow:auto; margin-top:8px; } .tl-row{ display:flex; align-items:center; gap:8px; padding:7px 2px; border-bottom:1px solid var(--border); } .tl-n{ flex:1; min-width:0; }
   .stm-empty{ color:var(--ink-soft); font-size:14px; padding:14px 4px; }
   .stm-acc{ margin:4px 2px 0 0; }
   .stm-acc summary{ list-style:none; display:inline-flex; align-items:center; gap:6px; line-height:1.4; }
@@ -1158,6 +1191,7 @@
       <nav class="nav" id="adNav" aria-label="תפריט"></nav>
       <div class="who"><span id="adWho"></span>
         <button class="btn small ghost hdr-btn" id="adNotify" title="התראות" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="ib-t">התראות</span></button>
+        <button class="btn small ghost hdr-btn" id="adTools" title="ניהול חשבונות"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.8 1l-.3 2h-4l-.3-2a7 7 0 0 1-1.8-1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3L3 9.3l2-3.4 1.9.7a7 7 0 0 1 1.8-1l.3-2h4l.3 2a7 7 0 0 1 1.8 1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"/></svg><span class="ib-t">ניהול</span></button>
         <button class="btn small ghost hdr-btn" id="adRefresh" title="רענון"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="ib-t">רענון</span></button>
         <button class="btn small ghost" id="adLogout">יציאה</button></div>
     </header>
@@ -1184,7 +1218,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.16.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.17",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1838,6 +1872,7 @@ function adminStart(fast){
   showView("adminView");
   $("adRefresh").onclick = async () => { toast("מתעדכן…"); AD.groups = null; AD.present = null; AD.info = null; await adLoad(); };
   $("adLogout").onclick = logout;
+  $("adTools").onclick = toolsSheet;
   rpc("my_role").then(r => { if (r && r.full_name) $("adWho").textContent = r.full_name; }).catch(() => {});
   $("drawerClose").onclick = $("drawerBg").onclick = () => closeDrawer();
   renderNav();
@@ -2049,8 +2084,11 @@ async function presentAllToday(){
   if (AD.presentP && AD.presentP.iso === iso) return AD.presentP.p;   // כבר בדרך
   let rows = null, done;
   AD.presentP = { iso, p: new Promise(r => done = r) };
-  try { rows = await get("attendance", "select=student_id,session_id&present=is.true&lesson_date=eq." + iso); } catch(e) {}
-  AD.present = { iso, at: Date.now(), ok: !!rows, set: new Set((rows || []).map(r => r.student_id + "|" + r.session_id)), any: new Set((rows || []).map(r => String(r.student_id))) };
+  let absent = [];
+  try { const all = await get("attendance", "select=student_id,session_id,present&lesson_date=eq." + iso);
+    rows = (all || []).filter(r => r.present === true); absent = (all || []).filter(r => r.present === false); } catch(e) {}
+  AD.present = { iso, at: Date.now(), ok: !!rows, set: new Set((rows || []).map(r => r.student_id + "|" + r.session_id)), any: new Set((rows || []).map(r => String(r.student_id))),
+                 absent: new Set(absent.map(r => String(r.student_id))) };   // 1.17: חסר/ה היום (✗)
   AD.presentP = null; done(AD.present);
   return AD.present;
 }
@@ -2207,22 +2245,46 @@ function studentsListHtml(){
   if (AD.filter === "noq") list = list.filter(s => s.has_account && !s.planned);
   return `
     <input class="search" id="stSearch" type="search" placeholder="חיפוש לפי שם או טלפון" value="${esc(AD.q)}">
-    ${AD.settings ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${AD.settings.initial_code ? `<b class="code">${esc(AD.settings.initial_code)}</b><span class="muted small">· תקף ${esc(AD.settings.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${AD.settings.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
     <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
     ${AD.filter === "noacc" && AD.settings && list.length ? `<button class="btn primary bulk-btn" id="bulkAcc" data-ids="${esc(list.map(x => x.student_id).join(","))}">יצירת חשבון לכל הרשימה (${list.length})</button>` : ""}
     <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
-    <div class="list-scroll">${todaySections(list, stRowHtml) || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
+    ${ST_LEG}<div class="list-scroll">${todaySections(list, stRowHtml) || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
 }
-const stRowHtml = (s) => { const here = AD.present && AD.present.any.has(s.student_id);
+// 1.17: שורה צפופה (כמו בנוכחות במערכת הניהול): שכבה+כיתה בעיגול צבעוני · שם · בית ספר · מת'/אנג' · אייקונים
+const GRADE_ORD = ["ה","ו","ז","ח","ט","י","יא","יב"];
+// צבע קבוע לכל בית ספר – בדיוק כמו במערכת הניהול (ראש העין צהוב/חום, כפר סבא ירוק, הוד השרון כחול; אחר – אפור)
+const SCHOOL_COLOR = { "בארי":"rh1", "עומר":"rh2", "גוונים":"rh3", "היובל":"rh4", "בראשית":"rh5",
+  "שרת":"ks1", "שז\"ר":"ks2", "אורט שפירא":"ks3", "אלון":"ks4", "השחר":"hs1", "הראשונים":"hs2", "עתידים":"hs3", "השקמים":"hs4" };
+const scCls = (name) => { const n = String(name || "").replace(/״/g, '"').trim(); return n ? "sc sc-" + (SCHOOL_COLOR[n] || "x") : ""; };
+const scChip = (name) => name ? `<span class="school-chip ${scCls(name)}">${esc(name)}</span>` : "";
+const gradeBadge = (g, n) => { const k = gradeKey(g); return `<span class="gbadge g-${GRADE_ORD.includes(k) ? k : "x"}">${k ? esc(k + "'" + (n || "")) : "?"}</span>`; };
+const subjMini = (subs) => { subs = subs || []; const t = subs.length > 1 ? ["s-b", "משולב"] : /מתמטיקה/.test(subs[0]) ? ["s-m", "מת'"] : /אנגלית/.test(subs[0]) ? ["s-e", "אנג'"] : ["s-x", "—"];
+  return `<span class="subj-mini ${t[0]}">${t[1]}</span>`; };
+const stRowHtml = (s) => {
+  const here = AD.present && AD.present.any.has(s.student_id);
+  const r = (AD.info && AD.info.st.get(s.student_id)) || {};
+  const ic = [];
+  // מבחן קרוב (תאריך, אדום עד שבוע) ו-📓 לומדים עכשיו – כמו בנוכחות בנייד במערכת הניהול; לחיצה – חלון עם הנושאים
+  if (AD.info) { const I = infoOf(s);
+    if (I.exam) ic.push(`<span class="si si-ex${exCls(I.exam.exam_date, I.t)}" data-exl="${I.exam.id}" title="${esc(I.exam.kind)} ${fmtDM(I.exam.exam_date)}">${fmtDM(I.exam.exam_date)}</span>`);
+    if (I.study) ic.push(`<span class="si si-study" data-exl="${I.study.id}" title="לומדים עכשיו">📓</span>`); }
+  if (here) ic.push(`<i class="si si-here" title="נוכח/ת היום">✓</i>`);
+  else if (AD.present && AD.present.absent && AD.present.absent.has(s.student_id)) ic.push(`<i class="si si-abs" title="חסר/ה היום">✗</i>`);
+  // עובד/ת (דף פתוח) / ממתין/ה – במשולב: על איזה מקצוע
+  const subs = s.subjects || [], multi = subs.length > 1, sh = (x) => /מתמטיקה/.test(x) ? "מת'" : /אנגלית/.test(x) ? "אנג'" : x;
+  const openBy = subs.filter(x => AD.plan.some(p => p.student_id === s.student_id && p.subject === x && p.status === "נשלח"));
+  const openAny = openBy.length || (!AD.plan.length && s.open_pages);
+  // במשולב: רק המקצוע (מת' / אנג'); בשניהם – בלי טקסט (כבר כתוב "משולב")
+  if (openAny) ic.push(`<i class="si si-open" title="בעבודה${openBy.length ? ": " + esc(openBy.join(", ")) : ""}">✎${multi && openBy.length === 1 ? sh(openBy[0]) : ""}</i>`);
+  const wt = s.waiting_subjects || [];
+  if (wt.length) ic.push(`<i class="si si-wait" title="ממתין/ה לדף: ${esc(wt.join(", "))}">⏳${multi && wt.length === 1 ? sh(wt[0]) : ""}</i>`);
+  if (s.planned) ic.push(`<i class="si si-q" title="${s.planned} בתור">☰${s.planned}</i>`);
+  if (!s.has_account) ic.push(`<i class="si si-noacc" title="בלי חשבון">🚫</i>`);
+  else if (s.must_change_code) ic.push(codeExpired(s) ? `<i class="si si-bad" title="הקוד הראשוני פג">🔑</i>` : `<i class="si si-key" title="עוד לא נכנס/ה${s.code_expires_at ? " · עד " + esc(fmtDay(s.code_expires_at)) : ""}">🔑</i>`);
   return `<button class="st-row ${AD.st === s.student_id && isDesk() ? "on" : ""}" data-open="${esc(s.student_id)}">
-      ${avatar(s)}<span style="min-width:0;flex:1"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}</div><div class="subj-tabs mini-tabs">${subjBadge(s.subjects, true)}</div></span>
-      <span class="chips">
-        ${here ? `<span class="chip here">✓ נמצא/ת</span>` : ""}
-        ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? codeChip(s) : ""}
-        ${(s.waiting_subjects || []).length ? `<span class="chip new">ממתין/ה</span>` : ""}
-        ${s.open_pages ? `<span class="chip ok">${s.open_pages} פתוחים</span>` : ""}
-        ${s.planned ? `<span class="chip acc">${s.planned} בתור</span>` : ""}
-      </span></button>`; };
+      ${gradeBadge(r.grade || s.grade, r.class_num)}<span class="sr-t"><b class="n">${esc(stName(s))}</b>${scChip(s.school)}</span>${subjMini(s.subjects)}
+      <span class="sr-ic">${ic.join("")}</span></button>`; };
+const ST_LEG = `<div class="st-leg"><span><b class="si-ex-l">24.10</b> מבחן</span><span>📓 לומדים</span><span><b class="si-here-l">✓</b> נוכח/ת</span><span><b class="si-abs-l">✗</b> חסר/ה</span><span>⏳ ממתין/ה</span><span>✎ בעבודה</span><span>☰ בתור</span><span>🔑 לא נכנס/ה</span><span>🚫 בלי חשבון</span></div>`;
 // 1.16: קודם מי שיש לו/ה קבוצה היום (לפי שעה; בתוך הקבוצה – מי שסומן/ה "נוכח/ת" קודם), אחר כך כל השאר
 function todaySections(list, rowFn){
   const today = DAY_L[new Date().getDay()];
@@ -2296,7 +2358,7 @@ function wireStudentsList(root){
   const inp = root.querySelector("#stSearch");
   inp.oninput = () => { AD.q = inp.value; const pos = inp.selectionStart; const col = root; col.innerHTML = studentsListHtml(); wireStudentsList(col); const n = col.querySelector("#stSearch"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(e) {} };
   root.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { AD.filter = b.dataset.f; root.innerHTML = studentsListHtml(); wireStudentsList(root); });
-  root.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open));
+  root.querySelectorAll("[data-open]").forEach(b => b.onclick = (e) => { const x = e.target.closest("[data-exl]"); if (x) { e.stopPropagation(); exSheet(x.dataset.exl); return; } openStudent(b.dataset.open); });
 }
 function renderStudents(){
   if (!AD.groups || !AD.present) Promise.all([loadGroups(), presentAllToday()]).then(() => { if (AD.view === "students" && (isDesk() || !AD.st) && $("listCol")) { $("listCol").innerHTML = studentsListHtml(); wireStudentsList($("listCol")); } });
@@ -2383,7 +2445,7 @@ async function renderStudentPlan(T, mobile){
         </div>
       </div>
     </div>
-    ${s.has_account ? `<div class="danger-zone"><div><b>מחיקת החשבון</b><div class="small muted">התלמיד/ה לא יוכל/תוכל להיכנס. התוכנית והדפים נשמרים.</div></div><button class="btn sm danger" id="accDel">מחיקת חשבון</button></div>` : ""}`;
+    `;
   const q = (sel) => T.querySelector(sel);
   if (q("#stBack")) q("#stBack").onclick = () => { AD.st = null; adRender(); };
   T.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { AD.subj = b.dataset.subj; AD.sel.clear(); rerenderPlan(); });
@@ -2463,20 +2525,21 @@ async function renderStudentMobile(T, s){
   const subTag = (p) => multi ? `<span class="subj-chip ${subjCls(p.subject)} on sm">${esc(p.subject === "מתמטיקה" ? "מת'" : p.subject === "אנגלית" ? "אנג'" : p.subject)}</span>` : "";
   const waiting = (s.waiting_subjects || []).length > 0;
 
-  const tabs = [["queue", "הבאים בתור", qn], ["now", "בעבודה", open.length], ["done", "סיים/ה", done.length]];
+  const tabs = [["queue", "☰ בתור", qn], ["now", "✎ בעבודה", open.length], ["done", "🏁 סיים/ה", done.length]];
   const row = (p, inner, cls) => `<div class="stm-row${cls || ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}">${inner}</div>`;
   const tt = (p, sub, pre) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${pre || ""}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
 
-  let body = "";
+  // 1.18: בלי לשוניות – שלושה חלקים במסך אחד: ☰ בתור (למעלה) · ✎ בעבודה · 🏁 סיים/ה (למטה)
+  const secBody = (tab) => { let body = "";
   if (multi) {
     // 1.15.2: משולב/ת – שתי עמודות (מתמטיקה | אנגלית). לחיצה על דף – חלון פעולות
     const H = { queue: "הבאים בתור – עוד לא נשלחו", now: 'בעבודה – עוד לא סומנו "סיימתי"', done: "סיים/ה" }[tab];
     const HINT = { queue: "לחיצה על דף – סדר, שליחה, הסרה או צפייה.", now: "לחיצה על דף – צפייה או ביטול שליחה.", done: "לחיצה על דף – צפייה." }[tab];
-    body += `<div class="stm-h">${H}</div><div class="stm-hint">${HINT}</div><div class="stm-cols">`;
+    body += `<div class="stm-hint">${HINT}</div><div class="stm-cols">`;
     let more = false;
     subs.forEach(x => {
       let list = tab === "queue" ? queueOf(s.student_id, x) : (tab === "now" ? open : done).filter(p => p.subject === x);
-      const full = list.length; if (tab === "done" && !AD.showDone && full > 8) { list = list.slice(0, 8); more = true; }
+      const full = list.length; if (tab === "done" && !AD.showDone && full > 4) { list = list.slice(0, 4); more = true; }
       const sub = (p) => tab === "queue" ? esc((W(p.worksheet_id) || {}).topic_name || "") : tab === "now" ? SEEN_IC(!!p.seen_at) + "נשלח " + esc(ago(p.released_at)) : esc(ago(p.done_at));
       body += `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span><b>${full}</b>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה</span>` : ""}</div>`;
       body += list.map((p, i) => `<button type="button" class="stm-mr${tab === "queue" && i === 0 ? " next" : ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-act="${p.id}">${tab === "queue" ? `<span class="n">${i + 1}</span>` : ""}<span class="t"><span class="tt">${esc(wsTitle(p.worksheet_id))}</span><small>${sub(p)}</small>${lvIc(W(p.worksheet_id))}</span></button>`).join("")
@@ -2487,8 +2550,7 @@ async function renderStudentMobile(T, s){
     body += `</div>`;
     if (more) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
   } else if (tab === "queue") {
-    body += `<div class="stm-h">הדפים הבאים – עוד לא נשלחו ל${esc(first)}</div>
-      <div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
+    body += `<div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
     queues.forEach(([x, q]) => {
       if (multi && q.length) body += `<div class="stm-sub"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>`;
       body += q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
@@ -2498,22 +2560,24 @@ async function renderStudentMobile(T, s){
       if (multi && q.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא ב${esc(x)}</button>`;
     });
   } else if (tab === "now") {
-    body += `<div class="stm-h">הדפים שנשלחו ועוד לא סומנו "סיימתי"</div>`;
     body += open.map(p => row(p, `${tt(p, "נשלח " + ago(p.released_at), SEEN_IC(!!p.seen_at))}
         <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
       || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
   } else {
-    const show = AD.showDone ? done : done.slice(0, 8);
+    const show = AD.showDone ? done : done.slice(0, 5);
     body += show.map(p => row(p, `${tt(p, wsTopicName(p.worksheet_id) + " · " + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`)).join("")
       || `<div class="stm-empty">עוד לא סיים/ה דפים.</div>`;
     if (done.length > show.length) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
   }
+  return body; };
+  const SEC = { queue: ["☰", "בתור", "עוד לא נשלחו"], now: ["✎", "בעבודה", 'נשלחו ועוד לא סומנו "סיימתי"'], done: ["🏁", "סיים/ה", ""] };
+  const body = tabs.map(([k, , n]) => `<section class="stm-sec sec-${k}"><h3 class="stm-sec-h"><span class="ic">${SEC[k][0]}</span>${SEC[k][1]}<b>${n}</b>${SEC[k][2] ? `<small>${esc(SEC[k][2])}</small>` : ""}</h3>${secBody(k)}</section>`).join("");
 
   const acc = !s.has_account
     ? `<div class="acc-line"><span class="chip">אין עדיין חשבון</span><span style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button></div>`
     : `<div class="acc-line"><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
        <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
-       </div><div class="acc-btns"><button class="btn sm acc-del" id="accDel">מחיקת חשבון</button><span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>`;
+       </div><div class="acc-btns"><span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>`;
 
   if (!AD.info) loadInfo().then(() => { if (AD.st === s.student_id && !isDesk()) renderStudentMobile(T, s); });
   const I = infoOf(s), exL = exLines(I);
@@ -2527,7 +2591,6 @@ async function renderStudentMobile(T, s){
         <b class="nm">${esc(stName(s))}</b><span class="mt">${esc(stMeta(s))}</span>${subjBadge(subs, true)}</div>
       ${exL ? `<div class="ex-lines">${exL}</div>` : ""}
       ${pick ? "" : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary><i class="dt-car" aria-hidden="true"></i>פרטים</summary>${det}${acc}</details>`}
-      <div class="stm-tabs" role="tablist">${tabs.map(([k, l, n]) => `<button role="tab" data-stab="${k}" aria-selected="${k === tab}"><span>${esc(l)}</span><b>${n}</b></button>`).join("")}</div>
     </div>
     <div class="stm-body">${body}</div>
     ${pick ? `<section class="stm-bank" id="stBankSec"><div class="stm-bank-h"><span>${IC.plusBox}<b>הוספת דפים ל${esc(first)}</b></span><button class="btn sm ghost" id="bankClose">✕ סגירה</button></div><div id="stBank"></div></section>` : ""}`;
@@ -2655,6 +2718,25 @@ function confirmSheet(text, okLabel, onOk){
   openSheet(`<h2>${esc(text)}</h2>
     <div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeSheet()">ביטול</button><button class="btn primary" style="flex:1" id="cfGo">${esc(okLabel)}</button></div>`, (sh) => {
       sh.querySelector("#cfGo").onclick = () => { closeSheet(); onOk(); };
+    });
+}
+// 1.17: מחיקת חשבון – לא בכרטיס (שלא יילחץ בטעות במקום "שליחה"), אלא ב"ניהול" בכותרת: בוחרים תלמיד/ה ומוחקים
+function toolsSheet(){
+  const st = AD.settings;
+  openSheet(`<h2>ניהול חשבונות</h2>
+    ${st ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${st.initial_code ? `<b class="code">${esc(st.initial_code)}</b><span class="muted small">· תקף ${esc(st.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${st.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
+    <h3 class="tl-h">מחיקת חשבון</h3>
+    <p class="muted small" style="margin-top:-4px">התלמיד/ה לא יוכל/תוכל להיכנס; התוכנית והדפים נשמרים.</p>
+    <input class="search" id="tlQ" type="search" placeholder="חיפוש תלמיד/ה לפי שם או טלפון" autocomplete="off">
+    <div id="tlList" class="tl-list"></div>
+    <button class="btn ghost block" onclick="closeSheet()" style="margin-top:10px">סגירה</button>`, (sh) => {
+      const draw = () => { const q = sh.querySelector("#tlQ").value.trim();
+        const L = AD.students.filter(x => x.has_account && (!q || stName(x).includes(q) || (digits(q).length > 2 && digits(x.login_phone || x.phone).includes(digits(q)))));
+        sh.querySelector("#tlList").innerHTML = L.slice(0, 40).map(x => `<div class="tl-row"><span class="tl-n"><b>${esc(stName(x))}</b> <small class="muted ltr">${esc(fmtPhone(x.login_phone))}</small></span><button class="btn sm acc-del" data-del="${esc(x.student_id)}">מחיקת חשבון</button></div>`).join("")
+          || `<div class="muted small" style="padding:8px 2px">${q ? "לא נמצא/ה תלמיד/ה עם חשבון." : "אין חשבונות."}</div>`;
+        sh.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { const x = stById(b.dataset.del); if (x) deleteAccount(x); }); };
+      sh.querySelector("#tlQ").oninput = draw; draw();
+      if (sh.querySelector("#icEdit")) sh.querySelector("#icEdit").onclick = initialCodeSheet;
     });
 }
 function deleteAccount(s){
