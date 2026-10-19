@@ -1,6 +1,6 @@
 // תלם שלי: שומר את קבצי האפליקציה כדי שתיפתח מהר.
 // הנתונים והדפים עצמם תמיד מגיעים מהשרת (לא נשמרים כאן).
-const CACHE = "telem-portal-1.17";   // לשנות יחד עם הגרסה ב-index.html
+const CACHE = "telem-portal-1.18";   // לשנות יחד עם הגרסה ב-index.html
 const SHELL = ["./", "index.html", "manifest.webmanifest", "logo.png", "favicon.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => {
