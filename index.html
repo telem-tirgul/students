@@ -967,6 +967,18 @@
   }
   .stm-head{ position:sticky; top:0; z-index:30; background:var(--paper); margin:0 -10px 10px; padding:calc(6px + var(--safe-t)) 10px 8px;
     border-bottom:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,.05); }
+  .ex-lines{ display:flex; flex-direction:column; gap:3px; margin:5px 0 0; }
+  .ex-lines.in-bank{ margin:0 0 10px; }
+  .ex-line{ all:unset; box-sizing:border-box; cursor:pointer; display:flex; gap:5px; align-items:baseline; min-width:0; max-width:100%; font-size:13px; line-height:1.35;
+    background:var(--muted); border-radius:8px; padding:4px 8px; }
+  .ex-line b{ flex:none; white-space:nowrap; } .ex-line > span{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink-soft); }
+  .ex-line.soon{ background:#FBE3E1; } .ex-line.soon b{ color:#A3261D; } .ex-line.near{ background:#FCEFEE; } .ex-line.near b{ color:#B84A42; }
+  :root[data-theme="dark"] .ex-line.soon, :root[data-theme="dark"] .ex-line.near{ background:#3a1d1b; }
+  .ex-topics-full{ font-size:15px; line-height:1.6; white-space:pre-wrap; margin-bottom:10px; }
+  .st-det{ margin:6px 0 0; font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .day-h{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-weight:800; font-size:13.5px; color:var(--accent); margin:12px 2px 6px; }
+  .day-h small{ color:var(--ink-soft); font-weight:600; }
+  .chip.here{ background:#E6F4E6; color:#2E6B35; }
   .stm-head .l1{ display:flex; align-items:center; gap:6px; min-width:0; }
   .stm-back{ flex:none; width:36px; height:36px; padding:0; border-radius:10px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink); display:grid; place-items:center; cursor:pointer; }
   .stm-back svg{ width:20px; height:20px; }
@@ -1169,7 +1181,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.15.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.16",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2158,14 +2170,34 @@ function studentsListHtml(){
     <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
     ${AD.filter === "noacc" && AD.settings && list.length ? `<button class="btn primary bulk-btn" id="bulkAcc" data-ids="${esc(list.map(x => x.student_id).join(","))}">יצירת חשבון לכל הרשימה (${list.length})</button>` : ""}
     <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
-    <div class="list-scroll">${list.map(s => `<button class="st-row ${AD.st === s.student_id && isDesk() ? "on" : ""}" data-open="${esc(s.student_id)}">
+    <div class="list-scroll">${todaySections(list, stRowHtml) || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
+}
+const stRowHtml = (s) => { const here = AD.present && AD.present.any.has(s.student_id);
+  return `<button class="st-row ${AD.st === s.student_id && isDesk() ? "on" : ""}" data-open="${esc(s.student_id)}">
       ${avatar(s)}<span style="min-width:0;flex:1"><div class="n">${esc(stName(s))}</div><div class="meta">${esc(stMeta(s))}</div><div class="subj-tabs mini-tabs">${subjBadge(s.subjects, true)}</div></span>
       <span class="chips">
+        ${here ? `<span class="chip here">✓ נמצא/ת</span>` : ""}
         ${!s.has_account ? `<span class="chip">בלי חשבון</span>` : s.must_change_code ? codeChip(s) : ""}
         ${(s.waiting_subjects || []).length ? `<span class="chip new">ממתין/ה</span>` : ""}
         ${s.open_pages ? `<span class="chip ok">${s.open_pages} פתוחים</span>` : ""}
         ${s.planned ? `<span class="chip acc">${s.planned} בתור</span>` : ""}
-      </span></button>`).join("") || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
+      </span></button>`; };
+// 1.16: קודם מי שיש לו/ה קבוצה היום (לפי שעה; בתוך הקבוצה – מי שסומן/ה "נוכח/ת" קודם), אחר כך כל השאר
+function todaySections(list, rowFn){
+  const today = DAY_L[new Date().getDay()];
+  const gs = (AD.groups || []).filter(g => g.day === today).sort((a, b) => String(a.start || a.time).localeCompare(String(b.start || b.time)));
+  if (!gs.length) return list.map(rowFn).join("");
+  const used = new Set(), here = (id) => !!(AD.present && AD.present.any.has(id));
+  let h = "";
+  gs.forEach(g => {
+    const kids = list.filter(s => g.kids.has(s.student_id) && !used.has(s.student_id)).sort((a, b) => here(b.student_id) - here(a.student_id));
+    if (!kids.length) return; kids.forEach(s => used.add(s.student_id));
+    const n = kids.filter(s => here(s.student_id)).length;
+    h += `<div class="day-h">היום ${esc(g.start || g.time || "")} · ${esc(g.loc || "")}<small>${n ? `· ${n} מתוך ${kids.length} נמצאים` : `· ${kids.length} בקבוצה`}</small></div>` + kids.map(rowFn).join("");
+  });
+  const rest = list.filter(s => !used.has(s.student_id));
+  if (rest.length) h += (h ? `<div class="day-h" style="color:var(--ink-soft)">כל השאר</div>` : "") + rest.map(rowFn).join("");
+  return h;
 }
 // מצב הקוד הראשוני: עוד לא נכנס/ה (עד מתי) / פג תוקף
 const codeExpired = (s) => !!(s.must_change_code && s.code_expires_at && new Date(s.code_expires_at) < new Date());
@@ -2226,6 +2258,7 @@ function wireStudentsList(root){
   root.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open));
 }
 function renderStudents(){
+  if (!AD.groups || !AD.present) Promise.all([loadGroups(), presentAllToday()]).then(() => { if (AD.view === "students" && (isDesk() || !AD.st) && $("listCol")) { $("listCol").innerHTML = studentsListHtml(); wireStudentsList($("listCol")); } });
   if (!isDesk()) {
     $("adBody").innerHTML = `<div class="page-h"><div><h1>תלמידים</h1></div></div><div id="listCol"></div>`;
     $("listCol").innerHTML = studentsListHtml(); wireStudentsList($("listCol")); return;
@@ -2326,6 +2359,52 @@ async function renderStudentPlan(T, mobile){
   if (q("#accDel")) q("#accDel").onclick = () => deleteAccount(s);
   selActions(T);
 }
+// ---------- 1.16: פרטים לבחירת החומר – כיתה, הקבצה, מבחנים ו"לומדים עכשיו" (קריאה בלבד, רק לצוות) ----------
+// אותם נתונים ואותה התאמה כמו במערכת הניהול (school_exams: בית ספר + שכבה + כיתה; מבחנים במתמטיקה)
+const EX_MAKEUP = /השלמה|שיפור/, EX_STUDY = /חומר נלמד|לומדים עכשיו|נושאים שוטפים/, EX_EVT = /^SMS|^אירוע אחר|^מרתון|^וידוא/;
+const schKey = (t) => String(t || "").replace(/["״׳'\s]/g, ""), gradeKey = (g) => String(g || "").replace(/['׳"״\s]/g, "");
+const fmtDM = (iso) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || ""); return m ? Number(m[3]) + "." + Number(m[2]) : ""; };
+const exDays = (iso, from) => Math.round((Date.parse(iso) - Date.parse(from)) / 864e5);
+const exCls = (iso, from) => { const d = exDays(iso, from); return d < 0 ? "" : d < 7 ? " soon" : d <= 14 ? " near" : ""; };
+async function loadInfo(force){
+  if (AD.info && !force && Date.now() - AD.info.at < 10 * 60e3) return AD.info;
+  const ids = AD.students.map(s => s.student_id).filter(x => /^\d+$/.test(x));
+  const I = { at: Date.now(), st: new Map(), ex: [] };
+  const chunks = []; for (let i = 0; i < ids.length; i += 150) chunks.push(ids.slice(i, i + 150));
+  try { (await Promise.all(chunks.map(c => get("students", "select=id,grade,class_num,math_level,english_level,school,school_ref:schools(name,city)&id=in.(" + c.join(",") + ")")
+          .catch(() => get("students", "select=id,grade,class_num,math_level,english_level,school&id=in.(" + c.join(",") + ")"))))).flat()
+          .forEach(r => I.st.set(String(r.id), r)); } catch(e) {}
+  try { I.ex = (await get("school_exams", "select=id,school_name,grade,class_num,subject,exam_date,kind,source,material,topics,school:schools(city,name)&order=exam_date,id")) || []; } catch(e) {}
+  AD.info = I; return I;
+}
+function infoOf(s){
+  const r = (AD.info && AD.info.st.get(String(s.student_id))) || {};
+  const school = (r.school_ref && r.school_ref.name) || r.school || s.school || "", city = (r.school_ref && r.school_ref.city) || "";
+  const grade = r.grade || s.grade || "", cls = r.class_num || "";
+  const exAll = (AD.info ? AD.info.ex : []).filter(e => schKey((e.school && e.school.name) || e.school_name) === schKey(school) && gradeKey(e.grade) === gradeKey(grade)
+    && (!city || !e.school || !e.school.city || e.school.city === city) && (!e.class_num || String(e.class_num) === String(cls)) && (e.subject || "מתמטיקה") === "מתמטיקה");
+  const t = todayIso(), math = (s.subjects || []).includes("מתמטיקה");
+  const exam = math ? exAll.find(e => e.exam_date >= t && !EX_STUDY.test(e.kind) && !EX_EVT.test(e.kind) && !EX_MAKEUP.test(e.kind)) || null : null;
+  const study = math ? exAll.filter(e => EX_STUDY.test(e.kind) && e.exam_date <= t).pop() || null : null;
+  return { school, city, grade, cls, math_level: r.math_level || "", english_level: r.english_level || "", exam, study, t };
+}
+// שורות 📝 / 📓 (לחיצה – חלון עם הנושאים)
+function exLines(I){
+  let h = "";
+  if (I.exam) h += `<button type="button" class="ex-line${exCls(I.exam.exam_date, I.t)}" data-exl="${I.exam.id}"><b>📝 ${esc(/מיפוי/.test(I.exam.kind) ? "מיפוי" : I.exam.kind)} ${fmtDM(I.exam.exam_date)}</b>${I.exam.topics ? `<span>· ${esc(I.exam.topics)}</span>` : `<span class="muted">· עוד אין נושאים</span>`}</button>`;
+  if (I.study) h += `<button type="button" class="ex-line" data-exl="${I.study.id}"><b>📓 לומדים עכשיו</b><span>${I.study.topics ? "· " + esc(I.study.topics) : `<span class="muted">· לא נכתבו נושאים</span>`}</span></button>`;
+  return h;
+}
+function exSheet(id){
+  const e = ((AD.info && AD.info.ex) || []).find(x => String(x.id) === String(id)); if (!e) return;
+  const st = EX_STUDY.test(e.kind);
+  openSheet(`<h2>${st ? "📓 לומדים עכשיו" : "📝 " + esc(e.kind)}</h2>
+    <p class="muted small" style="margin:-6px 0 10px">${esc((e.school && e.school.name) || e.school_name || "")} · ${esc(gradeKey(e.grade))}'${esc(e.class_num || "")} · ${st ? "התקבל" : "בתאריך"} ${esc(fmtDM(e.exam_date))}</p>
+    <div class="ex-topics-full">${e.topics ? esc(e.topics) : `<span class="muted">${st ? "לא נכתבו נושאים." : "עוד לא התקבלו נושאים למבחן הזה."}</span>`}</div>
+    ${e.material || e.source ? `<p class="small muted">${[e.material ? "קובץ: " + esc(e.material) : "", e.source ? "מקור: " + esc(e.source) : ""].filter(Boolean).join(" · ")}</p>` : ""}
+    <button class="btn ghost block" onclick="closeSheet()">סגירה</button>`);
+}
+const wireExLines = (T) => T.querySelectorAll("[data-exl]").forEach(b => b.onclick = () => exSheet(b.dataset.exl));
 // ---------- 1.15: מסך התלמיד/ה בנייד ----------
 // למעלה (קבוע בגלילה): שם · כיתה · בית ספר · מקצוע, שורה שנייה – על מה עובד/ת עכשיו (מוסתרת כשהמאגר פתוח),
 // ולשוניות "הבאים בתור / אצל… / סיים/ה". "+ הוספת דפים" פותח את המאגר באותו מסך, מתחת.
@@ -2394,18 +2473,25 @@ async function renderStudentMobile(T, s){
        <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
        </div><div class="acc-btns"><button class="btn sm acc-del" id="accDel">מחיקת חשבון</button><span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>`;
 
+  if (!AD.info) loadInfo().then(() => { if (AD.st === s.student_id && !isDesk()) renderStudentMobile(T, s); });
+  const I = infoOf(s), exL = exLines(I);
+  const lvl = [I.math_level && (s.subjects || []).includes("מתמטיקה") ? "מתמטיקה: " + I.math_level : "", I.english_level && (s.subjects || []).includes("אנגלית") ? "אנגלית: " + I.english_level : ""].filter(Boolean);
+  // פרטים בשורה אחת: בית ספר · כיתה · הקבצה
+  const det = `<div class="st-det">${[I.school ? esc(I.school) + (I.city ? `<span class="muted">, ${esc(I.city)}</span>` : "") : "",
+    I.grade ? "כיתה " + esc(gradeKey(I.grade) + "'" + (I.cls || "")) : "", lvl.length ? "הקבצה " + esc(lvl.join(" · ").replace(/מתמטיקה: /, "מת' ").replace(/אנגלית: /, "אנג' ")) : ""].filter(Boolean).join(" · ") || `<span class="muted">אין פרטים בכרטיס</span>`}</div>`;
   T.innerHTML = `
     <div class="stm-head${pick ? " picking" : ""}">
       <div class="l1"><button class="stm-back" id="stBack" aria-label="חזרה לרשימה">${IC.back}</button>
         <b class="nm">${esc(stName(s))}</b><span class="mt">${esc(stMeta(s))}</span>${subjBadge(subs, true)}</div>
-      ${pick ? "" : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary><i class="dt-car" aria-hidden="true"></i>חשבון וקוד כניסה</summary>${acc}</details>`}
+      ${exL ? `<div class="ex-lines">${exL}</div>` : ""}
+      ${pick ? "" : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary><i class="dt-car" aria-hidden="true"></i>פרטים</summary>${det}${acc}</details>`}
       <div class="stm-tabs" role="tablist">${tabs.map(([k, l, n]) => `<button role="tab" data-stab="${k}" aria-selected="${k === tab}"><span>${esc(l)}</span><b>${n}</b></button>`).join("")}</div>
     </div>
     <div class="stm-body">${body}</div>
     ${pick ? `<section class="stm-bank" id="stBankSec"><div class="stm-bank-h"><span>${IC.plusBox}<b>הוספת דפים ל${esc(first)}</b></span><button class="btn sm ghost" id="bankClose">✕ סגירה</button></div><div id="stBank"></div></section>` : ""}`;
 
   const q = (sel) => T.querySelector(sel);
-  q("#stBack").onclick = leaveStudent;
+  q("#stBack").onclick = leaveStudent; wireExLines(T);
   T.querySelectorAll("[data-stab]").forEach(b => b.onclick = () => { AD.stTab = b.dataset.stab; AD.showDone = false; renderStudentMobile(T, s); window.scrollTo(0, 0); });
   T.querySelectorAll("[data-unrel]").forEach(b => b.onclick = () => unrelease(Number(b.dataset.unrel)));
   T.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => movePlan(Number(b.dataset.mv), Number(b.dataset.d)));
