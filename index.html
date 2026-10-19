@@ -956,9 +956,9 @@
   @media (prefers-reduced-motion:reduce){ .ws-album{ transition:none; } }
   @media (max-width:760px){ .ws-albums{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; } .ws-album .nm{ font-size:16px; } }
   /* ===== 1.15: מסך התלמיד/ה בנייד – כותרת קבועה, לשוניות, מאגר באותו מסך ===== */
-  .lv{ font-style:normal; font-size:11.5px; font-weight:700; flex:none; white-space:nowrap; color:var(--ink-soft); border:1px solid var(--border); border-radius:6px; padding:1px 6px; background:var(--paper); }
-  .lv.lv3{ color:var(--ink); border-color:var(--ink-soft); }
-  .ws-pg .cap:has(.lv){ flex-wrap:wrap; row-gap:3px; } .ws-pg .cap .lv{ display:inline-block; }
+  .lv{ font-style:normal; font-size:13px; letter-spacing:1px; flex:none; white-space:nowrap; }
+  .seen-ic{ width:15px; height:15px; flex:none; fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; vertical-align:-3px; margin-inline-end:3px; }
+  .ws-pg .cap .lv{ margin-inline-start:auto; padding-inline-start:4px; }
   .lv-leg{ font-size:12px; color:var(--ink-soft); margin:10px 2px 4px; }
   @media (max-width:899px){
     body.v-stm #adminView .side{ display:none; }
@@ -1169,7 +1169,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.15.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.15.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1783,11 +1783,12 @@ const wsFetch = async () => { let q = WSQ;
     catch(e) { const m = String(e && e.message), c = ["level", "is_word", "file_at", "is_star"].find(c => q.includes("," + c) && new RegExp("\\b" + c + "\\b").test(m)); if (!c) throw e; q = q.replace("," + c, ""); }
   } };
 // רמת הדף – רק לצוות (החלטת נועה 17.10). לא נשלח ולא מוצג לתלמיד/ה.
-// 1.15.2: במילים (נועה: "יותר מדי צבעים… צריך לכתוב")
-const LV = { 1: "בסיסי", 2: "מתקדם", 3: "אתגר" };
-const lvOf = (w) => w ? [LV[w.level], w.is_word ? "מילולי" : ""].filter(Boolean).join(" · ") : "";
-const lvIc = (w) => { const t = lvOf(w); return t ? `<i class="lv lv${w.level || 0}">${t}</i>` : ""; };
-const LV_LEG = `<div class="lv-leg">הרמה (בסיסי · מתקדם · אתגר · מילולי) – רק לצוות. התלמיד/ה לא רואה אותה.</div>`;
+const LV = { 1: ["🟡", "בסיסי"], 2: ["🟣", "מתקדם"], 3: ["🧩", "אתגר"] };
+const lvOf = (w) => w ? [(LV[w.level] || [])[1], w.is_word ? "מילולי" : ""].filter(Boolean).join(" · ") : "";   // במילים (לחלון)
+const lvIc = (w) => { if (!w) return ""; const t = (LV[w.level] || [""])[0] + (w.is_word ? "📖" : ""); return t ? `<i class="lv" title="${esc(lvOf(w))}">${t}</i>` : ""; };
+const LV_LEG = `<div class="lv-leg">🟡 בסיסי · 🟣 מתקדם · 🧩 אתגר · 📖 מילולי – רק לצוות</div>`;
+// נפתח / עוד לא נפתח – אייקון קטן אפור (עין / עין עם קו)
+const SEEN_IC = (seen) => `<svg class="seen-ic" viewBox="0 0 24 24" aria-label="${seen ? "נפתח" : "עוד לא נפתח"}"><title>${seen ? "נפתח" : "עוד לא נפתח"}</title><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>${seen ? "" : '<path d="M4 4l16 16"/>'}</svg>`;
 async function setStar(ids, on){
   ids = ids.map(String);
   try { await patch("worksheets", "id=in.(" + ids.join(",") + ")", { is_star: on }); }
@@ -2343,7 +2344,7 @@ async function renderStudentMobile(T, s){
 
   const tabs = [["queue", "הבאים בתור", qn], ["now", "בעבודה", open.length], ["done", "סיים/ה", done.length]];
   const row = (p, inner, cls) => `<div class="stm-row${cls || ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}">${inner}</div>`;
-  const tt = (p, sub) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
+  const tt = (p, sub, pre) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${pre || ""}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
 
   let body = "";
   if (multi) {
@@ -2355,9 +2356,9 @@ async function renderStudentMobile(T, s){
     subs.forEach(x => {
       let list = tab === "queue" ? queueOf(s.student_id, x) : (tab === "now" ? open : done).filter(p => p.subject === x);
       const full = list.length; if (tab === "done" && !AD.showDone && full > 8) { list = list.slice(0, 8); more = true; }
-      const sub = (p) => tab === "queue" ? ((W(p.worksheet_id) || {}).topic_name || "") : tab === "now" ? (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · " + ago(p.released_at) : ago(p.done_at);
+      const sub = (p) => tab === "queue" ? esc((W(p.worksheet_id) || {}).topic_name || "") : tab === "now" ? SEEN_IC(!!p.seen_at) + "נשלח " + esc(ago(p.released_at)) : esc(ago(p.done_at));
       body += `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span><b>${full}</b>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה</span>` : ""}</div>`;
-      body += list.map((p, i) => `<button type="button" class="stm-mr${tab === "queue" && i === 0 ? " next" : ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-act="${p.id}">${tab === "queue" ? `<span class="n">${i + 1}</span>` : ""}<span class="t"><span class="tt">${esc(wsTitle(p.worksheet_id))}</span><small>${esc(sub(p))}</small>${lvIc(W(p.worksheet_id))}</span></button>`).join("")
+      body += list.map((p, i) => `<button type="button" class="stm-mr${tab === "queue" && i === 0 ? " next" : ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-act="${p.id}">${tab === "queue" ? `<span class="n">${i + 1}</span>` : ""}<span class="t"><span class="tt">${esc(wsTitle(p.worksheet_id))}</span><small>${sub(p)}</small>${lvIc(W(p.worksheet_id))}</span></button>`).join("")
         || `<div class="stm-empty">${tab === "queue" ? "התור ריק." : tab === "now" ? "אין דף פתוח." : "עוד אין."}</div>`;
       if (tab === "queue" && list.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא</button>`;
       body += `</div>`;
@@ -2377,7 +2378,7 @@ async function renderStudentMobile(T, s){
     });
   } else if (tab === "now") {
     body += `<div class="stm-h">הדפים שנשלחו ועוד לא סומנו "סיימתי"</div>`;
-    body += open.map(p => row(p, `${tt(p, (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · נשלח " + ago(p.released_at))}
+    body += open.map(p => row(p, `${tt(p, "נשלח " + ago(p.released_at), SEEN_IC(!!p.seen_at))}
         <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
       || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
   } else {
