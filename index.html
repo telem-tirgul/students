@@ -956,8 +956,9 @@
   @media (prefers-reduced-motion:reduce){ .ws-album{ transition:none; } }
   @media (max-width:760px){ .ws-albums{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; } .ws-album .nm{ font-size:16px; } }
   /* ===== 1.15: מסך התלמיד/ה בנייד – כותרת קבועה, לשוניות, מאגר באותו מסך ===== */
-  .lv{ font-style:normal; font-size:13px; letter-spacing:1px; flex:none; white-space:nowrap; }
-  .ws-pg .cap .lv{ margin-inline-start:auto; padding-inline-start:4px; }
+  .lv{ font-style:normal; font-size:11.5px; font-weight:700; flex:none; white-space:nowrap; color:var(--ink-soft); border:1px solid var(--border); border-radius:6px; padding:1px 6px; background:var(--paper); }
+  .lv.lv3{ color:var(--ink); border-color:var(--ink-soft); }
+  .ws-pg .cap:has(.lv){ flex-wrap:wrap; row-gap:3px; } .ws-pg .cap .lv{ display:inline-block; }
   .lv-leg{ font-size:12px; color:var(--ink-soft); margin:10px 2px 4px; }
   @media (max-width:899px){
     body.v-stm #adminView .side{ display:none; }
@@ -967,7 +968,7 @@
   .stm-head{ position:sticky; top:0; z-index:30; background:var(--paper); margin:0 -10px 10px; padding:calc(6px + var(--safe-t)) 10px 8px;
     border-bottom:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,.05); }
   .stm-head .l1{ display:flex; align-items:center; gap:6px; min-width:0; }
-  .stm-back{ flex:none; width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink); display:grid; place-items:center; cursor:pointer; padding:0; }
+  .stm-back{ flex:none; width:36px; height:36px; padding:0; border-radius:10px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink); display:grid; place-items:center; cursor:pointer; }
   .stm-back svg{ width:20px; height:20px; }
   .stm-head .nm{ font-family:var(--font-display); font-weight:900; font-size:17px; white-space:nowrap; }
   .stm-head .mt{ font-size:13px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1; }
@@ -995,15 +996,47 @@
   :root[data-theme="dark"] .stm-row.hl{ background:#3a2f17; } @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .stm-row.hl{ background:#3a2f17; } }
   .stm-row .ok-ic{ color:var(--ok); flex:none; display:flex; }
   .stm-rel{ width:100%; justify-content:center; margin:2px 0 8px; }
+  .stm-cols{ display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:start; }
+  .stm-col{ min-width:0; }
+  .stm-colh{ display:flex; align-items:center; gap:5px; margin:2px 2px 6px; }
+  .stm-colh b{ font-size:12px; color:var(--ink-soft); background:var(--muted); border-radius:20px; padding:0 7px; }
+  .stm-mr{ all:unset; box-sizing:border-box; display:flex; gap:6px; align-items:flex-start; width:100%; background:var(--paper); border:1px solid var(--border);
+    border-radius:10px; padding:7px; margin-bottom:6px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .stm-mr:active{ background:var(--muted); }
+  .stm-mr .n{ flex:none; width:20px; height:20px; border-radius:50%; background:var(--muted); font-size:11.5px; font-weight:800; display:grid; place-items:center; font-family:var(--font-display); }
+  .stm-mr.next{ border-color:color-mix(in srgb, var(--accent) 35%, var(--border)); } .stm-mr.next .n{ background:var(--accent); color:#fff; }
+  .stm-mr.hl{ background:#FFF4D6; border-color:var(--gold); }
+  .stm-mr .t{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+  .stm-mr .tt{ font-weight:700; font-size:13.5px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .stm-mr small{ font-size:11.5px; color:var(--ink-soft); max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .stm-cols .stm-empty{ padding:8px 4px; font-size:13px; }
+  .stm-cols .stm-rel{ font-size:12.5px; padding:6px 4px; }
+  .sheet-acts{ display:flex; flex-direction:column; gap:8px; } .sheet-acts .sa-row{ display:flex; gap:8px; } .sheet-acts .sa-row .btn{ flex:1; justify-content:center; }
+  .sheet .acc-del{ color:var(--bad, #B3261E); }
   .stm-empty{ color:var(--ink-soft); font-size:14px; padding:14px 4px; }
-  .stm-acc{ margin-top:22px; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:10px 12px; }
-  .stm-acc summary{ cursor:pointer; font-weight:700; color:var(--ink-soft); font-size:13.5px; }
+  .stm-acc{ margin:4px 2px 0 0; }
+  .stm-acc summary{ list-style:none; display:inline-flex; align-items:center; gap:6px; line-height:1.4; }
+  .stm-acc summary::-webkit-details-marker{ display:none; }
+  .stm-acc summary .dt-car{ line-height:1; display:inline-flex; align-items:center; } .stm-acc[open] .dt-car::after{ content:"▾"; }
+  .stm-acc[open]{ margin-bottom:4px; }
+  .stm-acc summary{ cursor:pointer; font-weight:600; color:var(--ink-soft); font-size:12.5px; }
   .stm-acc .acc-line{ margin-top:10px; }
-  .stm-acc .danger-zone{ margin-top:12px; }
+  .stm-acc .acc-line{ margin-top:6px; padding-top:6px; }
+  .stm-acc .acc-btns{ display:flex; gap:8px; margin-top:6px; }
+  #adminView .stm-acc .acc-del{ color:var(--bad, #B3261E); border-color:color-mix(in srgb, var(--bad, #B3261E) 40%, var(--border)); }
   .stm-bank{ margin-top:16px; border-top:3px solid var(--gold); padding-top:10px; }
   .stm-bank-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 2px 8px; }
   .stm-bank-h > span{ display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-size:16px; color:var(--accent); }
   .stm-bank-h svg{ width:20px; height:20px; }
+  #stBank .ws-bar{ position:static; }
+  .pk-hint{ display:block; font-size:11.5px; font-weight:500; color:var(--ink-soft); }
+  /* 1.15.2: "→ חזרה" תמיד הכי שמאלי למעלה (כמו במאגר של מערכת הניהול) */
+  @media (max-width:760px){
+    .ws-bar{ flex-wrap:wrap; gap:8px; align-items:flex-start; }
+    .ws-bar h2{ flex:1 1 0; white-space:normal; order:0; }
+    .ws-bar .ws-tstar{ order:1; margin:0 !important; }
+    .ws-bar .ws-back2{ order:2; margin:0 !important; }
+  }
   #stBank .ws-quick .gseg{ background:var(--paper); border:1.5px solid var(--border); padding:3px; gap:3px; }
   #stBank .ws-quick .gseg button{ border-radius:999px; font-weight:600; color:var(--ink); }
   #stBank .ws-quick .gseg button[aria-pressed="true"]{ background:var(--accent); color:#fff; }
@@ -1136,7 +1169,7 @@
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.15.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.15.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1750,11 +1783,11 @@ const wsFetch = async () => { let q = WSQ;
     catch(e) { const m = String(e && e.message), c = ["level", "is_word", "file_at", "is_star"].find(c => q.includes("," + c) && new RegExp("\\b" + c + "\\b").test(m)); if (!c) throw e; q = q.replace("," + c, ""); }
   } };
 // רמת הדף – רק לצוות (החלטת נועה 17.10). לא נשלח ולא מוצג לתלמיד/ה.
-const LV = { 1: ["🟡", "בסיסי"], 2: ["🟣", "מתקדם"], 3: ["🧩", "אתגר"] };
-const lvOf = (w) => w ? ((LV[w.level] || [""])[0] + (w.is_word ? "📖" : "")) : "";
-const lvTip = (w) => w ? [(LV[w.level] || [])[1], w.is_word ? "מילולי" : ""].filter(Boolean).join(" · ") : "";
-const lvIc = (w) => { const t = lvOf(w); return t ? `<i class="lv" title="${esc(lvTip(w))}">${t}</i>` : ""; };
-const LV_LEG = `<div class="lv-leg">🟡 בסיסי · 🟣 מתקדם · 🧩 אתגר · 📖 מילולי – רק לצוות</div>`;
+// 1.15.2: במילים (נועה: "יותר מדי צבעים… צריך לכתוב")
+const LV = { 1: "בסיסי", 2: "מתקדם", 3: "אתגר" };
+const lvOf = (w) => w ? [LV[w.level], w.is_word ? "מילולי" : ""].filter(Boolean).join(" · ") : "";
+const lvIc = (w) => { const t = lvOf(w); return t ? `<i class="lv lv${w.level || 0}">${t}</i>` : ""; };
+const LV_LEG = `<div class="lv-leg">הרמה (בסיסי · מתקדם · אתגר · מילולי) – רק לצוות. התלמיד/ה לא רואה אותה.</div>`;
 async function setStar(ids, on){
   ids = ids.map(String);
   try { await patch("worksheets", "id=in.(" + ids.join(",") + ")", { is_star: on }); }
@@ -2308,20 +2341,30 @@ async function renderStudentMobile(T, s){
   const subTag = (p) => multi ? `<span class="subj-chip ${subjCls(p.subject)} on sm">${esc(p.subject === "מתמטיקה" ? "מת'" : p.subject === "אנגלית" ? "אנג'" : p.subject)}</span>` : "";
   const waiting = (s.waiting_subjects || []).length > 0;
 
-  // שורה 2 – מה קורה עכשיו
-  let now = "";
-  if (!s.has_account) now = `<span class="chip">אין עדיין חשבון</span>`;
-  else if (open.length) now = `<span class="dot ${open[0].seen_at ? "seen" : "new"}"></span><span class="nw">עכשיו: <b>${esc(wsTitle(open[0].worksheet_id))}</b>${open.length > 1 ? ` ועוד ${open.length - 1}` : ""}</span>`;
-  else if (waiting) now = `<span class="chip new">ממתין/ה לדף</span>${done[0] ? `<span class="nw">סיים/ה: ${esc(wsTitle(done[0].worksheet_id))} · ${esc(ago(done[0].done_at))}</span>` : ""}`;
-  else if (done[0]) now = `<span class="nw">סיים/ה לאחרונה: ${esc(wsTitle(done[0].worksheet_id))} · ${esc(ago(done[0].done_at))}</span>`;
-  else now = `<span class="nw muted">עוד לא נשלחו דפים</span>`;
-
-  const tabs = [["queue", "הבאים בתור", qn], ["now", "אצל " + first, open.length], ["done", "סיים/ה", done.length]];
+  const tabs = [["queue", "הבאים בתור", qn], ["now", "בעבודה", open.length], ["done", "סיים/ה", done.length]];
   const row = (p, inner, cls) => `<div class="stm-row${cls || ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}">${inner}</div>`;
   const tt = (p, sub) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
 
   let body = "";
-  if (tab === "queue") {
+  if (multi) {
+    // 1.15.2: משולב/ת – שתי עמודות (מתמטיקה | אנגלית). לחיצה על דף – חלון פעולות
+    const H = { queue: "הבאים בתור – עוד לא נשלחו", now: 'בעבודה – עוד לא סומנו "סיימתי"', done: "סיים/ה" }[tab];
+    const HINT = { queue: "לחיצה על דף – סדר, שליחה, הסרה או צפייה.", now: "לחיצה על דף – צפייה או ביטול שליחה.", done: "לחיצה על דף – צפייה." }[tab];
+    body += `<div class="stm-h">${H}</div><div class="stm-hint">${HINT}</div><div class="stm-cols">`;
+    let more = false;
+    subs.forEach(x => {
+      let list = tab === "queue" ? queueOf(s.student_id, x) : (tab === "now" ? open : done).filter(p => p.subject === x);
+      const full = list.length; if (tab === "done" && !AD.showDone && full > 8) { list = list.slice(0, 8); more = true; }
+      const sub = (p) => tab === "queue" ? ((W(p.worksheet_id) || {}).topic_name || "") : tab === "now" ? (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · " + ago(p.released_at) : ago(p.done_at);
+      body += `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span><b>${full}</b>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה</span>` : ""}</div>`;
+      body += list.map((p, i) => `<button type="button" class="stm-mr${tab === "queue" && i === 0 ? " next" : ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-act="${p.id}">${tab === "queue" ? `<span class="n">${i + 1}</span>` : ""}<span class="t"><span class="tt">${esc(wsTitle(p.worksheet_id))}</span><small>${esc(sub(p))}</small>${lvIc(W(p.worksheet_id))}</span></button>`).join("")
+        || `<div class="stm-empty">${tab === "queue" ? "התור ריק." : tab === "now" ? "אין דף פתוח." : "עוד אין."}</div>`;
+      if (tab === "queue" && list.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא</button>`;
+      body += `</div>`;
+    });
+    body += `</div>`;
+    if (more) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
+  } else if (tab === "queue") {
     body += `<div class="stm-h">הדפים הבאים – עוד לא נשלחו ל${esc(first)}</div>
       <div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
     queues.forEach(([x, q]) => {
@@ -2334,7 +2377,7 @@ async function renderStudentMobile(T, s){
     });
   } else if (tab === "now") {
     body += `<div class="stm-h">הדפים שנשלחו ועוד לא סומנו "סיימתי"</div>`;
-    body += open.map(p => row(p, `${tt(p, (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · נשלח " + ago(p.released_at))}<span class="dot ${p.seen_at ? "seen" : "new"}"></span>
+    body += open.map(p => row(p, `${tt(p, (p.seen_at ? "נפתח" : "עוד לא נפתח") + " · נשלח " + ago(p.released_at))}
         <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
       || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
   } else {
@@ -2348,19 +2391,17 @@ async function renderStudentMobile(T, s){
     ? `<div class="acc-line"><span class="chip">אין עדיין חשבון</span><span style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button></div>`
     : `<div class="acc-line"><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
        <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
-       <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>
-       <div class="danger-zone"><div><b>מחיקת החשבון</b><div class="small muted">התוכנית והדפים נשמרים.</div></div><button class="btn sm danger" id="accDel">מחיקת חשבון</button></div>`;
+       </div><div class="acc-btns"><button class="btn sm acc-del" id="accDel">מחיקת חשבון</button><span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button></div>`;
 
   T.innerHTML = `
     <div class="stm-head${pick ? " picking" : ""}">
       <div class="l1"><button class="stm-back" id="stBack" aria-label="חזרה לרשימה">${IC.back}</button>
         <b class="nm">${esc(stName(s))}</b><span class="mt">${esc(stMeta(s))}</span>${subjBadge(subs, true)}</div>
-      ${pick ? "" : `<div class="l2">${now}</div>`}
+      ${pick ? "" : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary><i class="dt-car" aria-hidden="true"></i>חשבון וקוד כניסה</summary>${acc}</details>`}
       <div class="stm-tabs" role="tablist">${tabs.map(([k, l, n]) => `<button role="tab" data-stab="${k}" aria-selected="${k === tab}"><span>${esc(l)}</span><b>${n}</b></button>`).join("")}</div>
     </div>
     <div class="stm-body">${body}</div>
-    ${pick ? `<section class="stm-bank" id="stBankSec"><div class="stm-bank-h"><span>${IC.plusBox}<b>הוספת דפים ל${esc(first)}</b></span><button class="btn sm ghost" id="bankClose">✕ סגירה</button></div><div id="stBank"></div></section>`
-           : `<details class="stm-acc"${s.has_account ? "" : " open"}><summary>חשבון וקוד כניסה</summary>${acc}</details>`}`;
+    ${pick ? `<section class="stm-bank" id="stBankSec"><div class="stm-bank-h"><span>${IC.plusBox}<b>הוספת דפים ל${esc(first)}</b></span><button class="btn sm ghost" id="bankClose">✕ סגירה</button></div><div id="stBank"></div></section>` : ""}`;
 
   const q = (sel) => T.querySelector(sel);
   q("#stBack").onclick = leaveStudent;
@@ -2371,6 +2412,7 @@ async function renderStudentMobile(T, s){
   T.querySelectorAll(".stm-body [data-zoom]").forEach(t => t.onclick = () => previewWs(t.dataset.zoom));
   T.querySelectorAll("[data-relnext]").forEach(b => b.onclick = () => { const qq = queueOf(s.student_id, b.dataset.relnext); if (qq[0]) releaseItems([qq[0].id]); });
   if (q("#moreDoneAd")) q("#moreDoneAd").onclick = () => { AD.showDone = true; renderStudentMobile(T, s); };
+  T.querySelectorAll("[data-act]").forEach(b => b.onclick = () => planSheet(Number(b.dataset.act), s));
   if (q("#accCreate")) q("#accCreate").onclick = () => accountSheet(s, false);
   if (q("#accReset")) q("#accReset").onclick = () => accountSheet(s, true);
   if (q("#accDel")) q("#accDel").onclick = () => deleteAccount(s);
@@ -2381,6 +2423,26 @@ async function renderStudentMobile(T, s){
     b.querySelector("#abAdd").onclick = () => { if (!s.has_account) { toast("קודם צריך ליצור חשבון."); return; } startPick(s); };
     if (b.querySelector("#abNext")) b.querySelector("#abNext").onclick = () => releaseItems([one1.id]);
   });
+}
+// חלון פעולות לדף בתוכנית (בנייד, משולב/ת)
+function planSheet(id, s){
+  const p = AD.plan.find(x => x.id === id); if (!p) return;
+  const w = AD.wsById.get(String(p.worksheet_id));
+  const q = p.status === "מתוכנן" ? queueOf(p.student_id, p.subject) : null, i = q ? q.findIndex(x => x.id === id) : -1;
+  openSheet(`<h2>${esc(wsTitle(p.worksheet_id))}</h2>
+    <p class="muted small" style="margin:-6px 0 12px">${esc([p.subject, wsTopicName(p.worksheet_id), lvOf(w)].filter(Boolean).join(" · "))}</p>
+    <div class="sheet-acts">
+      ${q ? `<div class="sa-row"><button class="btn" data-a="up" ${i === 0 ? "disabled" : ""}>${IC.up} למעלה</button><button class="btn" data-a="down" ${i === q.length - 1 ? "disabled" : ""}>${IC.down} למטה</button></div>` : ""}
+      ${q && s.has_account ? `<button class="btn primary block" data-a="rel">${IC.check} שליחה עכשיו</button>` : ""}
+      ${p.status === "נשלח" ? `<button class="btn block" data-a="unrel">${IC.undo} ביטול שליחה (חזרה לתור)</button>` : ""}
+      <button class="btn block" data-a="view">צפייה בדף</button>
+      ${q ? `<button class="btn block acc-del" data-a="rm">${IC.x} הסרה מהתור</button>` : ""}
+      <button class="btn ghost block" data-a="close">סגירה</button>
+    </div>`, (sh) => {
+      sh.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { const a = b.dataset.a; closeSheet();
+        if (a === "up") movePlan(id, -1); else if (a === "down") movePlan(id, 1); else if (a === "rel") releaseItems([id]);
+        else if (a === "unrel") unrelease(id); else if (a === "view") previewWs(p.worksheet_id); else if (a === "rm") removePlan(id); });
+    });
 }
 function selActions(T){
   const box = T.querySelector("#selActs"); if (!box) return;
@@ -2664,10 +2726,10 @@ async function renderBank(T){
     const list = AD.bank.tab === "page" ? t.pages.concat(sumT ? sumT.pages.map(r => Object.assign({}, r, { _sumG: true })) : []) : t.answers;
     const allStar = t.pages.length && t.pages.every(r => r.is_star);
     const bl = (info[AD.bank.book] || {}).label || "";
-    body += `<div class="ws-bar"><h2><span class="ws-bar-sub">${esc(bl)} · נושא ${esc(String(Number(t.no) || t.no))}</span>${esc(t.name)}${t.pages.some(r => r.is_star) ? " ⭐" : ""}</h2>
-      ${selMode ? `<button type="button" class="btn small" id="selTopic">${(() => { const fr = t.pages.filter(r => !inPlan.has(r.id)); return fr.length && fr.every(r => AD.bank.sel.has(r.id)) ? "ביטול סימון הנושא" : "סימון כל הנושא"; })()}</button>`
-                : `<button type="button" class="btn small ws-tstar${allStar ? " on" : ""}" id="tStar" title="סימון כל הנושא כחשוב">${allStar ? "⭐ חשוב" : "☆ חשוב"}</button>`}
-      <button type="button" class="btn small ws-back2" id="tBack" title="חזרה לכל הנושאים">→ חזרה<span class="lg-t"> לנושאים</span></button></div>`;
+    const frT = t.pages.filter(r => !inPlan.has(r.id)), allSel = frT.length && frT.every(r => AD.bank.sel.has(r.id));
+    body += `<div class="ws-bar"><h2${selMode ? ` data-gsel="t" class="${allSel ? "on" : ""}" title="לחיצה ארוכה – סימון כל הדפים בנושא"` : ""}><span class="ws-bar-sub">${esc(bl)} · נושא ${esc(String(Number(t.no) || t.no))}</span>${esc(t.name)}${t.pages.some(r => r.is_star) ? " ⭐" : ""}</h2>
+      ${selMode ? "" : `<button type="button" class="btn small ws-tstar${allStar ? " on" : ""}" id="tStar" title="סימון כל הנושא כחשוב">${allStar ? "⭐ חשוב" : "☆ חשוב"}</button>`}
+      <button type="button" class="btn small ws-back2" id="tBack" title="חזרה לכל הנושאים">→ חזרה</button></div>`;
     if (!selMode && t.answers.length) body += `<div class="ws-sw"><div class="ws-tabs" role="tablist"><button type="button" role="tab" data-tab="page" aria-selected="${AD.bank.tab === "page"}">דפים <small>${t.pages.length}</small></button><button type="button" role="tab" data-tab="ans" aria-selected="${AD.bank.tab !== "page"}">פתרונות <small>${t.answers.length}</small></button></div></div>`;
     const st = list.filter(r => r.is_star && r.type === "page");
     if (st.length && !(allStar && !sumT)) body += `<div class="ws-stars"><div class="ws-stars-h"><span>⭐ חשובים בנושא</span></div><div class="ws-stars-row">${st.map(r => stTile(r, String(r.page_no || ""), r.title || "")).join("")}</div></div>`;
@@ -2707,9 +2769,18 @@ async function renderBank(T){
   if (one("#tStar")) one("#tStar").onclick = async () => {
     const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page");
     const on = !pg.every(r => r.is_star); if (await setStar(pg.map(r => r.id), on)) { toast(on ? "כל הנושא סומן כחשוב ⭐" : "הסימון הוסר מהנושא"); renderBank(T); } };
-  if (one("#selTopic")) one("#selTopic").onclick = () => {
+  // 1.15.2: לחיצה ארוכה על שם הנושא – סימון / ביטול סימון של כל הדפים בנושא (במקום כפתור)
+  const selTopic = () => {
     const pg = AD.ws.filter(r => r.book === AD.bank.book && r.kind === AD.bank.kind && r.topic_no === AD.bank.topic && r.type === "page" && !inPlan.has(r.id));
-    const all = pg.every(r => AD.bank.sel.has(r.id)); pg.forEach(r => all ? AD.bank.sel.delete(r.id) : AD.bank.sel.add(r.id)); renderBank(T); };
+    const all = pg.every(r => AD.bank.sel.has(r.id)); pg.forEach(r => all ? AD.bank.sel.delete(r.id) : AD.bank.sel.add(r.id));
+    try { navigator.vibrate && navigator.vibrate(15); } catch(e) {}
+    toast(all ? "הסימון הוסר מכל הנושא." : pg.length === 1 ? "דף אחד סומן." : pg.length + " דפים סומנו.");
+    renderBank(T); };
+  W(".ws-bar h2[data-gsel]").forEach(h => { let tm = null;
+    const end = () => { clearTimeout(tm); tm = null; h.classList.remove("press"); };
+    h.addEventListener("pointerdown", () => { h.classList.add("press"); tm = setTimeout(() => { tm = null; h.classList.remove("press"); selTopic(); }, 500); });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(ev => h.addEventListener(ev, end));
+    h.addEventListener("contextmenu", (e) => e.preventDefault()); });
   if (one("#showAllT")) one("#showAllT").onclick = () => { AD.bank.showAll = !AD.bank.showAll; renderBank(T); };
   if (one("#tBack")) one("#tBack").onclick = () => { AD.bank.topic = null; if (AD.bank.listKind) AD.bank.kind = AD.bank.listKind; renderBank(T); if (T.id === "stBank") scrollToBank(); };
   if (one("#pickCancel")) one("#pickCancel").onclick = () => { const sid = pick.sid, subj = pick.subj; AD.bank.pick = null; AD.bank.sel.clear(); AD.view = "students"; openStudent(sid, subj); };
@@ -2742,7 +2813,7 @@ function pickBar(){
   }
   if (!pick) { if (!inDrawer()) setActionBar(null); return; }
   const n = AD.bank.sel.size;
-  const html = `<span class="sp">${n === 1 ? "נבחר דף אחד" : n ? "נבחרו " + n + " דפים" : "לבחור דפים"}</span>
+  const html = `<span class="sp">${n === 1 ? "נבחר דף אחד" : n ? "נבחרו " + n + " דפים" : "לבחור דפים"}${!n && AD.bank.topic ? `<small class="pk-hint">לחיצה ארוכה על שם הנושא – כל הדפים</small>` : ""}</span>
     <button class="btn sm" id="pkAdd" ${n ? "" : "disabled"}>הוספה לתור</button>
     <button class="btn sm primary" id="pkAddRel" ${n ? "" : "disabled"}>הוספה ושליחה עכשיו</button>`;
   const wire = (b) => { b.querySelector("#pkAdd").onclick = () => addToPlan(false); b.querySelector("#pkAddRel").onclick = () => addToPlan(true); };
