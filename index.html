@@ -1214,6 +1214,8 @@ body.ws-vopen .crmws .ws-quick .gseg{background:rgba(255,255,255,.12);}
 body.ws-vopen .crmws .ws-quick .gseg button{color:#fff;}
 body.ws-vopen .crmws .ws-quick .gseg button[aria-pressed="true"]{background:#fff; color:#161118;}
 body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px));}
+/* 1.24 (נועה): בכרטיס תלמיד/ה – הדף הפתוח מכסה גם את הכותרת של הילד/ה, כדי שהדף ייראה במלואו כמו במערכת הניהול */
+body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-viewer{top:var(--wsqv, 48px);}
 }
 .crmws .ws-pop{position:fixed; inset:0; z-index:220; background:rgba(0,0,0,.35); display:flex; align-items:flex-end; justify-content:center;}
 .crmws .ws-pop[hidden]{display:none;}
@@ -1828,6 +1830,14 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 .crmatt .page-head{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; } .crmatt .page-head h1{ font-size:24px; color:var(--accent); font-weight:900; margin:0; }
 body[data-att], body:has(#attListV), body[data-att] #adminView, body:has(#attListV) #adminView, body[data-att] .ad-app, body:has(#attListV) .ad-app, body[data-att] #adminView .main, body:has(#attListV) #adminView .main{ background:#ECF1EA !important; background-image:none !important; }
 .crmatt .sh-actions .btn{ flex:1 1 auto !important; width:100%; min-height:52px; font-size:18px; }
+.crmatt .hol-chips{ display:flex; flex-wrap:wrap; gap:2px; justify-content:center; margin-top:2px; }
+.crmatt .hol-chip{ font-family:var(--font-body); font-size:10.5px; font-weight:800; border-radius:999px; padding:0 6px; line-height:1.6; white-space:nowrap; }
+.crmatt .hol-chip.hol-holiday{ background:#6B6560; color:#fff; } .crmatt .hol-chip.hol-vacation{ background:#E4E0DC; color:#4A4542; } .crmatt .hol-chip.hol-note{ background:transparent; color:var(--ink-soft); border:1px solid var(--border); }
+.crmatt .att-date .att-dayname:has(.hol-chips){ display:block !important; }
+.crmatt .cx-tag{ display:inline-block; font-size:11px; font-weight:800; border-radius:999px; padding:0 7px; background:var(--paper); color:var(--ink); border:1px solid var(--ink-soft); margin:1px 0; }
+.crmatt .mar-ic{ font-size:14px; margin-inline-start:4px; cursor:help; vertical-align:middle; }
+.crmatt .past-ic{ display:inline-flex; vertical-align:middle; margin-inline-start:6px; color:#b3a69a; cursor:help; } .crmatt .past-ic.reg{ color:#8a7a6c; }
+.crmatt .pay-q{ display:inline-flex; align-items:center; gap:3px; font-size:11.5px; font-weight:800; color:#8A5A12; background:#FBF1E2; border:1px solid #E8CFA0; border-radius:999px; padding:0 7px; margin-inline-start:4px; white-space:nowrap; }
 body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + var(--safe-t, 0px)); }   /* ההודעה לא מסתירה את "שמירה" */
 @media (max-width:760px){ .crmatt .att-stick, .crmatt .sh-stick{ margin-inline:-10px; padding-inline:10px !important; } }
 
@@ -1931,7 +1941,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
       <div class="who"><span id="adWho"></span>
         <button class="btn small ghost hdr-btn" id="adNotify" title="התראות" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="ib-t">התראות</span></button>
         <button class="btn small ghost hdr-btn" id="adSearch" title="חיפוש תלמיד/ה"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="ib-t">חיפוש</span></button>
-        <button class="btn small ghost hdr-btn" id="adTools" title="ניהול חשבונות"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.8 1l-.3 2h-4l-.3-2a7 7 0 0 1-1.8-1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3L3 9.3l2-3.4 1.9.7a7 7 0 0 1 1.8-1l.3-2h4l.3 2a7 7 0 0 1 1.8 1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"/></svg><span class="ib-t">ניהול</span></button>
+        <button class="btn small ghost hdr-btn" id="adTools" title="הגדרות"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.8 1l-.3 2h-4l-.3-2a7 7 0 0 1-1.8-1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3L3 9.3l2-3.4 1.9.7a7 7 0 0 1 1.8-1l.3-2h4l.3 2a7 7 0 0 1 1.8 1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"/></svg><span class="ib-t">ניהול</span></button>
         <button class="btn small ghost hdr-btn" id="adRefresh" title="רענון"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="ib-t">רענון</span></button>
         <button class="btn small ghost" id="adLogout">יציאה</button></div>
     </header>
@@ -1958,7 +1968,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.23",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.24",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2133,16 +2143,24 @@ const rpc = (fn, body) => api("POST", "/rest/v1/rpc/" + fn, body || {});
 const errText = (e) => { const m = String(e && e.message || ""); return /[֐-׿]/.test(m) ? m : "משהו השתבש. כדאי לנסות שוב."; };
 
 // קישורים זמניים לתמונות (שעה)
-const URLS = {};
+// 1.24 (מהירות): קישורי התמונות נשמרים בטלפון (צוות – 3 ימים, תלמיד/ה – יום), כך שבפתיחה הבאה התמונות מוצגות מיד
+// מהזיכרון של הטלפון (אותה כתובת → הדפדפן וה-sw לא מורידים שוב), ולא מבקשים קישורים חדשים מהשרת בכל פעם.
+const URLS_KEY = "telem_portal_urls";
+const URLS = (() => { try { const o = JSON.parse(localStorage.getItem(URLS_KEY) || "{}"), now = Date.now(), r = {};
+  Object.keys(o).forEach(k => { if (o[k] && o[k].exp > now + 600000) r[k] = o[k]; }); return r; } catch(e) { return {}; } })();
+let URLS_T = null;
+const urlsSave = () => { clearTimeout(URLS_T); URLS_T = setTimeout(() => { try { localStorage.setItem(URLS_KEY, JSON.stringify(URLS)); } catch(e) { try { localStorage.removeItem(URLS_KEY); } catch(e2) {} } }, 400); };
+const signSecs = () => ($("adminView") && !$("adminView").hidden) ? 3 * 86400 : 86400;
 async function sign(paths){
   const now = Date.now(), need = [...new Set(paths.filter(p => p && (!URLS[p] || URLS[p].exp < now + 120000)))];
   for (let i = 0; i < need.length; i += 100) {
     const part = need.slice(i, i + 100);
     try {
-      const res = await api("POST", "/storage/v1/object/sign/worksheets", { expiresIn: 3600, paths: part });
-      (res || []).forEach(r => { if (r.signedURL) URLS[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + 3600 * 1000 }; });
+      const secs = signSecs(), res = await api("POST", "/storage/v1/object/sign/worksheets", { expiresIn: secs, paths: part });
+      (res || []).forEach(r => { if (r.signedURL) URLS[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + secs * 1000 }; });
     } catch(e) {}
   }
+  if (need.length) urlsSave();
   return (p) => URLS[p] ? URLS[p].url + (WS_VER[p] ? "&v=" + WS_VER[p] : "") : "";
 }
 // גרסת הקובץ (file_at) – כדי שדף שיובא מחדש לא יוצג מהמטמון הישן (כמו במערכת הניהול 5.19.50)
@@ -2230,7 +2248,7 @@ $("loginForm").onsubmit = async (ev) => {
 };
 async function logout(){
   try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
-  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; $("adSearch").hidden = false; AD.started = false; } showLogin();
+  saveAuth(null); try { localStorage.removeItem(URLS_KEY); Object.keys(URLS).forEach(k => delete URLS[k]); } catch(e) {} LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; $("adSearch").hidden = false; AD.started = false; } showLogin();
 }
 $("msgLogout").onclick = logout;
 function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
@@ -3546,13 +3564,17 @@ function confirmSheet(text, okLabel, onOk){
 // 1.17: מחיקת חשבון – לא בכרטיס (שלא יילחץ בטעות במקום "שליחה"), אלא ב"ניהול" בכותרת: בוחרים תלמיד/ה ומוחקים
 function toolsSheet(){
   const st = AD.settings;
-  openSheet(`<h2>ניהול חשבונות</h2>
+  openSheet(`<h2>⚙ הגדרות</h2>
     ${st ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${st.initial_code ? `<b class="code">${esc(st.initial_code)}</b><span class="muted small">· תקף ${esc(st.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${st.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
     <h3 class="tl-h">מחיקת חשבון</h3>
     <p class="muted small" style="margin-top:-4px">התלמיד/ה לא יוכל/תוכל להיכנס; התוכנית והדפים נשמרים.</p>
     <input class="search" id="tlQ" type="search" placeholder="חיפוש תלמיד/ה לפי שם או טלפון" autocomplete="off">
     <div id="tlList" class="tl-list"></div>
+    <h3 class="tl-h">ייבוא דפים מהמחשב</h3>
+    <p class="muted small" style="margin-top:-4px">בוחרים במחשב את התיקייה הראשית של דפי התרגול. המערכת מוצאת לבד את הדפים שברשימה, מעלה אותם ומחליפה דפים קיימים בגרסה החדשה. ${isDesk() ? "" : "<b>רק מהמחשב.</b>"}</p>
+    ${isDesk() ? `<input type="file" id="wsFolderP" webkitdirectory directory multiple><div id="wsImportMsgP" class="small" style="margin-top:6px"></div>` : ""}
     <button class="btn ghost block" onclick="closeSheet()" style="margin-top:10px">סגירה</button>`, (sh) => {
+      if (sh.querySelector("#wsFolderP")) sh.querySelector("#wsFolderP").onchange = (e) => wsImportFolder(e.target, sh.querySelector("#wsImportMsgP"));
       const draw = () => { const q = sh.querySelector("#tlQ").value.trim();
         const L = AD.students.filter(x => x.has_account && (!q || stName(x).includes(q) || (digits(q).length > 2 && digits(x.login_phone || x.phone).includes(digits(q)))));
         sh.querySelector("#tlList").innerHTML = L.slice(0, 40).map(x => `<div class="tl-row"><span class="tl-n"><b>${esc(stName(x))}</b> <small class="muted ltr">${esc(fmtPhone(x.login_phone))}</small></span><button class="btn sm acc-del" data-del="${esc(x.student_id)}">מחיקת חשבון</button></div>`).join("")
@@ -3561,6 +3583,40 @@ function toolsSheet(){
       sh.querySelector("#tlQ").oninput = draw; draw();
       if (sh.querySelector("#icEdit")) sh.querySelector("#icEdit").onclick = initialCodeSheet;
     });
+}
+// 1.24 (נועה): ייבוא דפים מהמחשב – הועבר מהמאגר להגדרות (⚙). אותו קוד כמו במערכת הניהול (5.19.90).
+async function wsImportFolder(input, msg){
+  const files = [...input.files].filter(f => /\.(png|jpe?g)$/i.test(f.name));
+  let rows = AD.ws || [];
+  if (!rows.length) { msg.textContent = "המאגר עוד לא נטען – לנסות שוב בעוד רגע."; return; }
+  msg.textContent = "מכין…";
+  let src = new Map(); try { src = new Map((await getAll("worksheets", "select=id,source_path&is_active=eq.true")).map(x => [String(x.id), x.source_path])); } catch(e) { msg.textContent = "לא הצלחנו לקרוא את רשימת הקבצים."; return; }
+  const rel = (f) => (f.webkitRelativePath || f.name).replace(/\\/g, "/");
+  const jobs = [];
+  rows.forEach(r => { const s = (src.get(String(r.id)) || "").normalize("NFC"); if (!s) return;
+    const f = files.filter(x => rel(x).normalize("NFC").endsWith(s)).sort((a, b) => b.lastModified - a.lastModified)[0]; if (f) jobs.push({ r, f }); });
+  if (!jobs.length) { msg.textContent = `לא נמצאו דפים מהרשימה בתיקייה שנבחרה (${files.length} תמונות). צריך לבחור את התיקייה הראשית של דפי התרגול.`; return; }
+  input.disabled = true;
+  let done = 0, failed = 0; const okIds = [];
+  const flush = async () => { if (!okIds.length) return; const ids = okIds.splice(0), at = new Date().toISOString(), q = "id=in.(" + ids.join(",") + ")";
+    try { await patch("worksheets", q, { uploaded: true, file_at: at }); } catch(e) { if (!/file_at/.test(String(e && e.message))) throw e; await patch("worksheets", q, { uploaded: true }); }
+    ids.forEach(id => { [AD.ws || [], CBM.WS.rows || []].forEach(L => L.forEach(x => { if (String(x.id) === String(id)) { x.uploaded = true; x.file_at = at; } })); }); };
+  const t = await token();
+  const one = async ({ r, f }) => {
+    try {
+      const res = await fetch(CONFIG.supabaseUrl + "/storage/v1/object/worksheets/" + r.storage_path.split("/").map(encodeURIComponent).join("/"), {
+        method: "POST", headers: { "apikey": CONFIG.anonKey, "Authorization": "Bearer " + t, "x-upsert": "true", "cache-control": "max-age=60", "Content-Type": f.type || "image/png" }, body: f });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      okIds.push(r.id);
+    } catch(err) { failed++; }
+    done++; msg.textContent = `מעלה... ${done} מתוך ${jobs.length}${failed ? ` · ${failed} נכשלו` : ""}`;
+    if (okIds.length >= 25) await flush();
+  };
+  for (let i = 0; i < jobs.length; i += 4) await Promise.all(jobs.slice(i, i + 4).map(one));
+  await flush().catch(() => { failed++; });
+  wsVer(AD.ws); try { store(WS_CACHE, JSON.stringify({ t: Date.now(), rows: AD.ws })); } catch(e) {}
+  msg.innerHTML = `הסתיים: עלו <b>${done - failed}</b> דפים${failed ? `, <b>${failed}</b> נכשלו - אפשר לבחור את התיקייה שוב` : ""}.`;
+  input.disabled = false; input.value = "";
 }
 function deleteAccount(s){
   openSheet(`<h2>למחוק את החשבון?</h2><p class="muted">${esc(stName(s))} לא יוכל/תוכל להיכנס לאפליקציה. התוכנית והדפים נשמרים, ואפשר ליצור חשבון חדש בכל רגע.</p>
@@ -3721,7 +3777,7 @@ function buildXlsx(tables){
   return zipFiles(files, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 }
 function bkDownload(blob, name){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
-const WS = { rows: null, book: store("telem_ws_book") || "", kind: "topic", topic: null, tab: "page", urls: {}, list: [], idx: 0 };
+const WS = { rows: null, book: store("telem_ws_book") || "", kind: "topic", topic: null, tab: "page", urls: URLS, list: [], idx: 0 };   // 1.24: אותם קישורים שמורים
 const WS_KIND = { summary: "דפי סיכום", topic: "תרגול לפי נושאים", grammar: "דקדוק", unseen: "אנסין", vocab: "אוצר מילים", general: "כללי" };
 const WS_KIND_ORD = ["topic", "summary", "grammar", "unseen", "vocab", "general"];
 // 5.19.14: אנגלית - "אוצר מילים" (Vocabulary) בנפרד מ"כללי" (בלי שינוי במסד: מזהים לפי שם הנושא)
@@ -3775,9 +3831,10 @@ async function wsSign(paths){
   const now = Date.now(), need = paths.filter(p => !WS.urls[p] || WS.urls[p].exp < now + 60000);
   for (let i = 0; i < need.length; i += 100) {
     const part = need.slice(i, i + 100);
-    const res = await api("POST", "/storage/v1/object/sign/worksheets", { expiresIn: 3600, paths: part });
-    (res || []).forEach(r => { if (r.signedURL) WS.urls[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + 3600 * 1000 }; });
+    const secs = signSecs(), res = await api("POST", "/storage/v1/object/sign/worksheets", { expiresIn: secs, paths: part });
+    (res || []).forEach(r => { if (r.signedURL) WS.urls[r.path] = { url: CONFIG.supabaseUrl + "/storage/v1" + r.signedURL, exp: now + secs * 1000 }; });
   }
+  if (need.length) urlsSave();
   // 5.19.50: ?v=מתי עלה הקובץ - אחרי ייבוא הדפדפן טוען את התמונה החדשה (לא את השמורה)
   const ver = new Map(); (WS.rows || []).forEach(r => { if (r.file_at) ver.set(r.storage_path, r.file_at); });
   return (p) => WS.urls[p] ? WS.urls[p].url + (ver.has(p) ? "&v=" + encodeURIComponent(String(Date.parse(ver.get(p)) || ver.get(p))) : "") : "";
@@ -4634,8 +4691,9 @@ async function insRender(){
   const DF = { "א":"ראשון","ב":"שני","ג":"שלישי","ד":"רביעי","ה":"חמישי","ו":"שישי","ש":"שבת" }, dm = String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0");
   const rel = diff === 0 ? "היום" : diff === 1 ? "מחר" : diff === -1 ? "אתמול" : "";
   const rng = (a, b) => !a && !b ? "" : `<span dir="ltr" style="unicode-bidi:isolate; white-space:nowrap">${esc(a)}${b ? "–" + esc(b) : ""}</span>`;
+  let holC = "";
   const top = (sel) => `<div class="crmatt" id="attListV">${ins ? "" : `<div class="page-head att-head"><h1>נוכחות</h1></div>`}<div id="attMark"><div class="att-stick">
-    <div class="att-date card"><div class="att-dayname">יום ${DF[dl]}${rel === "היום" ? ' · <span class="today-word">היום</span>' : ""}</div>
+    <div class="att-date card"><div class="att-dayname">יום ${DF[dl]}${rel === "היום" ? ' · <span class="today-word">היום</span>' : ""}${holC ? ` <span class="hol-chips" style="display:inline-flex">${holC}</span>` : ""}</div>
       <div class="att-date-row"><button class="btn" type="button" data-wd="-1" aria-label="יום קודם">→<span class="lg-t"> יום קודם</span></button>
         <label class="att-dlbl"><span><span class="d-full">יום ${DF[dl]} ${dm}.${d.getFullYear()}</span><span class="d-short">יום ${dl}' ${dm}</span>${rel ? ` <span class="today-word">· ${rel}</span>` : ""}</span><input type="date" id="wdDate" value="${iso}" aria-label="תאריך"></label>
         <button class="btn today-btn${isToday ? " is-today" : ""}" type="button" data-wd="0" title="חזרה לתאריך של היום">להיום</button>
@@ -4643,8 +4701,11 @@ async function insRender(){
     ${sel || ""}</div>`;
   if (!T.querySelector("#attListV")) { T.innerHTML = top() + `<div class="att-groups"><div class="muted">טוען...</div></div></div></div>`; wireIns(T); }
   let list = [];
-  try { list = await rpc("attendance_groups", { p_date: iso, p_city: null }) || []; if (!Array.isArray(list)) list = []; }
+  try { [list] = await Promise.all([rpc("attendance_groups", { p_date: iso, p_city: null }), ATTM.HOLX.load().catch(() => {})]); list = list || []; if (!Array.isArray(list)) list = []; }
   catch(e) { T.innerHTML = top() + `<div class="card err">לא ניתן לטעון את הקבוצות.</div></div></div>`; wireIns(T); return; }
+  // 1.24 (נועה): חגים וחופשות – כמו במערכת הניהול (תגית ליד היום; קבוצה ביום חג – "לא התקיים")
+  holC = ATTM.HOLX.chips(iso);
+  list.forEach(g => { g.cx = g.marked ? null : ATTM.HOLX.cx({ kind: g.kind, city: g.city, location: g.location, cancelled: g.cancelled, cancel_reason: g.cancel_reason }, iso); });
   if (iso !== AD.waitDate || (!ins && AD.view !== "att") || (typeof ATTM !== "undefined" && ATTM.isOpen)) return;
   AD.attG = { iso, at: Date.now(), m: new Map(list.map(x => [String(x.session_id), x])) };
   const hm = (t) => String(t || "").slice(0, 5), insOf = (x) => String(x.instructors || "").split(/,\s*/).filter(Boolean);
@@ -4657,11 +4718,11 @@ async function insRender(){
     sel = `<div class="att-filt"><select id="attIns" aria-label="מתרגל"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${names.filter(n => n !== AD.myName).map(n => `<option>${esc(n)}</option>`).join("")}</select></div>`;
   }
   gs = gs.slice().sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"));
-  const card = (g) => `<button type="button" class="att-group ${scCls(g.location)} ${g.marked ? "done" : ""}${g.cancelled ? " hol-fade" : ""}" data-att="${esc(String(g.session_id))}">
+  const card = (g) => `<button type="button" class="att-group ${scCls(g.location)} ${g.marked ? "done" : ""}${g.cx ? " hol-fade" : ""}" data-att="${esc(String(g.session_id))}">
       <span class="t">${g.kind === "מרתון" ? "🏁 מרתון · " + esc(g.time_label || "") + (g.start_time ? ` <span class="m">${rng(hm(g.start_time), hm(g.end_time))}</span>` : "") : rng(hm(g.start_time), hm(g.end_time))}</span>
       <span class="w">${scChip(g.location)}${!ins ? " · " + esc(g.city || "") : ""}</span><span class="ag-br"></span>${g.room ? `<span class="m">חדר: <b><bdi>${esc(g.room)}</bdi></b></span>` : ""}
       ${!ins && g.instructors ? `<span class="ag-ins">${esc(g.instructors)}</span>` : ""}
-      <span class="ag-st">${g.marked ? `<span class="ok">✓ סומן · <b>${g.marked_count}</b> נוכחים מתוך ${g.kids}</span>` : `<span class="m kn">${g.kids} ילדים</span> · ${g.cancelled ? `<span class="cx-tag">לא התקיים${g.cancel_reason ? " · " + esc(g.cancel_reason) : ""}</span>` : `<span class="m">טרם סומן</span>`}`}</span></button>`;
+      <span class="ag-st">${g.marked ? `<span class="ok">✓ סומן · <b>${g.marked_count}</b> נוכחים מתוך ${g.kids}</span>` : `<span class="m kn">${g.kids} ילדים</span> · ${g.cx ? `<span class="cx-tag" title="לא התקיים${g.cx.reason ? " · " + esc(g.cx.reason) : ""}">לא התקיים${g.cx.reason ? " · " + esc(g.cx.reason) : ""}</span>` : `<span class="m">טרם סומן</span>`}`}</span></button>`;
   T.innerHTML = top(sel) + `<div class="att-groups">${gs.length ? gs.map(card).join("") : `<div class="card muted">${ins ? "אין לך קבוצות ביום הזה." : AD.waitIns && list.length ? "אין קבוצות ביום הזה למתרגל/ת שנבחר/ה." : "אין קבוצות ביום הזה."}</div>`}</div></div></div>`;
   wireIns(T); attSideH();
   T.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { const x = gs.find(g => String(g.session_id) === b.dataset.att) || {};
@@ -4721,7 +4782,7 @@ const ATTM = (() => {
   const $ = (id) => wrap.querySelector("#" + id) || document.getElementById(id);
   // ---- מה שמערכת הניהול מביאה ממקומות אחרים – כאן בקטן ----
   const ME = { get role(){ return AD.role === "instructor" ? "instructor" : "admin"; }, get full_name(){ return AD.myName || ""; } };
-  const G = { sessions: [], roster: null }, L = { leads: [], asg: null, staff: [], staffAll: [] }, EX = { rows: [] };
+  const G = { sessions: [], roster: null }, L = { leads: [], asg: null, staff: [], staffAll: [], hist: {}, mar: {}, pendReg: {} }, EX = { rows: [] };
   const loadExams = () => Promise.resolve();
   const currentView = "att";
   const isMobile = () => true, attSide = () => false;
@@ -4730,7 +4791,37 @@ const ATTM = (() => {
   const stSubjOf = (id) => { const s = stById(String(id)); const x = (s && s.subjects) || []; return x.includes("מתמטיקה") && x.includes("אנגלית") ? "מתמטיקה ואנגלית" : x[0] || ""; };
   // מי שמר (בהיסטוריית השמירות) – שמות הצוות
   let STAFF = null; const staffName = (id) => ((STAFF || []).find(x => x.id === id) || {}).full_name || "";
-  const pastBadge = () => "", marFlag = () => "", payPendChip = () => "";
+  // 1.24 (נועה): התגיות ליד שם הילד/ה – כמו במערכת הניהול (בשנים קודמות, 🏁 מרתון, ❓ ממתין לתשלום). רק לילדים בקבוצה הפתוחה.
+  const histReg = (h) => String(h.status || "").startsWith("נרשם");
+function pastBadge(st){
+  const h = (L.hist && L.hist[st.id]) || []; if (!h.length) return "";
+  const reg = h.some(histReg), tip = h.map(x => x.school_year + ": " + (x.status || "")).join("\n");
+  const lbl = (reg ? "נרשם/ה בעבר" : "פנה/תה בעבר") + "\n" + tip;
+  return `<span class="past-ic ${reg ? "reg" : ""}" title="${esc(lbl)}" aria-label="${esc(reg ? "נרשם/ה בעבר" : "פנה/תה בעבר")}" role="img"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+}
+function marFlag(sid){
+  const m = ((typeof L !== "undefined" && L.mar && L.mar[sid]) || []).filter(x => x.status !== "בוטל"); if (!m.length) return "";
+  return ` <span class="mar-ic" title="${esc("רשום/ה למרתון: " + m.map(x => x.marathon ? [x.marathon.name, x.marathon.school].filter(Boolean).join(" · ") : "מרתון").join(", "))}">🏁</span>`;
+}
+function payPend(stId, sessId, isMar){
+  if (isMar) { const r = ((L.mar && L.mar[stId]) || []).find(x => x.session_id === sessId && x.payment_method === "טלפוני" && !x.paid_at && x.status === "ממתין לתשלום");
+    return r ? { kind: "marathon", order_id: r.id, amount: r.amount, what: r.marathon ? r.marathon.name : "מרתון" } : null; }
+  const e = L.pendReg && L.pendReg[stId]; return e ? { kind: "registration", order_id: e.order_id, amount: e.amount, what: e.what || "הרשמה" } : null;
+}
+  function payPendChip(stId, sessId, isMar){ const x = payPend(stId, sessId, isMar); if (!x) return "";
+    return ` <span class="pay-q" title="נרשם/ה עם תשלום טלפוני - התשלום עוד לא אושר. השיבוץ לא סופי. (אישור – במערכת הניהול)">❓ ממתין לתשלום</span>`; }
+  const TAGS_DONE = new Set();
+  async function ATT_TAGS(){ const ids = (A.rows || []).map(r => r.student_id).filter(id => !TAGS_DONE.has(id)); if (!ids.length) return;
+    ids.forEach(id => TAGS_DONE.add(id)); const inn = "in.(" + ids.join(",") + ")", adm = ME.role !== "instructor";
+    const [h, m, pr] = await Promise.all([
+      adm ? get("student_history", "select=student_id,school_year,year_start,status&student_id=" + inn + "&order=year_start").catch(() => []) : [],
+      get("marathon_registrations", "select=id,student_id,session_id,status,payment_method,paid_at,amount,created_at,marathon:marathons(name,city,school)&student_id=" + inn + "&status=neq." + encodeURIComponent("בוטל") + "&order=id").catch(() => []),
+      adm ? get("pending_phone_payments", "select=kind,order_id,student_id,what,amount&kind=eq.registration&student_id=" + inn).catch(() => []) : []]);
+    const arr = (v) => Array.isArray(v) ? v : [];
+    arr(h).forEach(x => (L.hist[x.student_id] = L.hist[x.student_id] || []).push(x));
+    arr(m).forEach(x => (L.mar[x.student_id] = L.mar[x.student_id] || []).push(x));
+    arr(pr).forEach(x => { L.pendReg[x.student_id] = x; });
+    if (isOpen && A.sheet) renderSheetRows(); }
   const grpEdit = () => {};
   // מבחן / לומדים עכשיו – מהנתונים של תלם שלי (כמו בכרטיס התלמיד/ה)
   const kidExTag = (r) => { const s = stById(String(r.student_id)); if (!s || !AD.info || subjGrp(r.subject) === 1) return ""; const I = infoOf(s);
@@ -4890,7 +4981,7 @@ async function openSheet(sessionId, retry){
     $("shMeta").textContent = sh.lesson && sh.lesson.updated_at ? `נשמר לאחרונה: ${fmtDate(sh.lesson.updated_at)}${sh.lesson.updated_by ? " · " + sh.lesson.updated_by : ""}` : "";
     A.dirty = false; A.base = attSnap(); attDraftRestore();
     shNavFill(sh.session_id);
-    A.prev = {}; renderSheetRows();
+    A.prev = {}; renderSheetRows(); ATT_TAGS();
     renderSheetCx();
     if (ME.role !== "instructor") loadHistory(sessionId, A.date);
     loadPrevSubj(sessionId);
@@ -5278,7 +5369,9 @@ async function loadHistory(sessionId, date){
   // מעבר למסך אחר (תלמידים / מאגר) – בלי לרנדר את הקבוצות
   const refresh = () => { if (isOpen && A.sheet) renderSheetRows(); };
   const detach = () => { isOpen = false; delete document.body.dataset.att; };
-  return { open, close, onPop, detach, refresh, get isOpen(){ return isOpen; } };
+  const HOLX = { load: () => loadHol(), cx: (g, d) => lessonCx(g, d, g.cancelled, g.cancel_reason),
+    chips: (d) => (HOL.rows || []).filter(h => d >= h.date_from && d <= h.date_to && !h.city && !h.school).map(h => `<span class="hol-chip hol-${h.kind}">${esc(h.name)}</span>`).join("") };
+  return { HOLX, open, close, onPop, detach, refresh, get isOpen(){ return isOpen; } };
 })();
 // ===================== /נוכחות =====================
 // עדכון אוטומטי: בכל חזרה לאפליקציה (וכל חצי שעה) בודקים אם יש גרסה חדשה.
