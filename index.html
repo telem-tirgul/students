@@ -1060,6 +1060,8 @@
   .sheet .acc-del{ color:var(--bad, #B3261E); } .vbar .pa-del{ color:#ffb4ab; }
   .tl-h{ font-family:var(--font-display); font-size:15px; font-weight:800; margin:14px 0 6px; }
   .tl-list{ max-height:50vh; overflow:auto; margin-top:8px; } .tl-row{ display:flex; align-items:center; gap:8px; padding:7px 2px; border-bottom:1px solid var(--border); } .tl-n{ flex:1; min-width:0; }
+  .btn.ab-add{ border:2px solid var(--accent); color:var(--accent); font-weight:700; background:var(--accent-soft); }
+  .stm-more{ display:block; margin:4px auto 2px; }
   .stm-empty{ color:var(--ink-soft); font-size:14px; padding:14px 4px; }
   .stm-acc{ margin:4px 2px 0 0; }
   .stm-acc summary{ list-style:none; display:inline-flex; align-items:center; gap:6px; line-height:1.4; }
@@ -1523,7 +1525,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.18.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.18.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2688,7 +2690,7 @@ function renderStudents(){
 // ---------- תוכנית של תלמיד/ה ----------
 function openStudent(sid, subj){
   const s = stById(sid); if (!s) return;
-  AD.st = String(sid); AD.subj = subj && (s.subjects || []).includes(subj) ? subj : (s.subjects || [])[0]; AD.sel.clear(); AD.showDone = false;
+  AD.st = String(sid); AD.subj = subj && (s.subjects || []).includes(subj) ? subj : (s.subjects || [])[0]; AD.sel.clear(); AD.showDone = false; AD.showQ = false;
   if (isDesk()) {
     if (AD.view !== "students") { AD.view = "students"; window.scrollTo(0, 0); return adRender(); }
     document.querySelectorAll("#listCol .st-row").forEach(r => r.classList.toggle("on", r.dataset.open === AD.st));
@@ -2862,24 +2864,28 @@ async function renderStudentMobile(T, s){
     body += `</div>`;
     if (more) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
   } else if (tab === "queue") {
-    body += `<div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. החצים משנים את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
-    queues.forEach(([x, q]) => {
+    body += `<div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. גרירה בנקודות שמשמאל משנה את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
+    let hidQ = 0;   // 1.18.2 (נועה): רק שני הראשונים בתור (בכל מקצוע) – והשאר ב"עוד"
+    queues.forEach(([x, qAll]) => {
+      const q = AD.showQ ? qAll : qAll.slice(0, 2); hidQ += qAll.length - q.length;
       if (multi && q.length) body += `<div class="stm-sub"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>`;
-      // 1.18.2: שינוי סדר בגרירה (⋮⋮ משמאל), או ▲▼
+      // 1.18.2: שינוי סדר בגרירה (⋮⋮ משמאל) – בלי חיצים (נועה)
       body += `<div class="stm-q" data-q="${esc(x)}">` + q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
-          <span class="q-mv"><button class="mini sm" data-mv="${p.id}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="למעלה">▲</button><button class="mini sm" data-mv="${p.id}" data-d="1" ${i === q.length - 1 ? "disabled" : ""} aria-label="למטה">▼</button></span>
           <span class="drag" data-drag="${p.id}" title="גרירה לשינוי הסדר" aria-label="גרירה לשינוי הסדר">⋮⋮</span>`, i === 0 ? " next" : "")).join("") + `</div>`;
       if (multi && q.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא ב${esc(x)}</button>`;
     });
+    if (hidQ) body += `<button class="linkish small stm-more" id="moreQAd">עוד ${hidQ} בתור ▾</button>`;
+    else if (AD.showQ && qn > 2) body += `<button class="linkish small stm-more" id="moreQAd">להציג פחות ▴</button>`;
   } else if (tab === "now") {
     body += open.map(p => row(p, `${tt(p, "נשלח " + ago(p.released_at), SEEN_IC(!!p.seen_at))}
         <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
       || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
   } else {
-    const show = AD.showDone ? done : done.slice(0, 5);
+    const show = AD.showDone ? done : done.slice(0, 2);   // 1.18.2: רק שניים אחרונים
     body += show.map(p => row(p, `${tt(p, wsTopicName(p.worksheet_id) + " · " + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`)).join("")
       || `<div class="stm-empty">עוד לא סיים/ה דפים.</div>`;
-    if (done.length > show.length) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
+    if (done.length > show.length) body += `<button class="linkish small stm-more" id="moreDoneAd">עוד ${done.length - show.length} שסיים/ה ▾</button>`;
+    else if (AD.showDone && done.length > 2) body += `<button class="linkish small stm-more" id="moreDoneAd">להציג פחות ▴</button>`;
   }
   return body; };
   const SEC = { queue: ["☰", "בתור", "עוד לא נשלחו"], now: ["✎", "בעבודה", 'נשלחו ועוד לא סומנו "סיימתי"'], done: ["🏁", "סיים/ה", ""] };
@@ -2921,7 +2927,8 @@ async function renderStudentMobile(T, s){
   T.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => removePlan(Number(b.dataset.rm)));
   T.querySelectorAll(".stm-body .stm-row[data-pid] .t").forEach(t => t.onclick = () => planView(Number(t.closest(".stm-row").dataset.pid), s));
   T.querySelectorAll("[data-relnext]").forEach(b => b.onclick = () => { const qq = queueOf(s.student_id, b.dataset.relnext); if (qq[0]) releaseItems([qq[0].id]); });
-  if (q("#moreDoneAd")) q("#moreDoneAd").onclick = () => { AD.showDone = true; renderStudentMobile(T, s); };
+  if (q("#moreDoneAd")) q("#moreDoneAd").onclick = () => { AD.showDone = !AD.showDone; const y = window.scrollY; renderStudentMobile(T, s); window.scrollTo(0, y); };
+  if (q("#moreQAd")) q("#moreQAd").onclick = () => { AD.showQ = !AD.showQ; const y = window.scrollY; renderStudentMobile(T, s); window.scrollTo(0, y); };
   T.querySelectorAll("[data-act]").forEach(b => b.onclick = () => planView(Number(b.dataset.act), s));
   if (q("#accCreate")) q("#accCreate").onclick = () => accountSheet(s, false);
   if (q("#accReset")) q("#accReset").onclick = () => accountSheet(s, true);
@@ -2929,7 +2936,7 @@ async function renderStudentMobile(T, s){
   if (pick) { q("#stBack").onclick = closeInlineBank; renderBank($("stBank")); return; }
   // פס תחתון: הוספה מהמאגר + שליחת הדף הבא (כשיש מקצוע אחד)
   const one1 = !multi && queues[0] && queues[0][1][0];
-  setActionBar(`<button class="btn" id="abAdd" style="flex:1">${IC.plusBox} הוספת דפים מהמאגר</button>${one1 && s.has_account ? `<button class="btn primary" id="abNext" style="flex:1">${IC.check} שליחת הדף הבא</button>` : ""}`, (b) => {
+  setActionBar(`<button class="btn ${one1 && s.has_account ? "ab-add" : "primary"}" id="abAdd" style="flex:1">${IC.plusBox} הוספת דפים מהמאגר</button>${one1 && s.has_account ? `<button class="btn primary" id="abNext" style="flex:1">${IC.check} שליחת הדף הבא</button>` : ""}`, (b) => {
     b.querySelector("#abAdd").onclick = () => { if (!s.has_account) { toast("קודם צריך ליצור חשבון."); return; } startPick(s); };
     if (b.querySelector("#abNext")) b.querySelector("#abNext").onclick = () => releaseItems([one1.id]);
   });
