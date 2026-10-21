@@ -1740,8 +1740,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 .crmatt .ar-pg .pn{ color:#1E5C9A; font-weight:700; } .crmatt .ar-pg .pw{ color:#B07D1E; font-weight:700; } .crmatt .ar-pg .px{ color:var(--bad); font-weight:700; } .crmatt .ar-pg .ps{ color:var(--ink-soft); font-weight:800; }
 .crmatt .ar-main .seg{ flex:none; display:inline-flex; border:1.5px solid var(--border); border-radius:10px; overflow:hidden; }
 .crmatt .ar-main .seg button{ width:42px; height:38px; padding:0; font-size:17px; font-weight:900; display:grid; place-items:center; }
-.crmatt .ar-main .att-sj2{ flex:none; display:flex; flex-direction:column; gap:2px; padding:3px 6px; font-size:12px; }
-.crmatt .ar-main .att-sj2 label{ display:flex; align-items:center; gap:3px; white-space:nowrap; }
+.crmatt .ar-main .att-sj2, .crmatt .ar-main .subj-mini{ flex:none; }   /* 1.22 (נועה): בדיוק כמו בנוכחות במערכת הניהול – בשורה */
 .crmatt .ar-det{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; padding:0 10px 8px 10px; padding-inline-start:48px; margin-top:-4px; }
 .crmatt .ar-det .ex-tag, .crmatt .ar-det .att-track, .crmatt .ar-det .att-pt, .crmatt .ar-det .att-prev{ font-size:12.5px; }
 .crmatt .ar-det .skip-b{ font-size:12.5px; }
@@ -1887,7 +1886,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.21",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.22",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -3325,7 +3324,7 @@ async function renderStudentMobile(T, s){
   // פס תחתון: הוספה מהמאגר + שליחת הדף הבא (כשיש מקצוע אחד)
   const one1 = !multi && queues[0] && queues[0][1][0];
   setActionBar(`<button class="btn ${one1 && s.has_account ? "ab-add" : "primary"}" id="abAdd" style="flex:1">${IC.plusBox} הוספת דפים מהמאגר</button>${one1 && s.has_account ? `<button class="btn primary" id="abNext" style="flex:1">${IC.check} שליחת הדף הבא</button>` : ""}`, (b) => {
-    b.querySelector("#abAdd").onclick = () => { if (!s.has_account) { toast("קודם צריך ליצור חשבון."); return; } startPick(s); };
+    b.querySelector("#abAdd").onclick = () => startPick(s);   // 1.22: גם בלי חשבון – הדפים נשלחים בוואטסאפ ונרשמים
     if (b.querySelector("#abNext")) b.querySelector("#abNext").onclick = () => releaseItems([one1.id]);
   });
 }
@@ -4292,17 +4291,17 @@ function cbToStudents(ids){ if (!ids.length) return; CBM.wsViewerOff(); AD.bank.
 // 1.18.2 (נועה): בדף פתוח – "הוסף לתור" / "הוסף ושחרר עכשיו" / "הסרה" בצבעים של פעם; העתקה / הורדה / ⭐ – קטנים למטה
 CB.onOpen = (r) => { const box = document.getElementById("wsAppBtns"); if (!box) return;
   const tt = document.getElementById("wsVTitle"), lv = lvOf(r) ? " " + ((LV[r.level] || [""])[0] + (r.is_word ? "📖" : "")) : "";
-  if (tt && lv) tt.textContent += lv;
+  if (tt && lv && !tt.textContent.endsWith(lv)) tt.textContent += lv;
   document.body.classList.toggle("ws-app-on", CB.ctx !== "browse" || r.type === "page");
   if (r.type !== "page") { box.innerHTML = ""; return; }
   if (CB.ctx === "browse") { box.innerHTML = `<button type="button" class="btn primary" id="cbStu">לתלמידים…</button>`; box.querySelector("#cbStu").onclick = () => cbToStudents([String(r.id)]); return; }
   // תלמיד/ה (מהמאגר או מהתוכנית): לפי מצב הדף בתוכנית שלו/ה
   const sid = CB.ctx === "plan" ? CB.plan.s.student_id : AD.bank.pick && AD.bank.pick.sid;
   const p = AD.plan.find(x => x.student_id === String(sid) && String(x.worksheet_id) === String(r.id));
-  const hasAcc = (stById(sid) || {}).has_account;
   const B = (a, t, cls) => `<button type="button" class="btn ${cls}" data-pa="${a}">${t}</button>`;
-  box.innerHTML = !p ? B("add", "הוסף לתור", "pa-q") + (hasAcc ? B("addrel", "הוסף ושחרר עכשיו", "primary") : "")
-    : p.status === "מתוכנן" ? (hasAcc ? B("rel", "שחרר עכשיו", "primary") : "") + B("rm", "הסרה", "pa-rm")
+  // 1.22 (נועה): אותם כפתורים גם בלי חשבון – "שחרור" = הדף נרשם כנשלח
+  box.innerHTML = !p ? B("add", "הוסף לתור", "pa-q") + B("addrel", "הוסף ושחרר עכשיו", "primary")
+    : p.status === "מתוכנן" ? B("rel", "שחרר עכשיו", "primary") + B("rm", "הסרה", "pa-rm")
     : p.status === "נשלח" ? B("unrel", "ביטול שחרור (חזרה לתור)", "pa-q") : `<span class="pa-done">✔ סיים/ה את הדף</span>`;
   box.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { const a = b.dataset.pa;
     if (a === "add" || a === "addrel") { if (CB.ctx === "pick") return cbAdd([String(r.id)], a === "addrel"); CBM.wsClose(); return; }
@@ -4310,8 +4309,33 @@ CB.onOpen = (r) => { const box = document.getElementById("wsAppBtns"); if (!box)
 CB.onSel = (n) => { const box = CBM.wrap.querySelector("#wsSelApp"); if (!box) return;
   if (!n) { box.innerHTML = ""; return; }
   box.innerHTML = CB.ctx === "pick" ? `<button type="button" class="btn" id="cbSelQ">הוסף לתור</button><button type="button" class="btn primary" id="cbSelRel">הוסף ושחרר עכשיו</button>` : `<button type="button" class="btn" id="cbSelStu">לתלמידים…</button>`;
-  if (box.querySelector("#cbSelQ")) { box.querySelector("#cbSelQ").onclick = () => cbAdd(cbIds(), false); box.querySelector("#cbSelRel").onclick = () => cbAdd(cbIds(), true); }
+  if (box.querySelector("#cbSelQ")) box.querySelector("#cbSelQ").onclick = () => cbAdd(cbIds(), false);
+  if (box.querySelector("#cbSelRel")) box.querySelector("#cbSelRel").onclick = () => cbAdd(cbIds(), true);
   if (box.querySelector("#cbSelStu")) box.querySelector("#cbSelStu").onclick = () => cbToStudents(cbIds()); };
+// 1.22 (נועה): שליחה (או העתקה) של דף מהמאגר כשבוחרים לילד/ה מסוים/ת – הדף נרשם אצלו/ה כ"נשלח" (גם בלי חשבון), כדי שיהיה המידע.
+async function cbRecord(sid, wids){
+  sid = String(sid); wids = [...new Set(wids.map(String))].filter(Boolean); if (!sid || !wids.length) return;
+  const pl = planOf(sid), have = new Map(pl.map(p => [String(p.worksheet_id), p]));
+  const toRel = wids.map(w => have.get(w)).filter(p => p && p.status === "מתוכנן").map(p => p.id);
+  const posBy = {}, rows = wids.filter(w => !have.has(w)).map(wid => { const subject = wsSubject((AD.wsById.get(wid) || {}).book);
+    if (!(subject in posBy)) { const qq = queueOf(sid, subject); posBy[subject] = qq.length ? Math.max(...qq.map(x => x.position)) : 0; }
+    return { student_id: isNaN(Number(sid)) ? sid : Number(sid), worksheet_id: isNaN(Number(wid)) ? wid : Number(wid), subject, position: ++posBy[subject] }; });
+  try {
+    if (rows.length) { const res = await insert("portal_plan_items", rows); (res || []).forEach(p => { AD.plan.push(Object.assign(p, { student_id: String(p.student_id) })); toRel.push(p.id); }); }
+    if (toRel.length) { await rpc("portal_release", { p_items: toRel }); const now = new Date().toISOString();
+      AD.plan.forEach(p => { if (toRel.includes(p.id)) { p.status = "נשלח"; p.released_at = now; p.done_at = null; p.seen_at = null; } }); }
+    refreshWaitingLocal();
+    if (rows.length || toRel.length) toast(`נרשם אצל ${stName(stById(sid) || {})}: ${rows.length + toRel.length === 1 ? "דף אחד נשלח" : (rows.length + toRel.length) + " דפים נשלחו"}`);
+    const cur = CBM.WS.list && CBM.WS.list[CBM.WS.idx]; if (CBM.viewerOpen() && cur && CB.onOpen) CB.onOpen(cur);
+  } catch(e) { toast("השליחה עברה, אבל הרישום לא נשמר: " + errText(e)); }
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("#wsCopy, #wsSelSend"); if (!b || !CBM.wrap) return;
+  const sid = CB.ctx === "plan" ? CB.plan && CB.plan.s.student_id : CB.ctx === "pick" ? AD.bank.pick && AD.bank.pick.sid : null; if (!sid) return;
+  const wids = b.id === "wsCopy" ? [((CBM.WS.list || [])[CBM.WS.idx] || {}).id] : cbIds();
+  if (b.id === "wsSelSend" && !wids.length) return;
+  setTimeout(() => cbRecord(sid, wids.filter(Boolean)), 400);
+}, true);
 function pickBar(){
   if (CB_VIS()) { if (!inDrawer()) setActionBar(null); return; }   // 1.18: במאגר – הפס של מערכת הניהול
   const pick = AD.bank.pick;
@@ -4634,7 +4658,6 @@ const ATTM = (() => {
   const ATT_KID = (sid) => toCard(sid);
   // 1.20 (נועה): הדפים בתוך דף הנוכחות – לכל מקצוע: על מה עובד/ת / מה סיים/ה, והבא בתור (שחרור / + דפים מהמאגר)
   const ATT_PAGES = (r) => { const s = stById(String(r.student_id)); if (!s) return "";
-    if (!s.has_account) return `<div class="ap-row na"><span class="ap-x">אין חשבון בתלם שלי</span></div>`;
     const subs = s.subjects || [], two = subs.length > 1, sh = (x) => x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x;
     return `<div class="ap-row">` + subs.map(x => { const pl = planOf(s.student_id, x), q = queueOf(s.student_id, x)[0];
       const open = pl.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)))[0];
@@ -4644,7 +4667,7 @@ const ATTM = (() => {
         : `<span class="ap-x">אין דפים בתור</span><button type="button" class="ap-b" data-addp="${esc(s.student_id)}" data-subj="${esc(x)}">+ דפים</button>`;
       return `<div class="ap-s">${two ? `<span class="subj-chip ${subjCls(x)} on sm">${esc(sh(x))}</span>` : ""}${now}${nx}</div>`; }).join("") + `</div>`; };
   // 1.20: שורה קצרה של הדפים מתחת לשם (על מה עובד/ת / סיים/ה / אין דפים)
-  const ATT_PAGES_LINE = (r) => { const s = stById(String(r.student_id)); if (!s || !s.has_account) return "";
+  const ATT_PAGES_LINE = (r) => { const s = stById(String(r.student_id)); if (!s) return "";
     const subs = s.subjects || [], two = subs.length > 1, sh = (x) => x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x;
     return subs.map(x => { const pl = planOf(s.student_id, x), q = queueOf(s.student_id, x)[0];
       const open = pl.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)))[0];
@@ -5106,12 +5129,12 @@ function renderSheetRows(){
     const ex = kidExTag(r), pt = attPtHtml(r), dbl = !!r.dbl_from || isDouble(r.student_id, A.sheet.day || dayLetter(A.sheet.date), A.sheet.location, r.arrival_time, r.personal_end);
     const ic = dbl ? `<i class="dbl">×2</i>` : "";
     const ptS = "";
-    const sub = `${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${two ? "" : `<span class="ar-subj">${esc(subjMiniTxt(rowSubj(r)))}</span>`}${ptS}${r.added && !r.in_group ? ` · <b class="added-tag">נוסף/ה לשיעור</b>` : !r.in_group ? " · <b>כבר לא בקבוצה</b>" : ""}`;
+    const sub = `${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${ptS}${r.added && !r.in_group ? ` · <b class="added-tag">נוסף/ה לשיעור</b>` : !r.in_group ? " · <b>כבר לא בקבוצה</b>" : ""}`;
     const pg = ATT_PAGES_LINE(r);
     return head + `<li data-i="${i}" class="ar${r.present === true ? " p" : r.present === false ? " a" : ""}${open ? " open" : ""}">
       <div class="ar-main" data-tog>${gradeBadge(r.grade, r.class_num)}
         <div class="ar-nm"><span class="ar-n1"><b>${esc(r.first_name)} ${esc(r.last_name || "")}</b>${ic ? `<span class="ar-ic">${ic}</span>` : ""}</span><small>${sub}</small>${pg ? `<small class="ar-pg">${pg}</small>` : ""}</div>
-        ${two && r.present !== false ? `<span class="att-sj2${r.present && !r.did_math && !r.did_english ? " need" : ""}"><label><input type="checkbox" data-m ${r.did_math ? "checked" : ""} ${can ? "" : "disabled"}>מת'</label><label><input type="checkbox" data-e ${r.did_english ? "checked" : ""} ${can ? "" : "disabled"}>אנג'</label></span>` : ""}
+        ${two && r.present !== false ? `<span class="att-sj2${r.present && !r.did_math && !r.did_english ? " need" : ""}"><label><input type="checkbox" data-m ${r.did_math ? "checked" : ""} ${can ? "" : "disabled"}>מת'</label><label><input type="checkbox" data-e ${r.did_english ? "checked" : ""} ${can ? "" : "disabled"}>אנג'</label></span>` : two ? "" : subjMini(rowSubj(r))}
         <div class="seg" role="group" aria-label="נוכחות"><button type="button" class="no ${r.present === false ? "on" : ""}" data-p="0" ${can ? "" : "disabled"} aria-label="חסר/ה">✗</button><button type="button" class="yes ${r.present === true ? "on" : ""}" data-p="1" ${can ? "" : "disabled"} aria-label="נוכח/ת">✓</button></div>
       </div>
       ${pt || (two && prevTag(r)) || ex || r.tracking || (r.in_group && can && A.hasPlan) ? `<div class="ar-det">${pt}${two ? prevTag(r) : ""}${r.in_group && can && A.hasPlan ? `<button type="button" class="skip-b" data-skip title="לא מגיע/ה היום – רק בשיעור הזה">⊘<span class="skip-t"> לא היום</span></button>` : ""}${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""}
