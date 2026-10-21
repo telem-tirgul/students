@@ -1721,6 +1721,7 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt .ap-b{ margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:3px 11px; border:1.5px solid var(--accent); background:var(--paper); color:var(--accent); cursor:pointer; }
 .crmatt .ap-b.ap-rel{ background:var(--accent); color:#fff; }
 
+/* 1.24.1 (נועה): רשימת הקבוצות – גם במחשב כמו בנייד (שורה לכל קבוצה לפי השעה) */
 .crmatt .att-filt #attIns:focus-visible{outline:none;}
 .crmatt .att-date-row > .today-btn{background:var(--accent); border-color:var(--accent); color:#fff;}
 .crmatt .att-date-row > .today-btn:hover{filter:brightness(.95);}
@@ -1737,7 +1738,7 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt .att-dlbl{position:relative; display:inline-flex;}
 .crmatt .att-dlbl > span{display:none;}
 .crmatt .att-dlbl .d-short{display:none;}
-@media (max-width:760px){
+@media all{
 .crmatt .att-dlbl .d-full{display:none;}
 .crmatt .att-dlbl .d-short{display:inline;}
 }
@@ -1760,20 +1761,20 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt .att-group .m.kn{color:var(--ink); font-weight:700;}
 .crmatt .att-group.done{border-color:var(--ok); background:var(--ok-bg);}
 .crmatt .att-group .ok{color:var(--ok); font-weight:800;}
-@media (max-width:760px){
+@media all{
 .crmatt #attMark .att-date-row > .btn:not(.today-btn){height:54px !important; min-width:76px; flex:0 0 auto; font-size:30px !important; font-weight:900; padding:0 16px !important;}
 .crmatt #attMark .att-date-row > .today-btn{height:38px !important; padding:0 9px !important; font-size:13px !important;}
 .crmatt #attMark .att-dlbl{height:48px !important;}
 }
 .crmatt .att-group.sc{border-inline-start:6px solid var(--scd);}
 .crmatt .att-group.hol-fade{opacity:.5;}
-@media (max-width:760px){
+@media all{
 .crmatt .att-date-row{gap:6px;}
 .crmatt .att-date-row > .btn{padding:0 10px; font-size:13px;}
 .crmatt .att-date-row > input{width:150px;}
 .crmatt .att-groups{grid-template-columns:1fr;}
 }
-@media (max-width:760px){
+@media all{
 .crmatt .att-date{padding:8px 10px; gap:6px; margin-bottom:8px;}
 .crmatt .att-date .att-dayname:not(:has(.hol-chips)){display:none;}
 .crmatt .att-date .att-dayname{font-size:13px;}
@@ -1800,7 +1801,7 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt .att-group .w{font-size:14px;}
 .crmatt .att-group .m, .crmatt .att-group .ok{font-size:12.5px;}
 }
-@media (max-width:760px){
+@media all{
 .crmatt .att-stick{position:sticky; top:var(--side-h, 0px); z-index:9; background:var(--att-bg, var(--bg)); padding:6px 0 4px; margin-top:-6px; box-shadow:0 6px 8px -8px rgba(0,0,0,.25);}
 .crmatt .att-stick .att-date{margin-bottom:6px;}
 .crmatt .att-stick .att-filt{margin-bottom:0;}
@@ -1810,13 +1811,13 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt #attMark .att-filt select{height:38px; padding-block:0 !important;}
 }
 .crmatt .att-filt #attIns{font-weight:400;}
-@media (max-width:760px){
+@media all{
 .crmatt #attMark .att-date-row > .btn:not(.today-btn), .crmatt .att-date-row > .btn{height:36px !important; font-size:16px !important; font-weight:700 !important; min-width:48px;}
 }
 .crmatt .att-filt #attIns{background-color:#FAF8F5 !important; border:1.5px solid #E3DDD4 !important; color:var(--ink) !important;}
 .crmatt .att-filt #attIns:focus{background-color:#fff !important; border-color:var(--gold-deep, #C9A45C) !important;}
 .crmatt .att-filt .gseg button{min-height:31px; height:31px !important; padding-block:0 !important;}
-@media (max-width:760px){
+@media all{
 .crmatt #attDate, .crmatt .att-date-row > input{height:40px !important; border-radius:8px !important; border:1px solid #D9CFC2 !important;}
 }
 /* 1.23 – תלם שלי: השלמות קטנות */
@@ -1828,7 +1829,8 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmatt .ap-b{ margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:2px 10px; border:1.5px solid var(--accent); background:var(--paper); color:var(--accent); cursor:pointer; white-space:nowrap; }
 .crmatt .school-chip:not(.sch-sm){ font-weight:800; padding:1px 10px; line-height:1.6; font-size:inherit; }
 .crmatt .page-head{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; } .crmatt .page-head h1{ font-size:24px; color:var(--accent); font-weight:900; margin:0; }
-body[data-att], body:has(#attListV), body[data-att] #adminView, body:has(#attListV) #adminView, body[data-att] .ad-app, body:has(#attListV) .ad-app, body[data-att] #adminView .main, body:has(#attListV) #adminView .main{ background:#ECF1EA !important; background-image:none !important; }
+@media (max-width:760px){ body[data-att], body:has(#attListV), body[data-att] #adminView, body:has(#attListV) #adminView, body[data-att] .ad-app, body:has(#attListV) .ad-app, body[data-att] #adminView .main, body:has(#attListV) #adminView .main{ background:#ECF1EA !important; background-image:none !important; } }   /* 1.24.1 (נועה): רקע ירקרק רק בנייד */
+@media (min-width:761px){ .crmatt .att-stick, .crmatt .sh-stick{ background:var(--bg) !important; box-shadow:none; } }
 .crmatt .sh-actions .btn{ flex:1 1 auto !important; width:100%; min-height:52px; font-size:18px; }
 .crmatt .hol-chips{ display:flex; flex-wrap:wrap; gap:2px; justify-content:center; margin-top:2px; }
 .crmatt .hol-chip{ font-family:var(--font-body); font-size:10.5px; font-weight:800; border-radius:999px; padding:0 6px; line-height:1.6; white-space:nowrap; }
@@ -1838,6 +1840,7 @@ body[data-att], body:has(#attListV), body[data-att] #adminView, body:has(#attLis
 .crmatt .mar-ic{ font-size:14px; margin-inline-start:4px; cursor:help; vertical-align:middle; }
 .crmatt .past-ic{ display:inline-flex; vertical-align:middle; margin-inline-start:6px; color:#b3a69a; cursor:help; } .crmatt .past-ic.reg{ color:#8a7a6c; }
 .crmatt .pay-q{ display:inline-flex; align-items:center; gap:3px; font-size:11.5px; font-weight:800; color:#8A5A12; background:#FBF1E2; border:1px solid #E8CFA0; border-radius:999px; padding:0 7px; margin-inline-start:4px; white-space:nowrap; }
+#attListV, .crmatt#view-att{ max-width:760px; margin-inline:auto; }
 body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + var(--safe-t, 0px)); }   /* ההודעה לא מסתירה את "שמירה" */
 @media (max-width:760px){ .crmatt .att-stick, .crmatt .sh-stick{ margin-inline:-10px; padding-inline:10px !important; } }
 
@@ -1968,7 +1971,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.24",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.24.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
