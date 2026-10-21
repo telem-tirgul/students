@@ -331,6 +331,9 @@
   .wg-h{ gap:6px; margin-bottom:8px; } .wg-h .chip{ font-size:11.5px; padding:1px 8px; } .wg-h .wg-n{ font-size:12.5px; white-space:nowrap; }
   .wg-today{ color:var(--accent); }
   body.v-ins #adNav{ display:none; }
+  .sr-q{ width:100%; height:44px; font:inherit; font-size:16px; padding:0 12px; border:1.5px solid var(--border); border-radius:12px; margin-bottom:8px; }
+  .sr-list{ max-height:55vh; overflow:auto; } .sr-row{ display:flex; align-items:center; gap:10px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:8px 10px; margin-bottom:6px; cursor:pointer; }
+  .sr-t{ display:flex; flex-direction:column; min-width:0; } .sr-t small{ color:var(--ink-soft); font-size:12.5px; }
   .ins-g{ display:flex; flex-direction:column; gap:6px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-inline-start:5px solid var(--accent); border-radius:14px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
   .ins-g.live{ border-color:var(--ok); border-inline-start-color:var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, var(--paper)); }
   .ins-g.done{ border-inline-start-color:var(--ok); }
@@ -1739,11 +1742,14 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 .crmatt .ar-main .seg button{ width:42px; height:38px; padding:0; font-size:17px; font-weight:900; display:grid; place-items:center; }
 .crmatt .ar-main .att-sj2{ flex:none; display:flex; flex-direction:column; gap:2px; padding:3px 6px; font-size:12px; }
 .crmatt .ar-main .att-sj2 label{ display:flex; align-items:center; gap:3px; white-space:nowrap; }
+.crmatt .ar-det{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; padding:0 10px 8px 10px; padding-inline-start:48px; margin-top:-4px; }
+.crmatt .ar-det .ex-tag, .crmatt .ar-det .att-track, .crmatt .ar-det .att-pt, .crmatt .ar-det .att-prev{ font-size:12.5px; }
+.crmatt .ar-det .skip-b{ font-size:12.5px; }
 .crmatt .ar-x{ border-top:1px dashed var(--border); padding:8px 12px 10px; display:flex; flex-direction:column; gap:6px; font-size:13px; }
 .crmatt .ar-x .ar-l{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; } .crmatt .ar-x .ar-l:empty{ display:none; }
 .crmatt .ar-x .ap-row{ margin:0; flex-basis:auto; }
 .crmatt .ar-acts button{ font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:4px 11px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink-soft); cursor:pointer; }
-.crmatt .ar-acts .rm{ border-color:#efc4bf; color:var(--bad); }
+.crmatt .ar-acts .ar-all{ border-color:var(--accent); color:var(--accent); } .crmatt .ar-acts .rm{ border-color:#efc4bf; color:var(--bad); }
 .crmatt .ar.skip{ opacity:.6; } .crmatt .ar-un{ margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:4px 11px; border:1.5px solid var(--border); background:var(--paper); cursor:pointer; }
 .crmatt .ar-addbtn{ display:block; width:100%; margin:8px 0 4px; border:1.5px dashed var(--border); border-radius:12px; padding:10px; background:transparent; color:var(--ink-soft); font:inherit; font-weight:700; font-size:14px; cursor:pointer; }
 .crmatt .ar-foot{ display:flex; flex-direction:column; gap:4px; padding:6px 4px; font-size:12.5px; color:var(--ink-soft); }
@@ -1853,6 +1859,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
       <nav class="nav" id="adNav" aria-label="תפריט"></nav>
       <div class="who"><span id="adWho"></span>
         <button class="btn small ghost hdr-btn" id="adNotify" title="התראות" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="ib-t">התראות</span></button>
+        <button class="btn small ghost hdr-btn" id="adSearch" title="חיפוש תלמיד/ה"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="ib-t">חיפוש</span></button>
         <button class="btn small ghost hdr-btn" id="adTools" title="ניהול חשבונות"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.8 1l-.3 2h-4l-.3-2a7 7 0 0 1-1.8-1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3L3 9.3l2-3.4 1.9.7a7 7 0 0 1 1.8-1l.3-2h4l.3 2a7 7 0 0 1 1.8 1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"/></svg><span class="ib-t">ניהול</span></button>
         <button class="btn small ghost hdr-btn" id="adRefresh" title="רענון"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="ib-t">רענון</span></button>
         <button class="btn small ghost" id="adLogout">יציאה</button></div>
@@ -1880,7 +1887,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.20.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.21",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2152,7 +2159,7 @@ $("loginForm").onsubmit = async (ev) => {
 };
 async function logout(){
   try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
-  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; AD.started = false; } showLogin();
+  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; $("adSearch").hidden = false; AD.started = false; } showLogin();
 }
 $("msgLogout").onclick = logout;
 function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
@@ -2426,7 +2433,7 @@ window.addEventListener("popstate", () => {
   if (isDesk()) return;
   if (SHEET) closeSheet();
   if (AD.st && AD.bank.pick) return doCloseBank();   // קודם סוגרים את המאגר
-  if (AD.st) { AD.st = null; AD.stTab = null; adRender(); window.scrollTo(0, AD.listY || 0); }
+  if (AD.st) { AD.st = null; AD.stTab = null; if (backToAtt()) return; adRender(); window.scrollTo(0, AD.listY || 0); }
 });   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
 async function fetchBlob(url){ const r = await fetch(url); if (!r.ok) throw new Error("fetch"); return r.blob(); }
 async function saveImage(url, title){
@@ -2533,7 +2540,6 @@ const isDesk = () => DESK.matches;
 const NAV = [   // [מסך, שם, אייקון, שם קצר לנייד] – אייקוני קו כמו במערכת הניהול
   ["att", "נוכחות", '<svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/></svg>', "נוכחות"],   // 1.20.1 (נועה): לשונית משלה
   ["wait", "ממתינים לדף", '<svg class="ic" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M5.5 5h13L21 13v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/></svg>', "ממתינים"],
-  ["students", "תלמידים", '<svg class="ic" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>', "תלמידים"],
   ["bank", "מאגר תרגולים", '<svg class="ic" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v14"/><rect x="8" y="6" width="12" height="16" rx="2"/></svg>', "מאגר"]
 ];
 
@@ -2544,6 +2550,7 @@ function adminStart(fast){
   $("adRefresh").onclick = async () => { toast("מתעדכן…"); AD.groups = null; AD.present = null; AD.info = null; await adLoad(); };
   $("adLogout").onclick = logout;
   $("adTools").onclick = toolsSheet;
+  $("adSearch").onclick = searchSheet;
   rpc("my_role").then(r => { if (r && r.full_name) { $("adWho").textContent = r.full_name; AD.myName = r.full_name; } }).catch(() => {});
   $("drawerClose").onclick = $("drawerBg").onclick = () => closeDrawer();
   renderNav();
@@ -3540,8 +3547,10 @@ function leaveStudent(){
   if (typeof CBM !== "undefined" && CBM.viewerOpen()) CBM.wsClose(true);
   AD.bank.pick = null; AD.bank.sel.clear(); AD.bankD = 0;
   navBackTo(AD.stD); AD.stD = 0;
-  AD.st = null; adRender(); window.scrollTo(0, AD.listY || 0);
+  AD.st = null; if (backToAtt()) return; adRender(); window.scrollTo(0, AD.listY || 0);
 }
+// 1.21: חזרה מכרטיס הילד/ה לדף הנוכחות שממנו הגענו
+function backToAtt(){ const r = AD.attRet; if (!r) return false; AD.attRet = null; setTimeout(() => ATTM.open(r.sid, r.date, r.g), 30); return true; }
 function closeDrawer(silent){
   if ($("drawer").hidden) return;
   $("drawer").hidden = true; $("drawerBg").hidden = true; $("drawerFoot").innerHTML = ""; document.body.style.overflow = "";
@@ -4496,13 +4505,25 @@ async function previewWs(wid){
 // התחלה
 // ======================================================================
 document.querySelectorAll(".appVer").forEach(x => { x.textContent = CONFIG.version; });
+// 1.21 (נועה): 🔍 בכותרת – חיפוש ילד/ה לפי שם או טלפון → הכרטיס (בלי מסך תלמידים)
+function searchSheet(){
+  const row = (s) => `<button type="button" class="sr-row" data-sr="${esc(s.student_id)}">${gradeBadge(s.grade)}<span class="sr-t"><b>${esc(stName(s))}</b><small>${esc([s.school, (s.subjects || []).join(" + "), s.has_account ? "" : "בלי חשבון"].filter(Boolean).join(" · "))}</small></span></button>`;
+  openSheet(`<h2>חיפוש תלמיד/ה</h2><input id="srQ" type="search" class="sr-q" placeholder="שם או טלפון…" autocomplete="off"><div class="sr-list" id="srList"><p class="muted small">כותבים לפחות 2 אותיות או ספרות.</p></div>`, (S) => {
+    const q = S.querySelector("#srQ"), L = S.querySelector("#srList");
+    q.oninput = () => { const v = q.value.trim(), d = v.replace(/\D/g, "");
+      if (v.length < 2) { L.innerHTML = `<p class="muted small">כותבים לפחות 2 אותיות או ספרות.</p>`; return; }
+      const hit = AD.students.filter(s => (d.length >= 3 && String(s.phone || s.login_phone || "").replace(/\D/g, "").includes(d)) || stName(s).includes(v)).slice(0, 30);
+      L.innerHTML = hit.map(row).join("") || `<p class="muted small">לא נמצא/ה.</p>`;
+      L.querySelectorAll("[data-sr]").forEach(b => b.onclick = () => { closeSheet(); if (typeof ATTM !== "undefined" && ATTM.isOpen) ATTM.detach(); openStudent(b.dataset.sr); }); };
+    setTimeout(() => q.focus(), 60); });
+}
 // ===================== מתרגלים (1.20) =====================
 // מתרגל/ת רואה רק את הקבוצות שלו/ה ביום (השרת מחזיר רק אותן) ומסמן/ת נוכחות. בלי דפים, בלי תלמידים, בלי מאגר.
 function instructorStart(role){
   AD.role = "instructor"; AD.myName = (role && role.full_name) || "";
   showView("adminView"); document.body.classList.add("v-ins");
   $("adWho").textContent = AD.myName; $("adNav").innerHTML = `<button aria-current="page"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><span>נוכחות</span></button>`;
-  $("adTools").hidden = true; $("adNotify").hidden = true;
+  $("adTools").hidden = true; $("adNotify").hidden = true; $("adSearch").hidden = true;
   $("adLogout").onclick = logout;
   $("adRefresh").onclick = () => { AD.attG = null; insRender(); };
   insRender();
@@ -4604,7 +4625,13 @@ const ATTM = (() => {
   const kidExTag = (r) => { const s = stById(String(r.student_id)); if (!s || !AD.info || subjGrp(r.subject) === 1) return ""; const I = infoOf(s);
     return (I.exam ? `<button type="button" class="ex-tag${exCls(I.exam.exam_date, I.t)}" data-ex="${I.exam.id}" title="החומר למבחן"><span class="ex-ic">📝 </span>${esc(/מיפוי/.test(I.exam.kind) ? "מיפוי" : I.exam.kind)} ${fmtDM(I.exam.exam_date)}</button>` : "")
       + (I.study ? `<button type="button" class="ex-tag ex-nbt" data-ex="${I.study.id}" title="מה לומדים עכשיו בכיתה" aria-label="לומדים עכשיו">📓<span class="ex-lbl"> לומדים עכשיו</span></button>` : ""); };
-  const ATT_KID = (sid) => { if (attChanged()) { toast("יש סימון שלא נשמר – קודם שמירה"); return; } close(); setTimeout(() => openStudent(String(sid)), 50); };
+  // 1.21: מדף הנוכחות לכרטיס הילד/ה (כל הדפים) – "חזרה" מחזירה לאותו דף נוכחות
+  const toCard = (sid, subj, pick) => { if (attChanged()) { toast("יש סימון שלא נשמר – קודם שמירה"); return; }
+    if (!stById(String(sid))) { toast("לילד/ה הזה/זו אין עדיין חשבון בתלם שלי."); return; }
+    AD.attRet = { sid: A.sheet.session_id, date: A.date, g: A.gref }; isOpen = false; delete document.body.dataset.att;
+    history.replaceState({ ad: "st", d: navD() }, ""); AD.stD = navD(); AD.listY = 0;
+    openStudent(String(sid), subj); if (pick) { const s = stById(String(sid)); if (s) setTimeout(() => startPick(s), 80); } };
+  const ATT_KID = (sid) => toCard(sid);
   // 1.20 (נועה): הדפים בתוך דף הנוכחות – לכל מקצוע: על מה עובד/ת / מה סיים/ה, והבא בתור (שחרור / + דפים מהמאגר)
   const ATT_PAGES = (r) => { const s = stById(String(r.student_id)); if (!s) return "";
     if (!s.has_account) return `<div class="ap-row na"><span class="ap-x">אין חשבון בתלם שלי</span></div>`;
@@ -4624,7 +4651,7 @@ const ATTM = (() => {
       const done = pl.filter(p => p.status === "הושלם").sort((a, b) => String(b.done_at).localeCompare(String(a.done_at)))[0];
       const t = open ? `<span class="pn">✎ ${esc(wsTitle(open.worksheet_id))}</span>` : !q ? `<span class="px">אין דפים בתור</span>` : `<span class="pw">⏳ ${done ? "ממתין/ה לדף" : "עוד לא נשלח דף"}</span>`;
       return (two ? `<span class="ps">${sh(x)}</span> ` : "") + t; }).join(" · "); };
-  const ATT_ADD = (sid, subj) => { if (attChanged()) { toast("יש סימון שלא נשמר – קודם שמירה"); return; } close(); setTimeout(() => { openStudent(String(sid), subj); const s = stById(String(sid)); if (s) setTimeout(() => startPick(s), 80); }, 50); };
+  const ATT_ADD = (sid, subj) => toCard(sid, subj, true);
   const DOW = ["א","ב","ג","ד","ה","ו","ש"];
 const DAY_FULL = { "א":"ראשון","ב":"שני","ג":"שלישי","ד":"רביעי","ה":"חמישי","ו":"שישי","ש":"שבת" };
 const todayIL = () => { const p = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date()); return p; };
@@ -5077,8 +5104,8 @@ function renderSheetRows(){
       head = `<li class="ar-sec"><span>⏰ <bdi>${minHm(t)}</bdi>${t === attGrpStart() ? " · שעת הקבוצה" : ""}</span><span>${n === 1 ? "ילד/ה 1" : n + " ילדים"}</span></li>`; prevT = t; }
     const two = subjGrp(rowSubj(r)) === 2, open = A.openRows.has(r.student_id);
     const ex = kidExTag(r), pt = attPtHtml(r), dbl = !!r.dbl_from || isDouble(r.student_id, A.sheet.day || dayLetter(A.sheet.date), A.sheet.location, r.arrival_time, r.personal_end);
-    const ic = (ex ? `<i title="מבחן / לומדים עכשיו">📝</i>` : "") + (r.tracking ? `<i title="${esc(r.tracking)}">📌</i>` : "") + (dbl ? `<i class="dbl">×2</i>` : "");
-    const ptS = r.arrival_time && !dbl ? ` · <span class="ar-pt">⏰ ${esc(String(r.arrival_time).slice(0, 5))}</span>` : "";
+    const ic = dbl ? `<i class="dbl">×2</i>` : "";
+    const ptS = "";
     const sub = `${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${two ? "" : `<span class="ar-subj">${esc(subjMiniTxt(rowSubj(r)))}</span>`}${ptS}${r.added && !r.in_group ? ` · <b class="added-tag">נוסף/ה לשיעור</b>` : !r.in_group ? " · <b>כבר לא בקבוצה</b>" : ""}`;
     const pg = ATT_PAGES_LINE(r);
     return head + `<li data-i="${i}" class="ar${r.present === true ? " p" : r.present === false ? " a" : ""}${open ? " open" : ""}">
@@ -5087,11 +5114,10 @@ function renderSheetRows(){
         ${two && r.present !== false ? `<span class="att-sj2${r.present && !r.did_math && !r.did_english ? " need" : ""}"><label><input type="checkbox" data-m ${r.did_math ? "checked" : ""} ${can ? "" : "disabled"}>מת'</label><label><input type="checkbox" data-e ${r.did_english ? "checked" : ""} ${can ? "" : "disabled"}>אנג'</label></span>` : ""}
         <div class="seg" role="group" aria-label="נוכחות"><button type="button" class="no ${r.present === false ? "on" : ""}" data-p="0" ${can ? "" : "disabled"} aria-label="חסר/ה">✗</button><button type="button" class="yes ${r.present === true ? "on" : ""}" data-p="1" ${can ? "" : "disabled"} aria-label="נוכח/ת">✓</button></div>
       </div>
+      ${pt || (two && prevTag(r)) || ex || r.tracking || (r.in_group && can && A.hasPlan) ? `<div class="ar-det">${pt}${two ? prevTag(r) : ""}${r.in_group && can && A.hasPlan ? `<button type="button" class="skip-b" data-skip title="לא מגיע/ה היום – רק בשיעור הזה">⊘<span class="skip-t"> לא היום</span></button>` : ""}${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""}
       ${open ? `<div class="ar-x">
-        ${ex || r.tracking ? `<div class="ar-l">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""}
-        ${pt || (two && prevTag(r)) ? `<div class="ar-l">${pt}${two ? prevTag(r) : ""}</div>` : ""}
         ${ATT_PAGES(r)}
-        <div class="ar-l ar-acts">${r.in_group && can && A.hasPlan ? `<button type="button" class="skip-b" data-skip>⊘ לא מגיע/ה היום</button>` : ""}${r.added && can ? `<button type="button" class="rm" data-rm="1">הסרה מהשיעור</button>` : ""}</div>
+        <div class="ar-l ar-acts">${stById(String(r.student_id)) ? `<button type="button" class="ar-all" data-kl="${r.student_id}">📄 לכל הדפים</button>` : ""}${r.added && can ? `<button type="button" class="rm" data-rm="1">הסרה מהשיעור</button>` : ""}</div>
       </div>` : ""}</li>`; }).join("");
   const sk = A.rows.map((r, i) => [r, i]).filter(([r]) => r.skip);
   if (sk.length) $("shRows").insertAdjacentHTML("beforeend", `<li class="ar-sec"><span>לא מגיעים היום (רק בשיעור הזה)</span><span>${sk.length}</span></li>` +
@@ -5117,9 +5143,11 @@ async function loadHistory(sessionId, date){
 }
   let isOpen = false;
   function open(sessionId, date, g){
+    A.gref = g || null;
     A.groups = g ? [{ session_id: Number(sessionId), kind: g.mar ? "מרתון" : "שוטף" }] : [];
     A.date = date || todayIL(); A.curG = g ? { session_id: Number(sessionId), kind: g.mar ? "מרתון" : "שוטף", start_time: g.start ? g.start + ":00" : null, city: g.city, location: g.loc } : null;
     const T = $("adBody"); if (!T) return;
+    if (AD.role !== "instructor") { setActionBar(null); document.body.classList.remove("v-stm", "v-bank"); AD.st = null; }
     T.innerHTML = ""; T.appendChild(wrap); isOpen = true; document.body.dataset.att = "1";
     if (!STAFF) get("staff", "select=id,full_name").then(r => { STAFF = r || []; if (isOpen && A.sheet) loadHistory(A.sheet.session_id, A.date); }).catch(() => { STAFF = []; });
     if (!AD.info && AD.role !== "instructor") loadInfo().then(() => { if (isOpen && A.sheet) renderSheetRows(); });
@@ -5130,7 +5158,7 @@ async function loadHistory(sessionId, date){
   function close(fromBtn){
     if (!isOpen) return; isOpen = false; delete document.body.dataset.att;
     if (fromBtn && history.state && history.state.ad === "att") { AD.skipPop = true; history.back(); }
-    if (AD.role === "instructor" || AD.view === "att") { insRender(); } else adRender();
+    if (AD.role === "instructor") insRender(); else adRender();
   }
   // "אחורה" של הטלפון
   async function onPop(){ if (!isOpen) return false;
