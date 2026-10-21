@@ -336,6 +336,7 @@
   .ins-g.done{ border-inline-start-color:var(--ok); }
   .ins-1{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; } .ins-1 b{ font-family:var(--font-display); font-size:17px; } .ins-1 .mar-t{ background:#FDF0D5; color:#8a5a00; border:1px solid #F0D49A; } .ins-1 .wg-c{ color:var(--ink-soft); font-size:13.5px; }
   .ins-2{ display:flex; justify-content:space-between; gap:8px; font-size:13.5px; color:var(--ink-soft); }
+  .ins-who{ font-style:italic; } .ins-2 b{ color:var(--ink); }
   .ins-st{ font-weight:800; color:var(--accent); } .ins-st.ok{ color:var(--ok); } .ins-st.miss{ color:var(--bad); } .wg-h .mar-t{ background:#FDF0D5; color:#8a5a00; border:1px solid #F0D49A; }
   .att-open{ order:5; margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:3px 11px; border:1.5px solid var(--ok); background:var(--paper); color:var(--ok); cursor:pointer; white-space:nowrap; }
   .att-open.done{ background:var(--ok-bg); } .att-open.miss{ border-color:var(--bad); color:var(--bad); }
@@ -1879,7 +1880,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.20",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.20.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2498,7 +2499,7 @@ function showInstallHelp(){
 // ניהול (מנהלת) – גרסה 1.1: תצוגה למחשב (תפריט צד, רשימה + תוכנית זה לצד זה, חלונית מאגר)
 // ותצוגה לנייד (תפריט תחתון, מסך אחרי מסך)
 // ======================================================================
-const AD = { codeReqs: [], groups: null, loaded: false, view: "wait", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
+const AD = { codeReqs: [], groups: null, loaded: false, view: "att", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
              st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "list" ? "list" : "groups", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, waitIns: store("telem_portal_waitins") || "", present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws2";
@@ -2530,6 +2531,7 @@ const wsSubject = (book) => /^ENG/i.test(book || "") ? "אנגלית" : "מתמ�
 const DESK = window.matchMedia("(min-width: 900px)");
 const isDesk = () => DESK.matches;
 const NAV = [   // [מסך, שם, אייקון, שם קצר לנייד] – אייקוני קו כמו במערכת הניהול
+  ["att", "נוכחות", '<svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/></svg>', "נוכחות"],   // 1.20.1 (נועה): לשונית משלה
   ["wait", "ממתינים לדף", '<svg class="ic" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M5.5 5h13L21 13v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/></svg>', "ממתינים"],
   ["students", "תלמידים", '<svg class="ic" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>', "תלמידים"],
   ["bank", "מאגר תרגולים", '<svg class="ic" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v14"/><rect x="8" y="6" width="12" height="16" rx="2"/></svg>', "מאגר"]
@@ -2668,9 +2670,10 @@ function adRender(){
   document.body.classList.toggle("v-bank", AD.view === "bank" && !AD.st);
   document.body.classList.toggle("v-stm", !isDesk() && !!AD.st);
   if (!AD.loaded) return;
-  const titles = { wait: "ממתינים לדף", students: "תלמידים", bank: "מאגר" };
+  const titles = { att: "נוכחות", wait: "ממתינים לדף", students: "תלמידים", bank: "מאגר" };
 
   if (!isDesk() && AD.st) return renderStudentPlan($("adBody"), true);
+  if (AD.view === "att") return insRender();
   if (AD.view === "wait") return renderWait();
   if (AD.view === "students") return renderStudents();
   if (AD.view === "bank") return renderBank($("adBody"));
@@ -2709,11 +2712,13 @@ async function renderWait(){
   const noAcc = AD.students.filter(s => !s.has_account).length;
   const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
   const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
-  const byGroup = AD.waitMode === "groups";
+  const byGroup = AD.view === "att";   // 1.20.1: נוכחות = הקבוצות של היום; ממתינים = הרשימה
   const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
-  let h = `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
+  let h = byGroup ? `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1><p>הקבוצות של היום לפי השעה – סימון נוכחות, מי ממתין/ה ומה הבא בתור.</p></div></div>
+`
+    : `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
     <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "הקבוצות של היום לפי השעה – מי ממתין/ה, מי עובד/ת, ומה הבא בתור." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
-      <div class="mode-sw" role="tablist"><button data-wm="groups" class="${byGroup ? "on" : ""}">${IC.users || ""} לפי קבוצות</button><button data-wm="list" class="${byGroup ? "" : "on"}">${IC.list || ""} רשימה</button></div></div>
+</div>
 `;
   const reqs = AD.codeReqs || [];
   if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
@@ -2737,7 +2742,7 @@ async function renderWait(){
   B.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openStudent(b.dataset.open, b.dataset.subj));
   B.querySelectorAll("[data-zoom]").forEach(t => t.onclick = (e) => { e.stopPropagation(); previewWs(t.dataset.zoom); });
   B.querySelectorAll("[data-golive]").forEach(b => b.onclick = async () => { const id = b.dataset.golive;
-    if (AD.waitMode !== "groups" || (AD.waitCity !== "*" && AD.waitCity !== b.dataset.city)) { AD.waitMode = "groups"; store("telem_portal_waitmode", "groups"); AD.waitCity = "*"; AD.waitPresent = false; await renderWait(); }
+    if (AD.view !== "att" || (AD.waitCity !== "*" && AD.waitCity !== b.dataset.city)) { AD.view = "att"; AD.waitCity = "*"; AD.waitPresent = false; AD.waitDate = todayIso(); renderNav(); await renderWait(); }
     const el = $("live-" + id); if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1200); } });
   B.querySelectorAll("[data-wm]").forEach(b => b.onclick = () => { AD.waitMode = b.dataset.wm; store("telem_portal_waitmode", AD.waitMode); renderWait(); });
   B.querySelectorAll("[data-wcity]").forEach(b => b.onclick = () => { AD.waitCity = b.dataset.wcity; store("telem_portal_waitcity", AD.waitCity); renderWait(); });
@@ -4502,24 +4507,48 @@ function instructorStart(role){
   $("adRefresh").onclick = () => { AD.attG = null; insRender(); };
   insRender();
 }
+// 1.20.1 (נועה): מסך הנוכחות – כמו בנוכחות במערכת הניהול: יום (→ / תאריך / להיום / ←), מתרגלים, ערים, ולכל קבוצה כרטיס
+// (שעה, בית ספר, עיר, חדר, מתרגלים, כמה ילדים, מצב הסימון). לחיצה – דף הנוכחות. מתרגלים רואים רק את הקבוצות שלהם (השרת מסנן).
 async function insRender(){
   if (typeof ATTM !== "undefined" && ATTM.isOpen) return;
-  const T = $("adBody"), iso = AD.waitDate || (AD.waitDate = todayIso()), isToday = iso === todayIso();
-  T.innerHTML = waitDayBar(iso) + `<div class="card muted">טוען…</div>`; wireIns(T);
+  const T = $("adBody"), ins = AD.role === "instructor", iso = AD.waitDate || (AD.waitDate = todayIso()), isToday = iso === todayIso();
+  const head = ins ? "" : `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1></div></div>`;
+  if (!T.querySelector(".ins-g")) { T.innerHTML = head + waitDayBar(iso) + `<div class="card muted">טוען…</div>`; wireIns(T); }
   let list = [];
-  try { list = await rpc("attendance_groups", { p_date: iso, p_city: null }) || []; } catch(e) { T.innerHTML = waitDayBar(iso) + `<div class="card muted">לא הצלחנו לטעון את הקבוצות. אפשר לנסות שוב ב"רענון".</div>`; wireIns(T); return; }
-  if (iso !== AD.waitDate) return;
+  try { list = await rpc("attendance_groups", { p_date: iso, p_city: null }) || []; if (!Array.isArray(list)) list = []; }
+  catch(e) { T.innerHTML = head + waitDayBar(iso) + `<div class="card muted">לא הצלחנו לטעון את הקבוצות. אפשר לנסות שוב ב"רענון".</div>`; wireIns(T); return; }
+  if (iso !== AD.waitDate || (!ins && AD.view !== "att") || (typeof ATTM !== "undefined" && ATTM.isOpen)) return;
+  AD.attG = { iso, at: Date.now(), m: new Map(list.map(x => [String(x.session_id), x])) };
   const hm5 = (t) => String(t || "").slice(0, 5), now = new Date(), nowHm = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-  list.sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"));
-  const gs = list.map(x => ({ id: String(x.session_id), city: x.city || "", loc: x.location || "", start: hm5(x.start_time), end: hm5(x.end_time), mar: x.kind === "מרתון", x }));
-  let h = waitDayBar(iso);
-  if (!gs.length) h += `<div class="card muted">אין לך קבוצות ביום הזה.</div>`;
+  const insOf = (x) => String(x.instructors || "").split(/,\s*/).filter(Boolean);
+  // סינונים (מנהלים): מתרגל/ת – מעל הערים; ערים
+  let h = head + waitDayBar(iso);
+  let gsAll = list;
+  if (!ins) {
+    const names = [...new Set(list.flatMap(insOf))].sort((a, b) => a.localeCompare(b, "he"));
+    if (AD.waitIns && AD.waitIns !== "__me" && !names.includes(AD.waitIns)) names.push(AD.waitIns);
+    const want = AD.waitIns === "__me" ? (AD.myName || "") : AD.waitIns;
+    gsAll = list.filter(x => !AD.waitIns || insOf(x).includes(want));
+    const cities = [...new Set(gsAll.map(x => x.city).filter(Boolean))];
+    if (AD.waitCity && AD.waitCity !== "*" && !cities.includes(AD.waitCity)) AD.waitCity = "*";
+    h += `<div class="wg-bar">${names.length ? `<select id="wgIns" class="wg-ins" aria-label="סינון לפי מתרגל/ת"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${names.filter(n => n !== AD.myName).map(n => `<option ${n === AD.waitIns ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>` : ""}
+      ${cities.length > 1 ? `<div class="bk-cities wg-cities"><button data-wcity="*" class="${(AD.waitCity || "*") === "*" ? "on" : ""}">כל הערים</button>${cities.map(ct => `<button data-wcity="${esc(ct)}" class="${ct === AD.waitCity ? "on" : ""}">${esc(ct)}</button>`).join("")}</div>` : ""}</div>`;
+    if (AD.waitCity && AD.waitCity !== "*") gsAll = gsAll.filter(x => x.city === AD.waitCity);
+  }
+  const gs = gsAll.slice().sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"))
+    .map(x => ({ id: String(x.session_id), city: x.city || "", loc: x.location || "", start: hm5(x.start_time), end: hm5(x.end_time), mar: x.kind === "מרתון", x }));
+  if (!gs.length) h += `<div class="card muted">${ins ? "אין לך קבוצות ביום הזה." : AD.waitIns ? "אין קבוצות ביום הזה למתרגל/ת שנבחר/ה." : "אין קבוצות ביום הזה."}</div>`;
   h += gs.map(gr => { const x = gr.x, live = isToday && gr.start <= nowHm && (!gr.end || nowHm <= gr.end), past = iso < todayIso() || (isToday && gr.end && gr.end <= nowHm);
     return `<button type="button" class="ins-g${live ? " live" : ""}${x.marked ? " done" : ""}" data-att="${esc(gr.id)}">
-      <span class="ins-1"><b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${gr.mar ? `<span class="chip mar-t">🏁 מרתון</span>` : ""}${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}</span>
-      <span class="ins-2"><span>${x.kids || 0} ילדים${x.room ? " · חדר " + esc(x.room) : ""}</span><span class="ins-st${x.marked ? " ok" : past ? " miss" : ""}">${x.marked ? `✓ סומן · ${x.marked_count} נוכחים` : past ? "לא סומנה נוכחות" : "✓ לסימון נוכחות"}</span></span></button>`; }).join("");
+      <span class="ins-1"><b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${gr.mar ? `<span class="chip mar-t">🏁 מרתון${x.time_label ? " · " + esc(x.time_label) : ""}</span>` : ""}${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}</span>
+      <span class="ins-2"><span>${[x.room ? "חדר <b>" + esc(x.room) + "</b>" : "", !ins && x.instructors ? `<span class="ins-who">${esc(x.instructors)}</span>` : ""].filter(Boolean).join(" · ")}</span>
+        <span class="ins-st${x.marked ? " ok" : past ? " miss" : ""}">${x.marked ? `✓ סומן · ${x.marked_count} נוכחים מתוך ${x.kids || 0}` : `${x.kids || 0} ילדים · ${past ? "לא סומן" : "טרם סומן"}`}</span></span></button>`; }).join("");
   T.innerHTML = h; wireIns(T);
   T.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { const gr = gs.find(g => g.id === b.dataset.att); ATTM.open(b.dataset.att, iso, gr); });
+  if (!ins) {
+    T.querySelectorAll("[data-wcity]").forEach(b => b.onclick = () => { AD.waitCity = b.dataset.wcity; store("telem_portal_waitcity", AD.waitCity); insRender(); });
+    if ($("wgIns")) { $("wgIns").value = AD.waitIns; $("wgIns").onchange = (e) => { AD.waitIns = e.target.value; store("telem_portal_waitins", AD.waitIns || null); insRender(); }; }
+  }
 }
 function wireIns(T){
   T.querySelectorAll("[data-wd]").forEach(b => b.onclick = () => { const n = Number(b.dataset.wd), d = isoDate(AD.waitDate || todayIso()); AD.waitDate = n ? isoOf(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)) : todayIso(); insRender(); });
@@ -5101,7 +5130,7 @@ async function loadHistory(sessionId, date){
   function close(fromBtn){
     if (!isOpen) return; isOpen = false; delete document.body.dataset.att;
     if (fromBtn && history.state && history.state.ad === "att") { AD.skipPop = true; history.back(); }
-    if (AD.role === "instructor") { AD.attG = null; insRender(); } else renderWait();
+    if (AD.role === "instructor" || AD.view === "att") { insRender(); } else adRender();
   }
   // "אחורה" של הטלפון
   async function onPop(){ if (!isOpen) return false;
