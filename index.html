@@ -329,7 +329,18 @@
   .wg-opts{ display:flex; flex-wrap:nowrap; gap:8px 18px; font-size:14.5px; } .wg-opts .chk{ white-space:nowrap; }
   .wg-h .school-chip{ font-size:12.5px; padding:2px 9px; } .wg-h .wg-c{ color:var(--ink-soft); font-size:13px; white-space:nowrap; }
   .wg-h{ gap:6px; margin-bottom:8px; } .wg-h .chip{ font-size:11.5px; padding:1px 8px; } .wg-h .wg-n{ font-size:12.5px; white-space:nowrap; }
-  .wg-today{ color:var(--accent); } .wg-h .ok-t{ color:var(--ok); font-weight:700; }
+  .wg-today{ color:var(--accent); }
+  .wd-bar{ display:flex; align-items:center; gap:6px; margin:4px 0 10px; }
+  .wd-bar .btn{ height:38px; min-height:0; padding:0 12px; border-radius:10px; font-weight:700; }
+  .wd-arr{ min-width:52px; font-size:20px; }
+  .wd-bar .wd-today{ background:var(--accent) !important; border-color:var(--accent) !important; color:#fff !important; font-size:13px; padding:0 9px !important; }
+  .wd-lbl{ position:relative; flex:1; min-width:0; height:38px; display:flex; align-items:center; justify-content:center; border:1.5px solid var(--border); border-radius:10px; background:var(--paper); font-weight:800; font-size:14.5px; color:var(--accent); white-space:nowrap; overflow:hidden; }
+  .wd-lbl input{ position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; }
+  .wd-rel{ color:#B07D1E; font-size:13px; }
+  .wrow.noq{ border-color:color-mix(in srgb, var(--bad) 35%, var(--border)); }
+  .wr-nx{ display:flex; flex-wrap:wrap; gap:2px 10px; } .wr-q{ display:inline-flex; align-items:center; gap:4px; }
+  .wg-h .w-t{ color:#B07D1E; } .wg-h .bad-t{ color:var(--bad); } .wg-h .wg-n b{ font-family:inherit; font-size:12.5px; }
+  .wr-1 .ok-t{ color:var(--ok); font-weight:800; } .wrow .bad-t{ color:var(--bad); font-weight:700; } .wg-h .ok-t{ color:var(--ok); font-weight:700; }
   .wg{ padding:10px; margin-bottom:10px; border-radius:18px; }
   .wrows{ display:flex; flex-direction:column; gap:6px; }
   .wrow{ display:flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:6px 8px 6px 10px; }
@@ -1539,7 +1550,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.18.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.19",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2366,7 +2377,7 @@ async function renderWait(){
   const byGroup = AD.waitMode === "groups";
   const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
   let h = `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
-    <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "מי שמחכה לדף – לפי עיר, מקום תרגול וקבוצה." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
+    <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "הקבוצות של היום לפי השעה – מי ממתין/ה, מי עובד/ת, ומה הבא בתור." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
       <div class="mode-sw" role="tablist"><button data-wm="groups" class="${byGroup ? "on" : ""}">${IC.users || ""} לפי קבוצות</button><button data-wm="list" class="${byGroup ? "" : "on"}">${IC.list || ""} רשימה</button></div></div>
 `;
   const reqs = AD.codeReqs || [];
@@ -2395,7 +2406,8 @@ async function renderWait(){
     const el = $("live-" + id); if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1200); } });
   B.querySelectorAll("[data-wm]").forEach(b => b.onclick = () => { AD.waitMode = b.dataset.wm; store("telem_portal_waitmode", AD.waitMode); renderWait(); });
   B.querySelectorAll("[data-wcity]").forEach(b => b.onclick = () => { AD.waitCity = b.dataset.wcity; store("telem_portal_waitcity", AD.waitCity); renderWait(); });
-  if ($("wgToday")) $("wgToday").onchange = (e) => { AD.waitToday = e.target.checked; renderWait(); };
+  B.querySelectorAll("[data-wd]").forEach(b => b.onclick = () => { const n = Number(b.dataset.wd), d = isoDate(AD.waitDate || todayIso()); AD.waitDate = n ? isoOf(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)) : todayIso(); AD.waitPresent = false; renderWait(); });
+  if ($("wdDate")) $("wdDate").onchange = (e) => { if (e.target.value) { AD.waitDate = e.target.value; AD.waitPresent = false; renderWait(); } };
   if ($("wgIns")) { $("wgIns").value = AD.waitIns; $("wgIns").onchange = (e) => { AD.waitIns = e.target.value; store("telem_portal_waitins", AD.waitIns || null); renderWait(); }; }
   if ($("wgPresent")) $("wgPresent").onchange = (e) => { AD.waitPresent = e.target.checked; renderWait(); };
   B.querySelectorAll("[data-relg]").forEach(b => b.onclick = () => { const ids = b.dataset.relg.split(",").map(Number).filter(Boolean);
@@ -2469,68 +2481,74 @@ function liveBar(list){
       return `<button class="lb-g" data-golive="${esc(gr.id)}" data-city="${esc(gr.city)}"><span class="t"><b>${esc(gr.loc)}</b> · <span class="nw">${esc(gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span><small>${esc(gr.city)}</small></span>
         <span class="c"><b>${w}</b> ממתינים${n ? `<small>${n} סיימו בשיעור</small>` : ""}</span></button>`; }).join("") + `</div></div>`;
 }
+// 1.19 (נועה): לפי קבוצות = כמו בנוכחות – יום אחד (→ / תאריך / להיום / ←), הקבוצות של היום לפי השעה,
+// מה שמתקיים עכשיו – בירוק. בכל קבוצה כל הילדים: מה סיים/ה או עובד/ת עליו, ומה הבא בתור (להכנת החומר בבוקר).
+const isoOf = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const isoDate = (iso) => { const [y, m, d] = String(iso).split("-").map(Number); return new Date(y, m - 1, d); };
+function waitDayBar(iso){
+  const d = isoDate(iso), t = todayIso(), diff = Math.round((d - isoDate(t)) / 864e5);
+  const rel = diff === 0 ? "היום" : diff === 1 ? "מחר" : diff === -1 ? "אתמול" : "";
+  return `<div class="wd-bar"><button type="button" class="btn wd-arr" data-wd="-1" aria-label="יום קודם">→</button>
+    <label class="wd-lbl"><span>יום ${DAY_L[d.getDay()]}' ${d.getDate()}.${d.getMonth() + 1}${rel ? ` <span class="wd-rel">· ${rel}</span>` : ""}</span><input type="date" id="wdDate" value="${iso}" aria-label="תאריך"></label>
+    ${diff ? `<button type="button" class="btn wd-today" data-wd="0">להיום</button>` : ""}
+    <button type="button" class="btn wd-arr" data-wd="1" aria-label="יום הבא">←</button></div>`;
+}
 async function waitGroupsHtml(g, list, fresh){
   const [groups, pres] = await Promise.all([loadGroups(), presentAllToday()]);
-  const today = DAY_L[new Date().getDay()];
-  // כל מי שמחכה: סיים/ה דף (ממתין) + יש חשבון ועוד לא נשלח דף
-  const items = list.map(w => ({ s: w.s, subj: w.subj, hot: true, sub: `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`, at: w.done_at || "" }))
-    .concat(fresh.map(s => ({ s, subj: (s.subjects || [])[0], hot: false, sub: "עוד לא נשלח דף", at: "" })));
+  const iso = AD.waitDate || (AD.waitDate = todayIso()), isToday = iso === todayIso(), day = DAY_L[isoDate(iso).getDay()];
   if (!groups.length) return `<div class="card muted">לא הצלחנו לטעון את הקבוצות של השנה. אפשר לעבור ל"רשימה".</div>`;
-  // 1.18.3 (נועה): סינון לפי מתרגל/ת – כמו בנוכחות; מעל הערים (מתרגל/ת יכול/ה לעבוד בכמה ערים)
+  const waitBy = new Map(); list.forEach(w => waitBy.set(w.s.student_id + "|" + w.subj, w));
+  // סינון לפי מתרגל/ת – כמו בנוכחות; מעל הערים (מתרגל/ת יכול/ה לעבוד בכמה ערים)
   const insNames = [...new Set(groups.flatMap(gr => gr.ins))].sort((a, b) => a.localeCompare(b, "he"));
   if (AD.waitIns && AD.waitIns !== "__me" && !insNames.includes(AD.waitIns)) insNames.push(AD.waitIns);
   const insWant = AD.waitIns === "__me" ? (AD.myName || "") : AD.waitIns;
   const insOk = (gr) => !AD.waitIns || gr.ins.includes(insWant);
-  const cities = [...new Set(groups.filter(gr => insOk(gr) && items.some(it => gr.kids.has(it.s.student_id))).map(gr => gr.city))];
+  const dayG = groups.filter(gr => gr.day === day && insOk(gr));
+  const cities = [...new Set(dayG.map(gr => gr.city))];
   if (AD.waitCity && AD.waitCity !== "*" && !cities.includes(AD.waitCity)) AD.waitCity = "*";
   const city = AD.waitCity || "*";
-  let h = `<div class="wg-bar">
-    ${insNames.length ? `<select id="wgIns" class="wg-ins" aria-label="סינון לפי מתרגל/ת"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${insNames.filter(n => n !== AD.myName).map(n => `<option ${n === AD.waitIns ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>` : ""}${cities.length > 1 ? `<div class="bk-cities wg-cities"><button data-wcity="*" class="${city === "*" ? "on" : ""}">כל הערים</button>${cities.map(c => `<button data-wcity="${esc(c)}" class="${c === city ? "on" : ""}">${esc(c)}</button>`).join("")}</div>` : ""}
-    <div class="wg-opts"><label class="chk"><input type="checkbox" id="wgToday" ${AD.waitToday ? "checked" : ""}> רק היום (${today}')</label>
-    ${pres.ok ? `<label class="chk"><input type="checkbox" id="wgPresent" ${AD.waitPresent ? "checked" : ""}> רק נוכחים היום</label>` : ""}</div></div>`;
-  let gs = groups.filter(gr => (city === "*" || gr.city === city) && insOk(gr));
-  if (AD.waitToday) gs = gs.filter(gr => gr.day === today);
-  const placed = new Set();
-  let lastCity = null, lastLoc = null, shown = 0;
-  const now = new Date(), liveIds = new Set(gs.filter(gr => isLive(gr, now)).map(gr => gr.id));
-  // קבוצה שמתנהלת עכשיו – ראשונה, בנפרד
-  gs.filter(gr => liveIds.has(gr.id)).forEach(gr => {
-    let its = items.filter(it => gr.kids.has(it.s.student_id));
-    its.forEach(it => placed.add(it.s.student_id));
-    const inLesson = (it) => { const x = doneInGroup(it.s.student_id, it.at); return x && x.id === gr.id && new Date(it.at).toDateString() === now.toDateString(); };
-    const isPres = (it) => pres.set.has(it.s.student_id + "|" + gr.id);
-    if (AD.waitPresent) its = its.filter(isPres);
-    its.sort((a, b) => (inLesson(b) - inLesson(a)) || (isPres(b) - isPres(a)) || (b.hot - a.hot) || String(a.at).localeCompare(String(b.at)));
-    const nIn = its.filter(inLesson).length;
-    const rel = its.filter(inLesson).map(it => queueOf(it.s.student_id, it.subj)[0]).filter(Boolean).map(p => p.id);
-    h += `<section class="wg live" id="live-${esc(gr.id)}"><div class="wg-h"><b><span class="live-dot" style="display:inline-block;margin-inline-end:8px"></span>מתנהלת עכשיו · <span class="nw">${esc(gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>
-        <span class="wg-n">${its.length} ממתינים · ${nIn} סיימו בשיעור הזה${pres.ok ? ` · ${its.filter(isPres).length} נוכחים` : ""}</span>
-        ${rel.length > 1 ? `<button class="btn sm primary" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכל מי שסיים בשיעור (${rel.length})</button>` : ""}</div>
-      ${its.length ? `<div class="wrows">${its.map(it => waitRow(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at, gr) + (isPres(it) ? `<span class="chip ok">נוכח/ת היום</span>` : ""))).join("")}</div>` : `<div class="muted small" style="padding:4px 6px 8px">אין כרגע ממתינים בקבוצה הזו.</div>`}${workingHtml(gr, g)}</section>`;
-    shown++;
+  const presOn = isToday && pres.ok;
+  let h = waitDayBar(iso) + `<div class="wg-bar">
+    ${insNames.length ? `<select id="wgIns" class="wg-ins" aria-label="סינון לפי מתרגל/ת"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${insNames.filter(n => n !== AD.myName).map(n => `<option ${n === AD.waitIns ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>` : ""}
+    ${cities.length > 1 ? `<div class="bk-cities wg-cities"><button data-wcity="*" class="${city === "*" ? "on" : ""}">כל הערים</button>${cities.map(c => `<button data-wcity="${esc(c)}" class="${c === city ? "on" : ""}">${esc(c)}</button>`).join("")}</div>` : ""}
+    ${presOn ? `<div class="wg-opts"><label class="chk"><input type="checkbox" id="wgPresent" ${AD.waitPresent ? "checked" : ""}> רק נוכחים היום</label></div>` : ""}</div>`;
+  const now = new Date();
+  const gs = dayG.filter(gr => city === "*" || gr.city === city).sort((a, b) => String(a.start).localeCompare(String(b.start)) || a.city.localeCompare(b.city) || a.loc.localeCompare(b.loc));
+  if (!gs.length) return h + `<div class="card muted">${AD.waitIns ? "אין למתרגל/ת שנבחר/ה קבוצות ביום הזה." : "אין קבוצות ביום הזה."}</div>`;
+  const short = (x) => x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x;
+  gs.forEach(gr => {
+    const live = isToday && isLive(gr, now);
+    const isPres = (sid) => presOn && pres.set.has(sid + "|" + gr.id);
+    let kids = [...gr.kids].map(stById).filter(Boolean);
+    if (presOn && AD.waitPresent) kids = kids.filter(s => isPres(s.student_id));
+    const rows = kids.map(s => {
+      const subs = s.subjects || [], two = subs.length > 1, pl = planOf(s.student_id);
+      const w = subs.map(x => waitBy.get(s.student_id + "|" + x)).find(Boolean);
+      const open = pl.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)))[0];
+      const nxs = subs.map(x => [x, queueOf(s.student_id, x)[0]]);
+      const noQ = nxs.filter(([, p]) => !p).length;
+      const st = !s.has_account ? `<span class="bad-t">אין חשבון</span>`
+        : w ? `סיים/ה "${esc(w.last ? wsTitle(w.last.worksheet_id) : "")}" · ${esc(ago(w.done_at))}`
+        : open ? `✎ עובד/ת על "${esc(wsTitle(open.worksheet_id))}"${open.seen_at ? "" : " · עוד לא פתח/ה"}`
+        : pl.some(p => p.status === "הושלם") ? "עוד לא נשלח דף חדש" : "עוד לא נשלח אף דף";
+      const nx = nxs.map(([x, p]) => `<span class="wr-q">${two ? `<span class="subj-chip ${subjCls(x)} on sm">${esc(short(x))}</span>` : ""}${p ? "הבא: " + esc(wsTitle(p.worksheet_id)) : `<span class="bad-t">אין דפים בתור</span>`}</span>`).join("");
+      const relP = w && queueOf(s.student_id, w.subj)[0];
+      const inLesson = w && live && (() => { const x = doneInGroup(s.student_id, w.done_at); return x && x.id === gr.id && new Date(w.done_at).toDateString() === now.toDateString(); })();
+      const html = `<div class="wrow${w ? " hot" : ""}${noQ ? " noq" : ""}"><button type="button" class="wr-main" data-open="${esc(s.student_id)}" data-subj="${esc(w ? w.subj : subs[0] || "")}">
+          <span class="wr-1">${isPres(s.student_id) ? `<span class="ok-t" title="נוכח/ת">✓</span>` : ""}<b>${esc(stName(s))}</b>${w ? doneChip(s.student_id, w.done_at, gr) : ""}</span>
+          <small>${st}</small><small class="wr-nx">${nx}</small></button>
+        ${relP ? `<button class="btn primary sm wr-rel" data-rel="${relP.id}">${IC.check} שחרור</button>` : noQ ? `<button class="btn sm wr-rel" data-open="${esc(s.student_id)}" data-subj="${esc((nxs.find(([, p]) => !p) || [])[0] || "")}">+ דפים</button>` : ""}</div>`;
+      return { s, w, noQ, html, relP, inLesson, pres: isPres(s.student_id) };
+    });
+    rows.sort((a, b) => (b.inLesson - a.inLesson) || (b.pres - a.pres) || (!!b.w - !!a.w) || (!!b.noQ - !!a.noQ) || stName(a.s).localeCompare(stName(b.s), "he"));
+    const nW = rows.filter(r => r.w).length, nN = rows.filter(r => r.noQ).length, nP = rows.filter(r => r.pres).length;
+    const rel = rows.filter(r => r.relP && (!live || r.inLesson || true)).map(r => r.relP.id);
+    h += `<section class="wg${live ? " live" : ""}" id="live-${esc(gr.id)}"><div class="wg-h">
+        <b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start || gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}
+        <span class="wg-n">${rows.length} ילדים${nW ? ` · <b class="w-t">${nW} ממתינים</b>` : ""}${nN ? ` · <b class="bad-t">${nN} בלי דפים</b>` : ""}${presOn ? ` · <span class="ok-t">✓${nP}</span>` : ""}</span>
+        ${rel.length > 1 ? `<button class="btn sm${live ? " primary" : ""}" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכל הממתינים (${rel.length})</button>` : ""}</div>
+      ${rows.length ? `<div class="wrows">${rows.map(r => r.html).join("")}</div>` : `<div class="muted small" style="padding:4px 6px 8px">${AD.waitPresent ? "אף אחד לא סומן/ה נוכח/ת." : "אין ילדים עם חשבון בקבוצה."}</div>`}</section>`;
   });
-  gs.filter(gr => !liveIds.has(gr.id)).sort((a, b) => a.city.localeCompare(b.city) || a.loc.localeCompare(b.loc) || (DAY_L.indexOf(a.day) - DAY_L.indexOf(b.day)) || String(a.start).localeCompare(String(b.start))).forEach(gr => {
-    let its = items.filter(it => gr.kids.has(it.s.student_id));
-    its.forEach(it => placed.add(it.s.student_id));
-    const isPres = (it) => pres.set.has(it.s.student_id + "|" + gr.id);
-    if (AD.waitPresent) its = its.filter(isPres);
-    if (!its.length) return;
-    its.sort((a, b) => (isPres(b) - isPres(a)) || (b.hot - a.hot) || String(a.at).localeCompare(String(b.at)));
-    const nP = its.filter(isPres).length;
-    const rel = its.map(it => queueOf(it.s.student_id, it.subj)[0]).filter(Boolean).map(p => p.id);
-    h += `<section class="wg"><div class="wg-h"><b>${gr.day === today ? `<span class="wg-today">היום</span>` : "יום " + esc(gr.day) + "'"} · ${esc(gr.time)}</b>${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>
-        <span class="wg-n">${its.length} ממתינים${pres.ok && gr.day === today ? ` · <span class="ok-t" title="נוכחים">✓${nP}</span>` : ""}</span>
-        ${rel.length > 1 ? `<button class="btn sm" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכולם (${rel.length})</button>` : ""}</div>
-      <div class="wrows">${its.map(it => waitRow(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at, gr) + (isPres(it) ? `<span class="chip ok">נוכח/ת היום</span>` : ""))).join("")}</div></section>`;
-    shown++;
-  });
-  // מי שלא משובץ/ת לאף קבוצה
-  if (city === "*" && !AD.waitToday && !AD.waitPresent && !AD.waitIns) {
-    const none = items.filter(it => !groups.some(gr => gr.kids.has(it.s.student_id)));
-    if (none.length) { h += `<section class="wg"><div class="wg-h"><b>לא משובצים לקבוצה השנה</b><span class="wg-n">${none.length}</span></div>
-      <div class="wrows">${none.map(it => waitRow(g, it.s, it.subj, it.sub, it.hot, doneChip(it.s.student_id, it.at))).join("")}</div></section>`; shown++; }
-  }
-  if (!shown) h += `<div class="card empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg><h2 style="margin-top:8px">אין ממתינים ${AD.waitIns ? "בקבוצות של המתרגל/ת שנבחר/ה" : AD.waitPresent ? "שנוכחים היום" : AD.waitToday ? "בקבוצות של היום" : "כאן"}</h2></div>`;
   return h;
 }
 // 1.18.3 (נועה): בתצוגת קבוצות – שורה צפופה לכל ילד/ה, שהכול ייכנס במסך
