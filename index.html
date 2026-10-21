@@ -330,6 +330,16 @@
   .wg-h .school-chip{ font-size:12.5px; padding:2px 9px; } .wg-h .wg-c{ color:var(--ink-soft); font-size:13px; white-space:nowrap; }
   .wg-h{ gap:6px; margin-bottom:8px; } .wg-h .chip{ font-size:11.5px; padding:1px 8px; } .wg-h .wg-n{ font-size:12.5px; white-space:nowrap; }
   .wg-today{ color:var(--accent); }
+  body.v-ins #adNav{ display:none; }
+  .ins-g{ display:flex; flex-direction:column; gap:6px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-inline-start:5px solid var(--accent); border-radius:14px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
+  .ins-g.live{ border-color:var(--ok); border-inline-start-color:var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, var(--paper)); }
+  .ins-g.done{ border-inline-start-color:var(--ok); }
+  .ins-1{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; } .ins-1 b{ font-family:var(--font-display); font-size:17px; } .ins-1 .mar-t{ background:#FDF0D5; color:#8a5a00; border:1px solid #F0D49A; } .ins-1 .wg-c{ color:var(--ink-soft); font-size:13.5px; }
+  .ins-2{ display:flex; justify-content:space-between; gap:8px; font-size:13.5px; color:var(--ink-soft); }
+  .ins-st{ font-weight:800; color:var(--accent); } .ins-st.ok{ color:var(--ok); } .ins-st.miss{ color:var(--bad); } .wg-h .mar-t{ background:#FDF0D5; color:#8a5a00; border:1px solid #F0D49A; }
+  .att-open{ order:5; margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:3px 11px; border:1.5px solid var(--ok); background:var(--paper); color:var(--ok); cursor:pointer; white-space:nowrap; }
+  .att-open.done{ background:var(--ok-bg); } .att-open.miss{ border-color:var(--bad); color:var(--bad); }
+  .wg-h .wg-n{ order:4; flex:0 1 auto; }
   .wd-bar{ display:flex; align-items:center; gap:6px; margin:4px 0 10px; }
   .wd-bar .btn{ height:38px; min-height:0; padding:0 12px; border-radius:10px; font-weight:700; }
   .wd-arr{ min-width:52px; font-size:20px; }
@@ -1043,6 +1053,14 @@
   .stm-tabs button b{ flex:none; background:color-mix(in srgb, var(--ink-soft) 14%, transparent); border-radius:20px; padding:0 7px; font-size:12px; }
   .stm-tabs button[aria-selected="true"]{ background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.15); }
   .stm-tabs button[aria-selected="true"] b{ background:var(--accent); color:#fff; }
+  .stm-sec-h{ cursor:pointer; user-select:none; } .stm-sec-h .sec-car{ margin-inline-start:auto; color:var(--ink-soft); font-size:14px; }
+  .stm-sec.shut{ margin-bottom:6px; } .stm-sec.shut .stm-sec-h{ border-bottom-style:dashed; }
+  .stm-cols .stm-row{ padding:6px 8px; gap:6px; } .stm-cols .stm-row .t{ font-size:13.5px; } .stm-cols .stm-row .t small{ font-size:11.5px; }
+  .stm-cols .stm-rel{ width:100%; margin-top:2px; font-size:13px; min-height:34px !important; height:34px !important; padding:0 8px !important; border-radius:10px; } .stm-cols .stm-q .t small{ display:none; }
+  .stm-cols .stm-row{ padding:6px 6px; gap:4px; border-radius:12px; } .stm-cols .stm-row .n{ width:22px; height:22px; min-width:22px; font-size:12px; }
+  .stm-cols .stm-row .drag{ width:16px; font-size:13px; letter-spacing:-2px; } .stm-cols .stm-row .ws-lvi, .stm-cols .stm-row .lv-ic{ font-size:12px; }
+  .stm-cols .stm-row .mini{ width:30px; height:30px; } .stm-cols .ok-ic svg{ width:17px; height:17px; }
+  .stm-cols .stm-row .t{ line-height:1.25; } .stm-cols .stm-row .lv{ font-size:11px; }
   .stm-sec{ margin-bottom:14px; }
   .stm-sec-h{ display:flex; align-items:baseline; gap:6px; font-family:var(--font-display); font-weight:900; font-size:15.5px; margin:4px 2px 4px; padding-bottom:4px; border-bottom:2px solid var(--border); }
   .stm-sec-h .ic{ width:20px; text-align:center; } .stm-sec-h b{ font-size:12px; background:var(--accent); color:#fff; border-radius:20px; padding:0 7px; align-self:center; }
@@ -1409,13 +1427,13 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
   .crmws .ws-app{ display:contents; }
   @media (max-width:760px){ .crmws .lg-t{ display:none; } }
   .crmws .ws-vapp{ display:flex; gap:8px; padding:8px 10px 0; background:inherit; width:100%; max-width:560px; margin:0 auto; box-sizing:border-box; } .crmws .ws-vapp:empty{ display:none; }
-  .crmws .ws-vapp .btn{ flex:1; justify-content:center; height:44px; font-size:15px; }
+  .crmws .ws-vapp{ justify-content:center; } .crmws .ws-vapp .btn{ flex:0 1 auto; justify-content:center; height:34px; min-height:0; font-size:13.5px; padding:0 14px; border-radius:999px; }   /* 1.20 (נועה): כפתורים קטנים */
   .crmws .ws-vapp .btn:not(.primary){ background:#fff; color:#161118; border-color:#fff; }
   .crmws .ws-vapp.small{ justify-content:center; } .crmws .ws-vapp.small .btn{ flex:0 1 auto; height:34px; font-size:13.5px; padding:0 12px; }
   .crmws .ws-vapp.small .btn.primary{ flex:1 1 auto; max-width:200px; }
   .crmws .ws-vapp .btn.pa-q{ background:#fff !important; color:#161118 !important; border-color:#fff !important; }
   .crmws .ws-vapp .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
-  .crmws .ws-vapp .btn.pa-rm{ background:transparent !important; color:#ff8a80 !important; border:1.5px solid #ff8a80 !important; flex:0 1 auto; padding:0 18px; }
+  .crmws .ws-vapp .btn.pa-rm{ background:transparent !important; color:#ff8a80 !important; border:1.5px solid #ff8a80 !important; flex:0 1 auto; padding:0 12px; }
   .crmws .ws-vapp .pa-done{ color:#9be29b; font-weight:700; padding:10px; text-align:center; flex:1; }
   body.ws-app-on .crmws .ws-vbot{ padding-top:6px; gap:6px; }
   body.ws-app-on .crmws .ws-vbot .btn, body.ws-app-on .crmws .ws-vbot .ws-nav{ height:34px !important; min-height:0 !important; font-size:13px !important; padding:0 10px !important; flex:0 0 auto !important; }
@@ -1425,6 +1443,317 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
   .crmws .ws-pgw.cb-in .ws-pg{ opacity:.6; }
   #adminView .crmws .page-head h1{ font-size:21px; }
 .upd-bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);z-index:9999;background:var(--accent,#7a1f2b);color:#fff;border:0;border-radius:999px;padding:7px 16px;font:inherit;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+/* ===== נוכחות – העתק ממערכת הניהול ===== */
+.crmatt{ --full:var(--bad); --info:#1E6FB8; --accent-light:#8B1E23; --att-bg:#ECF1EA; }
+.crmatt .kind-tag{display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:2px 10px; margin-bottom:4px;}
+.crmatt .kind-tag.kt-att{background:#E6F2DC; color:#2f6e05; border:1px solid #b9d9a0;}
+.crmatt .lead-sub{color:var(--ink-soft); font-size:14px; margin-top:2px;}
+.crmatt .lead-sub b{color:var(--ink);}
+.crmatt .meta-line{display:flex; gap:18px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft);}
+.crmatt .err{color:var(--full); font-weight:700; font-size:12.5px;}
+.crmatt .kind-tag{display:inline-block; font-size:11px; font-weight:800; border-radius:999px; padding:0 8px; background:var(--paper); color:var(--ink); border:1px dashed var(--ink-soft); margin-inline-start:6px;}
+.crmatt .att-dayname{font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--accent);}
+.crmatt .notice{background:#FFF4E5; border:1px solid #F0C27A; color:#7A4B00; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-weight:700;}
+.crmatt .sh-tools{display:flex; gap:12px; align-items:center; margin-bottom:10px;}
+.crmatt .att-rows{list-style:none; margin:0 0 14px; padding:0;}
+.crmatt .att-rows li{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 14px; padding:10px 4px; border-bottom:1px solid var(--border);}
+.crmatt .att-name b{font-size:16.5px;}
+.crmatt .att-rows li[data-i]{position:relative; gap:10px;}
+.crmatt .att-rows li[data-i] .att-name{flex:1 1 auto; min-width:0;}
+.crmatt .gbadge{display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; padding:0; border-radius:50%; font-weight:800; font-size:13.5px; letter-spacing:-.3px; flex:none; box-sizing:border-box; background:var(--gb); color:var(--gi); border:2px solid var(--gi);}
+.crmatt .g-ה, .crmatt .g-ו{--gb:#E2EEFA; --gi:#2F78C4;}
+.crmatt .g-ז{--gb:#DFF3E8; --gi:#24935F;}
+.crmatt .g-ח{--gb:#FCEBD9; --gi:#C86E14;}
+.crmatt .g-ט{--gb:#ECE5FA; --gi:#7B55C9;}
+.crmatt .g-י{--gb:#F3F0C6; --gi:#857400;}
+.crmatt .g-x{--gb:transparent; --gi:var(--ink-soft);}
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]) .crmatt .gbadge{border-color:color-mix(in srgb, var(--gi) 60%, #fff); color:color-mix(in srgb, var(--gi) 55%, #fff); background:color-mix(in srgb, var(--gi) 22%, transparent);}
+}
+:root[data-theme="dark"] .crmatt .gbadge{border-color:color-mix(in srgb, var(--gi) 60%, #fff); color:color-mix(in srgb, var(--gi) 55%, #fff); background:color-mix(in srgb, var(--gi) 22%, transparent);}
+.crmatt .dbl-star{color:var(--gold); font-size:1.05em; margin-inline-end:3px;}
+.crmatt .dbl-star.dbl-x2{display:inline-flex; align-items:center; background:#5A1216; color:#F3D27A !important; text-shadow:none !important; font-size:12.5px !important; font-weight:800; line-height:1 !important; border-radius:6px; padding:3px 6px;}
+.crmatt .dbl-star.dbl-x2{direction:ltr; unicode-bidi:isolate;}
+.crmatt .att-name b.att-nm{display:flex; align-items:center; gap:6px;}
+.crmatt .att-kl{cursor:pointer; text-decoration:underline; text-decoration-color:color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset:3px;}
+.crmatt .att-kl:hover{color:var(--accent);}
+.crmatt .att-nm .dbl-star + .trk-btn{margin-inline-start:2px;}
+.crmatt .att-nm > span + .trk-btn{margin-inline-start:auto;}
+@media (min-width:761px){
+.crmatt #attSheet > .card{max-width:900px;}
+.crmatt #shRows{max-width:none;}
+.crmatt .att-rows li[data-i]{justify-content:space-between;}
+.crmatt .att-nm .dbl-star{margin-inline-start:2px !important;}
+.crmatt .att-rows li[data-i] .att-name{flex:1 1 0 !important; min-width:0;}
+.crmatt .att-rows li[data-i] .att-ctl{display:grid !important; grid-template-columns:150px auto; align-items:center; justify-items:end; gap:10px; flex:none; margin-inline-start:auto;}
+.crmatt .att-rows li[data-i] .att-ctl > :first-child:last-child{grid-column:2;}
+.crmatt .att-name b.att-nm{flex-wrap:wrap; row-gap:3px;}
+.crmatt .att-nm > span:first-child{white-space:nowrap;}
+}
+.crmatt .att-nm .dbl-star{margin-inline-start:auto; margin-inline-end:0; font-size:1.45em; line-height:1; color:#E0A100; text-shadow:0 0 1px #9a6d00;}
+.crmatt .school-chip.sch-sm{font-size:12px; padding:0 8px; line-height:1.5; font-weight:700;}
+.crmatt .att-rows li.att-sec{display:flex !important; align-items:center; gap:8px; background:var(--muted); font-weight:800; padding:6px 10px !important; border-radius:8px; margin-top:8px;}
+.crmatt .att-rows li.att-sec span:last-child{color:var(--ink-soft); font-size:13px;}
+.crmatt .seg .sm{display:none;}
+.crmatt .att-rows li[data-i]{flex-wrap:wrap;}
+.crmatt .att-track-row{flex-basis:100%; padding-inline-start:48px; margin-top:-2px;}
+.crmatt .att-track-row .att-track{display:inline-block; border-inline-start:3px solid #E0B44A;}
+.crmatt .att-track-row{display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px;}
+.crmatt .att-track-row .ex-tag{margin:0;}
+.crmatt .att-track-row .att-track + .att-track{margin-inline-start:0;}
+.crmatt .att-track.att-pt{background:#FFF0DC; border-color:#E6A04A; color:#6B3E00;}
+.crmatt .att-name .meta{display:block; font-size:12.5px; color:var(--ink-soft);}
+.crmatt .att-ctl{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.crmatt .sh-nav{display:flex; justify-content:space-between; gap:8px; margin:0 0 10px;}
+.crmatt .sh-nav .btn{font-weight:800; padding:8px 14px;}
+.crmatt .sh-nav .btn small{font-weight:600; color:var(--ink-soft);}
+.crmatt .sh-nav #shNextG{margin-inline-start:auto;}
+@media (max-width:760px){
+.crmatt .sh-nav .btn{flex:1 1 0; min-width:0; font-size:14px; padding:10px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+}
+.crmatt #shRows .att-name .meta{display:inline-flex; flex-wrap:wrap; align-items:center; gap:3px 0;}
+.crmatt .att-pt-s{display:inline-flex; align-items:center; gap:2px; padding:0 6px; margin-inline-start:4px; border-radius:999px; background:#fdebd3; color:#8a4b08; border:1px solid #e9b670; font-size:11px; font-weight:700; line-height:1.5; vertical-align:middle;}
+@media (max-width:760px){
+.crmatt #shRows .att-pt-l{display:none;}
+}
+.crmatt .skip-b{border:1px solid var(--border); background:var(--paper); color:var(--ink-soft); border-radius:999px; padding:0 8px; font-size:11.5px; font-weight:600; line-height:1.7; cursor:pointer; margin-inline-start:4px; vertical-align:middle;}
+@media (max-width:760px){
+.crmatt .skip-t{display:none;}
+.crmatt .skip-b{padding:0 4px; font-size:11px; line-height:1.5;}
+}
+.crmatt .skip-b:hover{border-color:var(--accent); color:var(--accent);}
+.crmatt #shRows li.att-skip{opacity:.55;}
+.crmatt #shRows .att-skip-h{margin-top:8px;}
+.crmatt .att-prev{display:inline-flex; align-items:center; gap:2px; padding:0 6px; margin-inline-start:4px; border-radius:999px; background:#f1f3f5; color:#555; font-size:11px; font-weight:700; line-height:1.6; white-space:nowrap; vertical-align:middle;}
+.crmatt .att-sj2{display:inline-flex; align-items:center; gap:0; padding:0 4px; border-radius:999px; background:#dbe9fb; color:#1f4f8a; font-weight:700; font-size:13px; line-height:1.6;}
+.crmatt .att-sj2 label{display:inline-flex; align-items:center; gap:3px; padding:1px 5px; cursor:pointer; white-space:nowrap;}
+.crmatt .att-sj2 input{width:14px; height:14px; margin:0; accent-color:#1f4f8a; cursor:pointer;}
+.crmatt .seg{display:inline-flex; border:1.5px solid var(--border); border-radius:10px; overflow:hidden;}
+.crmatt .seg button{border:0; background:var(--paper); padding:9px 16px; font-weight:800; font-size:15px; cursor:pointer; color:var(--ink-soft); font-family:inherit;}
+.crmatt .seg button + button{border-inline-start:1.5px solid var(--border);}
+.crmatt .seg button.on.yes{background:#4ea30c; color:#fff;}
+.crmatt .seg button.on.no{background:#c0392b; color:#fff;}
+.crmatt #shCount .c-yes, .crmatt #shTopCnt .c-yes{color:#3d8a06;}
+.crmatt #shCount .c-no, .crmatt #shTopCnt .c-no{color:#c0392b;}
+.crmatt #shTopCnt{font-size:15px; display:block !important;}
+.crmatt #shTopCnt > *{white-space:nowrap;}
+@media (max-width:760px){
+.crmatt #shTopCnt{font-size:14px;}
+}
+.crmatt #shTopCnt .c-un{color:var(--ink-soft);}
+.crmatt .sh-fields{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;}
+@media (max-width:700px){
+.crmatt .sh-fields{grid-template-columns:1fr;}
+.crmatt .att-rows li{align-items:flex-start;}
+}
+.crmatt .hist{list-style:none; padding:0; margin:8px 0 0; font-size:13px;}
+.crmatt .hist li{padding:6px 0; border-bottom:1px dashed var(--border);}
+.crmatt details#shHist summary{cursor:pointer; font-weight:700; color:var(--ink-soft); margin-top:10px;}
+.crmatt .sc-groups td.rm{white-space:normal;}
+.crmatt .sc-groups td.rm{min-width:0; overflow-wrap:anywhere;}
+.crmatt .sx-items .ex-tag{margin:0; font-size:13px; padding:1px 10px;}
+.crmatt .att-mini{display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed var(--border);}
+.crmatt .att-mini:last-child{border-bottom:none;}
+.crmatt .att-mini .p{font-weight:800; color:#4ea30c;}
+.crmatt .att-mini .a{font-weight:800; color:#c0392b;}
+.crmatt .sh-kicker{display:none;}
+.crmatt .att-side #attSheet{position:fixed; top:0; bottom:0; right:0; width:min(620px, 100%); background:var(--att-bg, var(--bg)); z-index:40; overflow-y:auto; padding:0 18px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.18);}
+.crmatt .att-side .sh-kicker{display:block; font-weight:800; color:var(--accent); font-size:13px; letter-spacing:.3px; padding:12px 0 2px;}
+.crmatt .att-side .sh-stick{position:sticky; top:0; z-index:5; background:var(--att-bg, var(--bg));}
+.crmatt .att-track{display:block; background:#fff8d6; border:1px solid #e9cf62; color:#5c4500; border-radius:8px; padding:3px 8px; font-size:13px; font-weight:700; margin-top:4px; white-space:pre-wrap;}
+.crmatt .split-bar{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; align-items:center;}
+.crmatt .split-bar .lbl2{font-weight:800; font-size:13.5px; color:var(--ink-soft);}
+.crmatt .split-bar button{border:1.5px solid var(--border); background:var(--paper); border-radius:999px; padding:5px 12px; font-weight:700; cursor:pointer; font-family:inherit; font-size:13.5px;}
+.crmatt .split-bar button[aria-pressed=true]{background:#1d4f86; border-color:#1d4f86; color:#fff;}
+.crmatt .att-ctl .subj-mini{margin:0; align-self:center;}
+.crmatt .subj-mini{display:inline-block; margin-inline-start:8px; font-size:13px; font-weight:700; line-height:1.5; border-radius:999px; padding:1px 10px; vertical-align:middle;}
+.crmatt .subj-mini.s-m{background:#DDF5D6; color:#1F6B17;}
+.crmatt .subj-mini.s-e{background:#FFF6B8; color:#6B5600;}
+.crmatt .subj-mini.s-b{background:#DCEAFB; color:#1D4F91;}
+.crmatt .subj-mini.s-x{background:var(--muted); color:var(--ink-soft);}
+.crmatt .cx-box{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 10px;}
+.crmatt .cx-box{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-start; margin:-6px 0 10px;}
+.crmatt .cx-btn{background:transparent !important; border:1px dashed var(--border) !important; color:var(--ink-soft) !important; font-weight:600 !important;}
+.crmatt .sh-head{margin-bottom:2px;}
+.crmatt .sh-head2{margin-bottom:12px;}
+.crmatt .sh-stick .sh-nav:not([hidden]) + *{}
+.crmatt .sh-h1row{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+.crmatt .sh-h1row h1{min-width:0;}
+.crmatt .sh-tbox{min-width:0;}
+.crmatt .sh-topcnt{display:none; font-size:13.5px; color:var(--ink-soft); margin-top:1px;}
+@media (max-width:760px){
+.crmatt .sh-topcnt{display:block;}
+}
+.crmatt .sh-top-btns{display:flex; gap:6px; align-items:center; flex:none;}
+.crmatt .sh-totrow{display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px;}
+.crmatt .sh-totrow .cx-box{margin:0 !important; margin-inline-start:auto !important;}
+@media (max-width:760px){
+.crmatt .lg-t{display:none;}
+.crmatt .sh-h1row h1{font-size:19px;}
+.crmatt .sh-top-btns .btn{padding:5px 9px; font-size:12.5px;}
+}
+.crmatt .sh-total{font-size:14px; color:var(--ink-soft); margin-top:2px;}
+.crmatt .sh-total b{color:var(--accent); font-size:15px;}
+.crmatt .cx-on{background:color-mix(in srgb, var(--ink) 8%, var(--paper)); border:1px solid var(--border); border-radius:10px; padding:8px 12px;}
+.crmatt .cx-form{display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap;}
+.crmatt .cx-form select, .crmatt .cx-form input{width:auto; padding:5px 8px;}
+.crmatt #attSheet .card.cx-off .att-rows, .crmatt #attSheet .card.cx-off .sh-tools{opacity:.45;}
+.crmatt .ro-k .gbadge{margin-top:2px;}
+.crmatt .att-ctl .seg{flex:none;}
+@media (max-width:760px){
+.crmatt .att-rows li{display:block; padding:12px 2px;}
+.crmatt .att-name{margin-bottom:8px;}
+.crmatt .att-ctl{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+.crmatt .att-ctl .seg{grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr;}
+.crmatt .seg button{padding:12px 8px; font-size:16px;}
+.crmatt .sh-actions .btn{flex:1; padding:12px; font-size:16px;}
+.crmatt .sh-tools{flex-wrap:wrap;}
+}
+@media (max-width:760px){
+.crmatt .att-date .att-dayname:not(:has(.hol-chips)){display:none;}
+.crmatt .att-date .att-dayname{font-size:13px;}
+.crmatt .att-dayname{font-size:16px;}
+.crmatt .att-rows li{display:flex !important; flex-wrap:wrap; align-items:center; gap:4px 8px; padding:7px 2px;}
+.crmatt .att-name{flex:1 1 40%; min-width:0; margin:0;}
+.crmatt .att-name b{font-size:15px;}
+.crmatt .att-name .meta{font-size:11.5px;}
+.crmatt .att-track{font-size:12px; padding:2px 6px;}
+.crmatt .att-ctl{display:flex !important; flex:none; gap:4px; flex-wrap:nowrap;}
+.crmatt .att-ctl .seg{display:inline-flex !important;}
+.crmatt .att-rows li[data-i]{flex-wrap:wrap !important; gap:4px 6px !important; padding:5px 2px !important;}
+.crmatt .att-rows li[data-i] .att-name{flex:1 1 0 !important;}
+.crmatt .att-rows li[data-i] .att-name .meta{display:block !important; font-size:11px; line-height:1.2;}
+.crmatt .att-name{flex:1 1 auto !important;}
+.crmatt .att-name b{font-size:14.5px;}
+.crmatt .att-name .meta{display:none;}
+.crmatt .gbadge{width:32px; height:32px; font-size:11.5px;}
+.crmatt .att-track-row{padding-inline-start:40px;}
+.crmatt .att-track-row .att-track{font-size:12px; padding:2px 8px;}
+.crmatt .seg .lg{display:none;}
+.crmatt .seg .sm{display:inline;}
+.crmatt .seg button{height:32px; padding:0 9px !important; font-size:15px !important; min-width:34px; box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;}
+.crmatt .att-ctl{align-items:center !important;}
+.crmatt .sh-fields textarea{min-height:56px;}
+.crmatt .split-bar button{padding:4px 9px; font-size:12.5px;}
+}
+.crmatt .hist-tbl{width:100%; border-collapse:collapse; font-size:13px;}
+.crmatt .hist-tbl td{padding:5px 4px; border-bottom:1px solid var(--border); vertical-align:top;}
+.crmatt .hist-tbl .sib-row td{color:var(--ink-soft, #777);}
+.crmatt .hist-tbl details summary{cursor:pointer; color:var(--accent); font-size:12.5px;}
+.crmatt .hist-tbl details div{white-space:pre-wrap; font-size:12.5px; margin-top:4px;}
+.crmatt .sh-add{margin:10px 0 4px;}
+.crmatt .sh-add input{margin-top:8px;}
+.crmatt .sh-add-res{list-style:none; margin:6px 0 0; padding:0;}
+.crmatt .sh-add-res li{margin:0;}
+.crmatt .sh-add-res button{width:100%; text-align:right; background:none; border:0; border-bottom:1px solid var(--border); padding:8px 4px; cursor:pointer; font:inherit; color:inherit;}
+.crmatt .sh-add-res button:hover{background:var(--muted);}
+.crmatt .sh-add-res small{color:var(--ink-soft, #777); margin-inline-start:6px;}
+.crmatt .att-rows .added-tag{color:var(--accent);}
+.crmatt .att-rows .rm{background:none; border:0; color:var(--accent); text-decoration:underline; cursor:pointer; font:inherit; font-size:12.5px; padding:0 4px;}
+.crmatt .ex-tag{display:inline-block; font-size:12px; font-weight:700; color:#5B4A1E; background:#F6EED8; border:1px solid #E6D6A8; border-radius:999px; padding:0 8px; line-height:1.6; margin-inline-start:6px; white-space:nowrap;}
+.crmatt .ex-tag.soon{color:#fff; background:#B5523B; border-color:#B5523B;}
+@media (max-width:760px){
+.crmatt .ex-ic, .crmatt .ex-nbt .ex-lbl{display:none;}
+.crmatt .ex-tag.ex-nbt{padding:0 6px;}
+}
+.crmatt .ex-tag.near{color:#8E3B28; background:#F6DCD3; border-color:#EBBDAF;}
+.crmatt button.ex-tag{font-family:inherit; cursor:pointer;}
+.crmatt .ex-tag.ex-nbt{color:#3F5A80; background:#EEF2F8; border-color:#CBD6E6;}
+.crmatt .ex-row .ex-tag{margin-inline-start:4px;}
+.crmatt .hist-hits{margin-top:14px; border-color:color-mix(in srgb, var(--gold) 45%, var(--border)); background:color-mix(in srgb, var(--gold) 7%, var(--paper));}
+@media (max-width:760px){
+.crmatt .sh-stick{position:sticky; top:var(--side-h, 0px); z-index:9; background:var(--att-bg, var(--bg)); padding:6px 0 4px; margin-top:-6px; box-shadow:0 6px 8px -8px rgba(0,0,0,.25);}
+.crmatt .sh-stick .sh-head{margin-bottom:4px;}
+.crmatt .sh-stick .sh-h1row h1{font-size:18px;}
+.crmatt .sh-stick .sh-nav{margin:4px 0 0;}
+.crmatt .sh-stick .sh-nav .btn{padding:6px 12px !important; font-size:14px !important; min-height:0; border-radius:999px; border:1.5px solid var(--accent) !important; color:var(--accent); background:var(--paper);}
+.crmatt .sh-stick .sh-nav .btn small{color:var(--accent); opacity:.8;}
+.crmatt .sh-stick{padding:4px 0 3px !important;}
+.crmatt #attSheet .sh-actions{position:static; padding-block:6px 4px;}
+}
+.crmatt .seg-mini{display:inline-flex; flex-wrap:wrap; gap:4px;}
+.crmatt .seg-mini button{border:1px solid var(--border); background:#fff; border-radius:999px; padding:5px 12px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; color:var(--ink);}
+.crmatt .seg-mini button[aria-pressed="true"]{background:var(--maroon,#5A1216); border-color:var(--maroon,#5A1216); color:#fff;}
+.crmatt .seg-mini.kinds{margin-bottom:10px;}
+.crmatt #payWrap .err{color:var(--full); font-weight:700;}
+.ui-dlg-bg{position:fixed; inset:0; z-index:5000; background:rgba(30,20,15,.45); display:flex; align-items:center; justify-content:center; padding:16px;}
+.ui-dlg{background:var(--paper, #fff); color:var(--ink, #222); border:1.5px solid var(--accent, #6B1E23); border-radius:16px; width:100%; max-width:440px; max-height:85vh; overflow:auto; padding:18px 18px 14px; box-shadow:0 14px 40px rgba(0,0,0,.25); direction:rtl; text-align:right;}
+.ui-dlg-t{white-space:pre-line; font-size:16px; line-height:1.6; margin-bottom:14px;}
+.ui-dlg-in{width:100%; box-sizing:border-box; font:inherit; font-size:16px; padding:10px 12px; border:1px solid var(--border, #ddd); border-radius:12px; margin-bottom:14px; background:var(--bg, #FAF8F5); color:inherit; resize:vertical;}
+.ui-dlg-b{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+.ui-dlg-b .btn{flex:0 0 auto; min-width:120px; white-space:nowrap; min-height:46px; padding-inline:16px; font-size:16px; font-weight:700; justify-content:center;}
+.ui-dlg-b .btn.danger{background:#A1261F; border-color:#A1261F; color:#fff;}
+@media (max-width:760px){
+.ui-dlg-bg{align-items:flex-end; padding:0;}
+.ui-dlg{max-width:none; border-radius:18px 18px 0 0; border-width:1.5px 0 0; padding:20px 16px calc(16px + env(safe-area-inset-bottom));}
+}
+/* תלם שלי: התאמות קטנות כדי שייראה בדיוק כמו במערכת הניהול (הכפתורים / שדות של האפליקציה שונים) */
+.crmatt .seg{ background:none; padding:0; gap:0; margin:0; border-radius:10px; }
+.crmatt .seg button{ min-height:0; border-radius:0; box-shadow:none; font-family:inherit; flex:none; }
+.crmatt .seg button.on{ box-shadow:none; }
+.crmatt input[type=search], .crmatt select, .crmatt textarea{ width:100%; font-size:14px; padding:8px 10px; border-radius:8px; border:1.5px solid var(--border); background:var(--paper); }
+.crmatt textarea{ resize:vertical; min-height:110px; }
+.crmatt .actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start; margin-top:12px; background:var(--bg); padding-block:6px 4px; }
+.crmatt .sh-actions .btn{ flex:1; padding:12px; font-size:18px; min-height:52px; border-radius:10px; }
+.crmatt #shGroup{ display:none !important; }
+.crmatt .btn.small{ min-height:0; height:auto; padding:7px 14px; border-radius:10px; font-size:14px; }
+/* 1.20: הדפים של הילד/ה בתוך דף הנוכחות */
+.crmatt .ap-row{ flex-basis:100%; box-sizing:border-box; margin-inline-start:40px; display:flex; flex-direction:column; gap:3px; margin-top:6px; padding:6px 8px; background:var(--muted); border-radius:10px; font-size:13px; }
+.crmatt .ap-s{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.crmatt .ap-now{ color:var(--info); font-weight:700; } .crmatt .ap-wait{ color:#B07D1E; font-weight:700; }
+.crmatt .ap-nx{ color:var(--ink); } .crmatt .ap-x{ color:var(--bad); font-weight:700; } .crmatt .ap-row.na{ background:none; padding:0 8px; } .crmatt .ap-row.na .ap-x{ color:var(--ink-soft); font-weight:400; font-size:12px; }
+.crmatt .ap-b{ margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:3px 11px; border:1.5px solid var(--accent); background:var(--paper); color:var(--accent); cursor:pointer; }
+.crmatt .ap-b.ap-rel{ background:var(--accent); color:#fff; }
+
+/* 1.20 – עיצוב חדש לדף הנוכחות */
+.crmatt{ padding-bottom:84px; } body[data-att] #adminView .main{ padding-top:14px; } @media (min-width:900px){ .crmatt .ah{ margin:-20px -16px 10px; } }
+.crmatt .ah{ position:sticky; top:0; z-index:20; background:#2B2320; color:#fff; margin:-14px -10px 10px; padding:10px 14px 9px; border-radius:0 0 16px 16px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.crmatt .ah1{ display:flex; align-items:center; gap:10px; }
+.crmatt .ah-back{ flex:none; height:34px; min-width:40px; border:1px solid #6b5a52; border-radius:10px; background:transparent; color:#fff; font-size:18px; font-weight:800; cursor:pointer; }
+.crmatt .ah h1{ margin:0; font-size:19px; font-weight:900; font-family:var(--font-display); color:#fff; line-height:1.2; flex:1; min-width:0; }
+.crmatt .ah2{ font-size:13px; color:#d9cec6; margin-top:4px; } .crmatt .ah2 b{ color:#fff; font-weight:700; }
+.crmatt .ah-bar{ display:flex; height:6px; border-radius:6px; overflow:hidden; background:#4a3f38; margin-top:8px; } .crmatt .ah-bar i{ display:block; } .crmatt .ah-bar .by{ background:#6CC082; } .crmatt .ah-bar .bn{ background:#e26a5e; }
+.crmatt #shTopCnt.ah-cnt{ display:flex !important; font-size:12.5px; } .crmatt #shTopCnt.ah-cnt .c-yes, .crmatt #shTopCnt.ah-cnt .c-yes b{ color:#9ee0ad; } .crmatt #shTopCnt.ah-cnt .c-no, .crmatt #shTopCnt.ah-cnt .c-no b{ color:#f2a39b; }
+.crmatt .ah-cnt{ display:flex !important; gap:12px; font-size:12.5px; color:#d9cec6; margin-top:4px; } .crmatt .ah-cnt b{ color:#fff; } .crmatt .ah-cnt .c-yes, .crmatt .ah-cnt .c-yes b{ color:#9ee0ad; } .crmatt .ah-cnt .c-no, .crmatt .ah-cnt .c-no b{ color:#f2a39b; } .crmatt .ah-cnt .c-un{ color:#d9cec6; }
+.crmatt .ah .sh-nav{ display:flex; gap:6px; margin:0; flex:none; } .crmatt .ah .sh-nav[hidden]{ display:none; }
+.crmatt .ah .sh-nav button{ width:34px; height:34px; padding:0; background:transparent; border:1px solid #6b5a52; color:#fff; border-radius:10px; font:inherit; font-size:20px; font-weight:800; cursor:pointer; display:grid; place-items:center; } .crmatt .ah .sh-nav button[hidden]{ visibility:hidden; display:grid; }
+.crmatt .cx-on{ background:#FDECEA; border:1.5px solid #efc4bf; color:#8b2a22; border-radius:12px; padding:9px 12px; margin:0 0 10px; font-size:14px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.crmatt .cx-on .cx-acts{ margin-inline-start:auto; display:flex; gap:6px; } .crmatt .cx-on button{ font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:3px 10px; border:1.5px solid #c0392b; background:#fff; color:#c0392b; cursor:pointer; }
+.crmatt.cx-off .ar-list{ opacity:.55; }
+.crmatt .ar-list{ list-style:none; margin:0; padding:0; }
+.crmatt .ar-sec{ display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; color:var(--ink-soft); padding:8px 4px 4px; }
+.crmatt .ar{ background:var(--paper); border:1px solid var(--border); border-radius:14px; margin-bottom:6px; overflow:hidden; transition:background .2s, border-color .2s; }
+.crmatt .ar.p{ border-color:#b9d9a0; background:#f6fbf2; } .crmatt .ar.a{ border-color:#efc4bf; background:#fdf5f4; }
+.crmatt .ar.open{ box-shadow:0 2px 8px rgba(0,0,0,.08); }
+.crmatt .ar-main{ display:flex; align-items:center; gap:8px; padding:8px 10px; cursor:pointer; }
+.crmatt .ar-main .gbadge{ flex:none; }
+.crmatt .ar-nm{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.crmatt .ar-n1{ display:flex; align-items:center; gap:4px; min-width:0; } .crmatt .ar-n1 b{ font-size:15.5px; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.crmatt .ar-ic{ display:inline-flex; gap:2px; margin-inline-start:4px; font-size:12.5px; vertical-align:1px; } .crmatt .ar-ic i{ font-style:normal; } .crmatt .ar-ic .dbl{ font-size:11px; font-weight:800; color:#8a5a00; }
+.crmatt .ar-nm small{ display:flex; align-items:center; gap:4px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); line-height:1.35; }
+.crmatt .ar-nm .school-chip.sch-sm{ font-size:11px; padding:0 7px; }
+.crmatt .ar-pg{ display:block !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.crmatt .ar-pg .pn{ color:#1E5C9A; font-weight:700; } .crmatt .ar-pg .pw{ color:#B07D1E; font-weight:700; } .crmatt .ar-pg .px{ color:var(--bad); font-weight:700; } .crmatt .ar-pg .ps{ color:var(--ink-soft); font-weight:800; }
+.crmatt .ar-main .seg{ flex:none; display:inline-flex; border:1.5px solid var(--border); border-radius:10px; overflow:hidden; }
+.crmatt .ar-main .seg button{ width:42px; height:38px; padding:0; font-size:17px; font-weight:900; display:grid; place-items:center; }
+.crmatt .ar-main .att-sj2{ flex:none; display:flex; flex-direction:column; gap:2px; padding:3px 6px; font-size:12px; }
+.crmatt .ar-main .att-sj2 label{ display:flex; align-items:center; gap:3px; white-space:nowrap; }
+.crmatt .ar-x{ border-top:1px dashed var(--border); padding:8px 12px 10px; display:flex; flex-direction:column; gap:6px; font-size:13px; }
+.crmatt .ar-x .ar-l{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; } .crmatt .ar-x .ar-l:empty{ display:none; }
+.crmatt .ar-x .ap-row{ margin:0; flex-basis:auto; }
+.crmatt .ar-acts button{ font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:4px 11px; border:1.5px solid var(--border); background:var(--paper); color:var(--ink-soft); cursor:pointer; }
+.crmatt .ar-acts .rm{ border-color:#efc4bf; color:var(--bad); }
+.crmatt .ar.skip{ opacity:.6; } .crmatt .ar-un{ margin-inline-start:auto; font:inherit; font-size:12.5px; font-weight:700; border-radius:999px; padding:4px 11px; border:1.5px solid var(--border); background:var(--paper); cursor:pointer; }
+.crmatt .ar-addbtn{ display:block; width:100%; margin:8px 0 4px; border:1.5px dashed var(--border); border-radius:12px; padding:10px; background:transparent; color:var(--ink-soft); font:inherit; font-weight:700; font-size:14px; cursor:pointer; }
+.crmatt .ar-foot{ display:flex; flex-direction:column; gap:4px; padding:6px 4px; font-size:12.5px; color:var(--ink-soft); }
+.crmatt .ar-foot summary{ cursor:pointer; }
+.crmatt .ar-bot{ position:fixed; bottom:0; left:0; right:0; box-sizing:border-box; z-index:30; display:flex; gap:8px; align-items:center; background:var(--paper); border-top:1px solid var(--border); padding:10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow:0 -2px 10px rgba(0,0,0,.06); }
+.crmatt .ar-bot .ar-o{ flex:none; height:46px; padding:0 12px; border:1.5px solid var(--border); border-radius:12px; background:var(--paper); color:var(--ink-soft); font:inherit; font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap; } .crmatt .ar-bot .ar-o[hidden]{ display:none; }
+.crmatt .ar-bot .ar-o .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent); vertical-align:2px; }
+.crmatt .ar-bot .ar-save{ flex:1; height:46px; border:0; border-radius:12px; background:var(--accent); color:#fff; font:inherit; font-size:17px; font-weight:900; cursor:pointer; } .crmatt .ar-bot .ar-save:disabled{ opacity:.5; }
+.cx-reasons{ display:flex; flex-wrap:wrap; gap:6px; } .cx-reasons .btn.on{ background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ===== /נוכחות ===== */
 </style>
 </head>
 <body>
@@ -1550,7 +1879,7 @@ body.ws-vopen .crmws .ws-viewer{top:calc(var(--side-h, 0px) + var(--wsqv, 48px))
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.19",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.20",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -1822,7 +2151,7 @@ $("loginForm").onsubmit = async (ev) => {
 };
 async function logout(){
   try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
-  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); showLogin();
+  saveAuth(null); LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; AD.started = false; } showLogin();
 }
 $("msgLogout").onclick = logout;
 function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
@@ -1847,6 +2176,9 @@ async function boot(){
     showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לבדוק את האינטרנט ולנסות שוב."); return;
   }
   if (isManager) { if (!fastAdmin) adminStart(); return; }
+  // 1.20 (נועה): מתרגלים – נכנסים לכאן רק כדי לסמן נוכחות בקבוצות שלהם
+  if (!isStudentLogin) { let role = null; try { role = await rpc("my_role"); } catch(e) {}
+    if (role && role.role === "instructor") { if (fastAdmin) { AD_CACHE.clear(); AD.loaded = false; } store("telem_portal_role", "instructor"); instructorStart(role); return; } }
   if (fastAdmin) { AD_CACHE.clear(); AD.loaded = false; }
   let me;
   try { me = await rpc("portal_me"); } catch(e) { showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לנסות שוב."); return; }
@@ -2086,6 +2418,7 @@ window.addEventListener("popstate", () => {
   if (VIEWER) return closeViewer(true);   // כפתור "חזרה" של הטלפון סוגר את הדף הפתוח
   if (typeof AD === "undefined" || $("adminView").hidden) return;
   if (AD.skipPop) { AD.skipPop = false; return; }
+  if (typeof ATTM !== "undefined" && ATTM.isOpen) { ATTM.onPop(); return; }   // 1.20: דף הנוכחות של קבוצה
   // 1.18: מאגר (מערכת הניהול) – קודם הדף הפתוח, אחר כך הנושא
   if (typeof CBM !== "undefined" && CBM.viewerOpen()) { CBM.wsClose(true); return; }
   if (CB_VIS() && CBM.WS.topic && !(history.state && history.state.ad === "wst") && (!AD.bank.pick || navD() >= (AD.bankD || 0))) { CBM.WS.topic = null; if (CBM.WS.listKind) CBM.WS.kind = CBM.WS.listKind; CBM.renderWs(); return; }
@@ -2322,6 +2655,7 @@ async function loadWs(force){
   catch(e) { AD.ws = AD.ws || []; }
 }
 function adGo(v){
+  if (typeof ATTM !== "undefined" && ATTM.isOpen) ATTM.detach();
   AD.view = v; AD.sel.clear();
   if (!isDesk()) AD.st = null;
   if (v !== "bank" || isDesk()) AD.bank.pick = null;
@@ -2329,6 +2663,7 @@ function adGo(v){
   window.scrollTo(0, 0); adRender();
 }
 function adRender(){
+  if (typeof ATTM !== "undefined" && ATTM.isOpen) { renderNav(); ATTM.refresh(); return; }   // 1.20: דף הנוכחות פתוח – רק מרעננים את השורות
   renderNav(); setActionBar(null);
   document.body.classList.toggle("v-bank", AD.view === "bank" && !AD.st);
   document.body.classList.toggle("v-stm", !isDesk() && !!AD.st);
@@ -2406,6 +2741,7 @@ async function renderWait(){
     const el = $("live-" + id); if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1200); } });
   B.querySelectorAll("[data-wm]").forEach(b => b.onclick = () => { AD.waitMode = b.dataset.wm; store("telem_portal_waitmode", AD.waitMode); renderWait(); });
   B.querySelectorAll("[data-wcity]").forEach(b => b.onclick = () => { AD.waitCity = b.dataset.wcity; store("telem_portal_waitcity", AD.waitCity); renderWait(); });
+  B.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { const gr = (AD.groups || []).find(x => x.id === b.dataset.att); ATTM.open(b.dataset.att, AD.waitDate || todayIso(), gr); });
   B.querySelectorAll("[data-wd]").forEach(b => b.onclick = () => { const n = Number(b.dataset.wd), d = isoDate(AD.waitDate || todayIso()); AD.waitDate = n ? isoOf(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)) : todayIso(); AD.waitPresent = false; renderWait(); });
   if ($("wdDate")) $("wdDate").onchange = (e) => { if (e.target.value) { AD.waitDate = e.target.value; AD.waitPresent = false; renderWait(); } };
   if ($("wgIns")) { $("wgIns").value = AD.waitIns; $("wgIns").onchange = (e) => { AD.waitIns = e.target.value; store("telem_portal_waitins", AD.waitIns || null); renderWait(); }; }
@@ -2503,7 +2839,16 @@ async function waitGroupsHtml(g, list, fresh){
   if (AD.waitIns && AD.waitIns !== "__me" && !insNames.includes(AD.waitIns)) insNames.push(AD.waitIns);
   const insWant = AD.waitIns === "__me" ? (AD.myName || "") : AD.waitIns;
   const insOk = (gr) => !AD.waitIns || gr.ins.includes(insWant);
-  const dayG = groups.filter(gr => gr.day === day && insOk(gr));
+  // 1.20: מצב הנוכחות בכל קבוצה ביום הזה (כמו בנוכחות במערכת הניהול)
+  if (!AD.attG || AD.attG.iso !== iso || Date.now() - AD.attG.at > 60e3) { try { const r = await rpc("attendance_groups", { p_date: iso, p_city: null }); AD.attG = { iso, at: Date.now(), m: new Map((r || []).map(x => [String(x.session_id), x])) }; } catch(e) { AD.attG = { iso, at: Date.now(), m: new Map() }; } }
+  const attOf = (gr) => AD.attG.m.get(gr.id);
+  // 1.20: הקבוצות של היום – לפי השרת (כמו בנוכחות: כולל מרתונים, תאריכי התחלה / סיום של קבוצה); הילדים – מהשיבוצים
+  const hm5 = (t) => String(t || "").slice(0, 5);
+  const dayAll = AD.attG.m.size ? [...AD.attG.m.values()].map(x => { const g0 = groups.find(gr => gr.id === String(x.session_id));
+      return Object.assign({}, g0 || { id: String(x.session_id), city: x.city || "", loc: x.location || "", day, kids: new Set(), ins: String(x.instructors || "").split(/,\s*/).filter(Boolean) },
+        { start: hm5(x.start_time) || (g0 && g0.start), end: hm5(x.end_time) || (g0 && g0.end), time: hm5(x.start_time) || (g0 && g0.time), mar: x.kind === "מרתון", label: x.time_label }); })
+    : groups.filter(gr => gr.day === day);
+  const dayG = dayAll.filter(insOk);
   const cities = [...new Set(dayG.map(gr => gr.city))];
   if (AD.waitCity && AD.waitCity !== "*" && !cities.includes(AD.waitCity)) AD.waitCity = "*";
   const city = AD.waitCity || "*";
@@ -2544,7 +2889,9 @@ async function waitGroupsHtml(g, list, fresh){
     const nW = rows.filter(r => r.w).length, nN = rows.filter(r => r.noQ).length, nP = rows.filter(r => r.pres).length;
     const rel = rows.filter(r => r.relP && (!live || r.inLesson || true)).map(r => r.relP.id);
     h += `<section class="wg${live ? " live" : ""}" id="live-${esc(gr.id)}"><div class="wg-h">
-        <b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start || gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}
+        <b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start || gr.time)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${gr.mar ? `<span class="chip mar-t">🏁 מרתון</span>` : ""}${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}
+        ${(() => { const a = attOf(gr), past = iso < todayIso() || (isToday && gr.end && gr.end <= String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0"));
+          return `<button type="button" class="att-open${a && a.marked ? " done" : past ? " miss" : ""}" data-att="${esc(gr.id)}">${a && a.marked ? `✓ סומן · ${a.marked_count} נוכחים` : past ? "לא סומנה נוכחות" : "✓ נוכחות"}</button>`; })()}
         <span class="wg-n">${rows.length} ילדים${nW ? ` · <b class="w-t">${nW} ממתינים</b>` : ""}${nN ? ` · <b class="bad-t">${nN} בלי דפים</b>` : ""}${presOn ? ` · <span class="ok-t">✓${nP}</span>` : ""}</span>
         ${rel.length > 1 ? `<button class="btn sm${live ? " primary" : ""}" data-relg="${rel.join(",")}">${IC.send || ""} הדף הבא לכל הממתינים (${rel.length})</button>` : ""}</div>
       ${rows.length ? `<div class="wrows">${rows.map(r => r.html).join("")}</div>` : `<div class="muted small" style="padding:4px 6px 8px">${AD.waitPresent ? "אף אחד לא סומן/ה נוכח/ת." : "אין ילדים עם חשבון בקבוצה."}</div>`}</section>`;
@@ -2887,59 +3234,41 @@ async function renderStudentMobile(T, s){
 
   const tabs = [["queue", "☰ בתור", qn], ["now", "✎ בעבודה", open.length], ["done", "🏁 סיים/ה", done.length]];
   const row = (p, inner, cls) => `<div class="stm-row${cls || ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-pid="${p.id}">${inner}</div>`;
-  const tt = (p, sub, pre) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${subTag(p)}${pre || ""}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
+  const tt = (p, sub, pre) => `<div class="t" data-zoom="${esc(String(p.worksheet_id))}">${esc(wsTitle(p.worksheet_id))}<small>${pre || ""}${esc(sub)}</small></div>${lvIc(W(p.worksheet_id))}`;
 
   // 1.18: בלי לשוניות – שלושה חלקים במסך אחד: ☰ בתור (למעלה) · ✎ בעבודה · 🏁 סיים/ה (למטה)
-  const secBody = (tab) => { let body = "";
-  if (false) {   // 1.18 (נועה): גם במשולב – בשורות, לא בעמודות
-    // 1.15.2: משולב/ת – שתי עמודות (מתמטיקה | אנגלית). לחיצה על דף – חלון פעולות
-    const H = { queue: "הבאים בתור – עוד לא נשלחו", now: 'בעבודה – עוד לא סומנו "סיימתי"', done: "סיים/ה" }[tab];
-    const HINT = { queue: "לחיצה על דף – פותחת אותו (ולמטה: סדר, שחרור, הסרה).", now: "לחיצה על דף – פותחת אותו (ולמטה: ביטול שחרור).", done: "לחיצה על דף – פותחת אותו." }[tab];
-    body += `<div class="stm-hint">${HINT}</div><div class="stm-cols">`;
-    let more = false;
-    subs.forEach(x => {
-      let list = tab === "queue" ? queueOf(s.student_id, x) : (tab === "now" ? open : done).filter(p => p.subject === x);
-      const full = list.length; if (tab === "done" && !AD.showDone && full > 4) { list = list.slice(0, 4); more = true; }
-      const sub = (p) => tab === "queue" ? esc((W(p.worksheet_id) || {}).topic_name || "") : tab === "now" ? SEEN_IC(!!p.seen_at) + "נשלח " + esc(ago(p.released_at)) : esc(ago(p.done_at));
-      body += `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span><b>${full}</b>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה</span>` : ""}</div>`;
-      body += list.map((p, i) => `<button type="button" class="stm-mr${tab === "queue" && i === 0 ? " next" : ""}${AD.hl && AD.hl.has(p.id) ? " hl" : ""}" data-act="${p.id}">${tab === "queue" ? `<span class="n">${i + 1}</span>` : ""}<span class="t"><span class="tt">${esc(wsTitle(p.worksheet_id))}</span><small>${sub(p)}</small>${lvIc(W(p.worksheet_id))}</span></button>`).join("")
-        || `<div class="stm-empty">${tab === "queue" ? "התור ריק." : tab === "now" ? "אין דף פתוח." : "עוד אין."}</div>`;
-      if (tab === "queue" && list.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא</button>`;
-      body += `</div>`;
-    });
-    body += `</div>`;
-    if (more) body += `<button class="linkish small" id="moreDoneAd">להציג את כל ${done.length}</button>`;
-  } else if (tab === "queue") {
-    body += `<div class="stm-hint">${qn ? `"שליחת הדף הבא" שולח את דף 1. גרירה בנקודות שמשמאל משנה את הסדר.` : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
-    let hidQ = 0;   // 1.18.2 (נועה): רק שני הראשונים בתור (בכל מקצוע) – והשאר ב"עוד"
-    queues.forEach(([x, qAll]) => {
-      const q = AD.showQ ? qAll : qAll.slice(0, 2); hidQ += qAll.length - q.length;
-      if (multi && q.length) body += `<div class="stm-sub"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) ? `<span class="chip new">ממתין/ה לדף</span>` : ""}</div>`;
-      // 1.18.2: שינוי סדר בגרירה (⋮⋮ משמאל) – בלי חיצים (נועה)
-      body += `<div class="stm-q" data-q="${esc(x)}">` + q.map((p, i) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
-          <span class="drag" data-drag="${p.id}" title="גרירה לשינוי הסדר" aria-label="גרירה לשינוי הסדר">⋮⋮</span>`, i === 0 ? " next" : "")).join("") + `</div>`;
-      if (multi && q.length && s.has_account) body += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא ב${esc(x)}</button>`;
-    });
-    if (hidQ) body += `<button class="linkish small stm-more" id="moreQAd">עוד ${hidQ} בתור ▾</button>`;
-    else if (AD.showQ && qn > 2) body += `<button class="linkish small stm-more" id="moreQAd">להציג פחות ▴</button>`;
-  } else if (tab === "now") {
-    body += open.map(p => row(p, `${tt(p, "נשלח " + ago(p.released_at), SEEN_IC(!!p.seen_at))}
-        <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`)).join("")
-      || `<div class="stm-empty">אין דף פתוח${waiting ? " – <b>ממתין/ה לדף</b>" : ""}.</div>`;
-  } else {
-    const show = AD.showDone ? done : done.slice(0, 2);   // 1.18.2: רק שניים אחרונים
-    body += show.map(p => row(p, `${tt(p, wsTopicName(p.worksheet_id) + " · " + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`)).join("")
-      || `<div class="stm-empty">עוד לא סיים/ה דפים.</div>`;
-    if (done.length > show.length) body += `<button class="linkish small stm-more" id="moreDoneAd">עוד ${done.length - show.length} שסיים/ה ▾</button>`;
-    else if (AD.showDone && done.length > 2) body += `<button class="linkish small stm-more" id="moreDoneAd">להציג פחות ▴</button>`;
-  }
-  return body; };
+  // 1.20 (נועה): שלושה מקטעים נפרדים (☰ בתור · ✎ בעבודה · 🏁 סיים/ה) – לחיצה על הכותרת מכווצת / פותחת.
+  // משולב/ת – בכל מקטע מתמטיקה ואנגלית בעמודות; מקצוע אחד – שורות לכל הרוחב.
+  const qRow = (p, i, n) => row(p, `<span class="n">${i + 1}</span>${tt(p, wsTopicName(p.worksheet_id))}
+          <span class="drag" data-drag="${p.id}" title="גרירה לשינוי הסדר" aria-label="גרירה לשינוי הסדר">⋮⋮</span>`, i === 0 ? " next" : "");
+  const nowRow = (p) => row(p, `${tt(p, "נשלח " + ago(p.released_at), SEEN_IC(!!p.seen_at))}
+        <button class="mini" title="ביטול שליחה (חזרה לתור)" data-unrel="${p.id}">${IC.undo}</button>`);
+  const doneRow = (p) => row(p, `${tt(p, (multi ? "" : wsTopicName(p.worksheet_id) + " · ") + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`);
+  const EMPTY = { queue: "התור ריק.", now: "אין דף פתוח.", done: "עוד לא סיים/ה דפים." };
+  const secBody = (tab) => { let body = "", hid = 0;
+    if (tab === "queue") body += `<div class="stm-hint">${qn ? (multi ? "גרירה בנקודות משנה את הסדר." : `"שליחת הדף הבא" שולח את דף 1. גרירה בנקודות שמשמאל משנה את הסדר.`) : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
+    const part = (x) => {   // מה שמוצג במקצוע אחד
+      let h = "";
+      if (tab === "queue") { const qAll = queueOf(s.student_id, x), q = AD.showQ ? qAll : qAll.slice(0, 2); hid += qAll.length - q.length;
+        h += q.length ? `<div class="stm-q" data-q="${esc(x)}">` + q.map((p, i) => qRow(p, i)).join("") + `</div>` : `<div class="stm-empty">${EMPTY.queue}</div>`;
+        if (q.length && s.has_account && multi) h += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא</button>`; }
+      else if (tab === "now") { const L = open.filter(p => !multi || p.subject === x);
+        h += L.map(nowRow).join("") || `<div class="stm-empty">${EMPTY.now}${waiting && (!multi || (s.waiting_subjects || []).includes(x)) ? " – <b>ממתין/ה לדף</b>" : ""}</div>`; }
+      else { const all = done.filter(p => !multi || p.subject === x), L = AD.showDone ? all : all.slice(0, 2); hid += all.length - L.length;
+        h += L.map(doneRow).join("") || `<div class="stm-empty">${EMPTY.done}</div>`; }
+      return h; };
+    if (multi) body += `<div class="stm-cols">` + subs.map(x => `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) && tab !== "done" ? `<span class="chip new">ממתין/ה</span>` : ""}</div>${part(x)}</div>`).join("") + `</div>`;
+    else body += part(subs[0]);
+    if (tab === "queue") { if (hid) body += `<button class="linkish small stm-more" id="moreQAd">עוד ${hid} בתור ▾</button>`; else if (AD.showQ && qn > 2) body += `<button class="linkish small stm-more" id="moreQAd">להציג פחות ▴</button>`; }
+    if (tab === "done") { if (hid) body += `<button class="linkish small stm-more" id="moreDoneAd">עוד ${hid} שסיים/ה ▾</button>`; else if (AD.showDone && done.length > 2) body += `<button class="linkish small stm-more" id="moreDoneAd">להציג פחות ▴</button>`; }
+    return body; };
   const SEC = { queue: ["☰", "בתור", "עוד לא נשלחו"], now: ["✎", "בעבודה", 'נשלחו ועוד לא סומנו "סיימתי"'], done: ["🏁", "סיים/ה", ""] };
   // 1.18: בזמן בחירה במאגר – מה הילד/ה עושה (בתור / בעבודה / סיים), בלי לצאת מהמאגר
   const peekList = (k) => { const L = k === "queue" ? queues.flatMap(([, q]) => q) : k === "now" ? open : done.slice(0, 8);
     return L.map(p => `<div class="pk-row">${multi ? subTag(p) : ""}<b>${esc(wsTitle(p.worksheet_id))}</b><small>${esc(k === "done" ? ago(p.done_at) : k === "now" ? "נשלח " + ago(p.released_at) : (W(p.worksheet_id) || {}).topic_name || "")}</small>${lvIc(W(p.worksheet_id))}</div>`).join("")
       || `<div class="pk-row muted">${k === "queue" ? "התור ריק." : k === "now" ? "אין דף פתוח." : "עוד לא סיים/ה דפים."}</div>`; };
-  const body = tabs.map(([k, , n]) => `<section class="stm-sec sec-${k}"><h3 class="stm-sec-h"><span class="ic">${SEC[k][0]}</span>${SEC[k][1]}<b>${n}</b>${SEC[k][2] ? `<small>${esc(SEC[k][2])}</small>` : ""}</h3>${secBody(k)}</section>`).join("");
+  const shut = AD.secShut || (AD.secShut = new Set(JSON.parse(store("telem_portal_secshut") || "[]")));
+  const body = tabs.map(([k, , n]) => `<section class="stm-sec sec-${k}${shut.has(k) ? " shut" : ""}"><h3 class="stm-sec-h" data-sec="${k}" role="button" aria-expanded="${!shut.has(k)}"><span class="ic">${SEC[k][0]}</span>${SEC[k][1]}<b>${n}</b>${SEC[k][2] ? `<small>${esc(SEC[k][2])}</small>` : ""}<span class="sec-car">${shut.has(k) ? "▸" : "▾"}</span></h3>${shut.has(k) ? "" : `<div class="stm-sec-b">${secBody(k)}</div>`}</section>`).join("");
 
   // 1.18: החשבון בשורה קטנה מתחת לפרטים (בלי "חשבון ◂"): טלפון · כניסה אחרונה · קוד חדש
   const acc = !s.has_account
@@ -2965,6 +3294,7 @@ async function renderStudentMobile(T, s){
 
   const q = (sel) => T.querySelector(sel);
   q("#stBack").onclick = leaveStudent; wireExLines(T);
+  T.querySelectorAll("[data-sec]").forEach(h => h.onclick = () => { const k = h.dataset.sec, S = AD.secShut; S.has(k) ? S.delete(k) : S.add(k); store("telem_portal_secshut", JSON.stringify([...S])); const y = window.scrollY; renderStudentMobile(T, s); window.scrollTo(0, y); });
   T.querySelectorAll("[data-peek]").forEach(b => b.onclick = () => { AD.peek = AD.peek === b.dataset.peek ? null : b.dataset.peek; const y = window.scrollY; renderStudentMobile(T, s); window.scrollTo(0, y); });
   T.querySelectorAll("[data-stab]").forEach(b => b.onclick = () => { AD.stTab = b.dataset.stab; AD.showDone = false; renderStudentMobile(T, s); window.scrollTo(0, 0); });
   T.querySelectorAll("[data-unrel]").forEach(b => b.onclick = () => unrelease(Number(b.dataset.unrel)));
@@ -4161,6 +4491,628 @@ async function previewWs(wid){
 // התחלה
 // ======================================================================
 document.querySelectorAll(".appVer").forEach(x => { x.textContent = CONFIG.version; });
+// ===================== מתרגלים (1.20) =====================
+// מתרגל/ת רואה רק את הקבוצות שלו/ה ביום (השרת מחזיר רק אותן) ומסמן/ת נוכחות. בלי דפים, בלי תלמידים, בלי מאגר.
+function instructorStart(role){
+  AD.role = "instructor"; AD.myName = (role && role.full_name) || "";
+  showView("adminView"); document.body.classList.add("v-ins");
+  $("adWho").textContent = AD.myName; $("adNav").innerHTML = `<button aria-current="page"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><span>נוכחות</span></button>`;
+  $("adTools").hidden = true; $("adNotify").hidden = true;
+  $("adLogout").onclick = logout;
+  $("adRefresh").onclick = () => { AD.attG = null; insRender(); };
+  insRender();
+}
+async function insRender(){
+  if (typeof ATTM !== "undefined" && ATTM.isOpen) return;
+  const T = $("adBody"), iso = AD.waitDate || (AD.waitDate = todayIso()), isToday = iso === todayIso();
+  T.innerHTML = waitDayBar(iso) + `<div class="card muted">טוען…</div>`; wireIns(T);
+  let list = [];
+  try { list = await rpc("attendance_groups", { p_date: iso, p_city: null }) || []; } catch(e) { T.innerHTML = waitDayBar(iso) + `<div class="card muted">לא הצלחנו לטעון את הקבוצות. אפשר לנסות שוב ב"רענון".</div>`; wireIns(T); return; }
+  if (iso !== AD.waitDate) return;
+  const hm5 = (t) => String(t || "").slice(0, 5), now = new Date(), nowHm = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+  list.sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"));
+  const gs = list.map(x => ({ id: String(x.session_id), city: x.city || "", loc: x.location || "", start: hm5(x.start_time), end: hm5(x.end_time), mar: x.kind === "מרתון", x }));
+  let h = waitDayBar(iso);
+  if (!gs.length) h += `<div class="card muted">אין לך קבוצות ביום הזה.</div>`;
+  h += gs.map(gr => { const x = gr.x, live = isToday && gr.start <= nowHm && (!gr.end || nowHm <= gr.end), past = iso < todayIso() || (isToday && gr.end && gr.end <= nowHm);
+    return `<button type="button" class="ins-g${live ? " live" : ""}${x.marked ? " done" : ""}" data-att="${esc(gr.id)}">
+      <span class="ins-1"><b>${live ? `<span class="live-dot" style="display:inline-block;margin-inline-end:6px"></span>` : ""}<span class="nw">${esc(gr.start)}${gr.end ? "–" + esc(gr.end) : ""}</span></b>${gr.mar ? `<span class="chip mar-t">🏁 מרתון</span>` : ""}${scChip(gr.loc)}<span class="wg-c">${esc(gr.city)}</span>${live ? `<span class="chip ok">עכשיו</span>` : ""}</span>
+      <span class="ins-2"><span>${x.kids || 0} ילדים${x.room ? " · חדר " + esc(x.room) : ""}</span><span class="ins-st${x.marked ? " ok" : past ? " miss" : ""}">${x.marked ? `✓ סומן · ${x.marked_count} נוכחים` : past ? "לא סומנה נוכחות" : "✓ לסימון נוכחות"}</span></span></button>`; }).join("");
+  T.innerHTML = h; wireIns(T);
+  T.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { const gr = gs.find(g => g.id === b.dataset.att); ATTM.open(b.dataset.att, iso, gr); });
+}
+function wireIns(T){
+  T.querySelectorAll("[data-wd]").forEach(b => b.onclick = () => { const n = Number(b.dataset.wd), d = isoDate(AD.waitDate || todayIso()); AD.waitDate = n ? isoOf(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)) : todayIso(); insRender(); });
+  const di = T.querySelector("#wdDate"); if (di) di.onchange = (e) => { if (e.target.value) { AD.waitDate = e.target.value; insRender(); } };
+}
+// ===================== נוכחות – העתק ממערכת הניהול (1.20) =====================
+// הקוד של "דף הקבוצה" (סימון נוכחות) הועתק כמו שהוא ממערכת הניהול, בתוך ATTM. מערכת הניהול לא השתנתה.
+// אותן פונקציות בשרת (attendance_sheet / save_attendance / attendance_find_student / set_lesson_cancelled).
+// כשמשנים את הנוכחות במערכת הניהול – מעתיקים שוב (port/att-build.py).
+const ATTM = (() => {
+  const wrap = document.createElement("div"); wrap.className = "crmatt"; wrap.id = "view-att";
+  wrap.innerHTML = `<div id="attList" hidden></div><div id="attSideBg" hidden></div><div id="attMark" hidden></div>
+<div id="attSheet" hidden>
+  <div class="ah">
+    <div class="ah1"><button type="button" class="ah-back" id="shBack" aria-label="חזרה">→</button><h1 id="shTitle"></h1><div class="sh-nav" id="shNav" hidden><button type="button" id="shPrevG"></button><button type="button" id="shNextG"></button></div></div>
+    <div class="ah2" id="shSub"></div>
+    <div class="ah-bar" id="shBar"></div>
+    <div class="ah-cnt" id="shTopCnt"></div>
+  </div>
+  <div class="notice" id="shLocked" hidden>אפשר לסמן ולתקן נוכחות רק ביום השיעור.</div>
+  <div class="cx-on" id="shCx" hidden></div>
+  <ul class="ar-list" id="shRows"></ul>
+  <div class="sh-add" id="shAddBox">
+    <button type="button" class="ar-addbtn" id="shAddBtn">+ ילד/ה מקבוצה אחרת</button>
+    <div id="shAddPanel" hidden>
+      <input id="shAddQ" type="search" placeholder="שם הילד/ה (לפחות 2 אותיות)..." aria-label="חיפוש ילד/ה רשום/ה" autocomplete="off">
+      <div class="muted" style="font-size:12.5px; margin-top:4px;">רק ילדים רשומים – קודם מהעיר של הקבוצה. ילד/ה שלא רשום/ה – כותבים בהערה.</div>
+      <ul class="sh-add-res" id="shAddRes"></ul>
+    </div>
+  </div>
+  <div class="ar-foot"><div id="shTotal"></div><div class="meta-line" id="shMeta"></div>
+    <details id="shHist"><summary>היסטוריית שמירות</summary><ul class="hist" id="shHistList"></ul></details></div>
+  <div class="err" id="shErr"></div>
+  <textarea id="shExtra" hidden></textarea><textarea id="shNotes" hidden></textarea>
+  <span id="shCount" hidden></span><button type="button" id="shAll" hidden></button><button type="button" id="shGroup" hidden></button><div id="shSplitBar" hidden></div>
+  <div class="ar-bot"><button type="button" class="ar-o" id="shCxBtn">⊘ לא התקיים</button><button type="button" class="ar-o" id="shNoteBtn">✎ הערה</button><button type="button" class="ar-save" id="shSave">שמירה</button></div>
+</div>`;
+  const $ = (id) => wrap.querySelector("#" + id) || document.getElementById(id);
+  // ---- מה שמערכת הניהול מביאה ממקומות אחרים – כאן בקטן ----
+  const ME = { get role(){ return AD.role === "instructor" ? "instructor" : "admin"; }, get full_name(){ return AD.myName || ""; } };
+  const G = { sessions: [], roster: null }, L = { leads: [], asg: null, staff: [], staffAll: [] }, EX = { rows: [] };
+  const loadExams = () => Promise.resolve();
+  const currentView = "att";
+  const isMobile = () => true, attSide = () => false;
+  const attFiltTo = () => {};
+  const statusName = () => "";
+  const stSubjOf = (id) => { const s = stById(String(id)); const x = (s && s.subjects) || []; return x.includes("מתמטיקה") && x.includes("אנגלית") ? "מתמטיקה ואנגלית" : x[0] || ""; };
+  // מי שמר (בהיסטוריית השמירות) – שמות הצוות
+  let STAFF = null; const staffName = (id) => ((STAFF || []).find(x => x.id === id) || {}).full_name || "";
+  const pastBadge = () => "", marFlag = () => "", payPendChip = () => "";
+  const grpEdit = () => {};
+  // מבחן / לומדים עכשיו – מהנתונים של תלם שלי (כמו בכרטיס התלמיד/ה)
+  const kidExTag = (r) => { const s = stById(String(r.student_id)); if (!s || !AD.info || subjGrp(r.subject) === 1) return ""; const I = infoOf(s);
+    return (I.exam ? `<button type="button" class="ex-tag${exCls(I.exam.exam_date, I.t)}" data-ex="${I.exam.id}" title="החומר למבחן"><span class="ex-ic">📝 </span>${esc(/מיפוי/.test(I.exam.kind) ? "מיפוי" : I.exam.kind)} ${fmtDM(I.exam.exam_date)}</button>` : "")
+      + (I.study ? `<button type="button" class="ex-tag ex-nbt" data-ex="${I.study.id}" title="מה לומדים עכשיו בכיתה" aria-label="לומדים עכשיו">📓<span class="ex-lbl"> לומדים עכשיו</span></button>` : ""); };
+  const ATT_KID = (sid) => { if (attChanged()) { toast("יש סימון שלא נשמר – קודם שמירה"); return; } close(); setTimeout(() => openStudent(String(sid)), 50); };
+  // 1.20 (נועה): הדפים בתוך דף הנוכחות – לכל מקצוע: על מה עובד/ת / מה סיים/ה, והבא בתור (שחרור / + דפים מהמאגר)
+  const ATT_PAGES = (r) => { const s = stById(String(r.student_id)); if (!s) return "";
+    if (!s.has_account) return `<div class="ap-row na"><span class="ap-x">אין חשבון בתלם שלי</span></div>`;
+    const subs = s.subjects || [], two = subs.length > 1, sh = (x) => x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x;
+    return `<div class="ap-row">` + subs.map(x => { const pl = planOf(s.student_id, x), q = queueOf(s.student_id, x)[0];
+      const open = pl.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)))[0];
+      const done = pl.filter(p => p.status === "הושלם").sort((a, b) => String(b.done_at).localeCompare(String(a.done_at)))[0];
+      const now = open ? `<span class="ap-now">✎ ${esc(wsTitle(open.worksheet_id))}</span>` : done ? `<span class="ap-wait">⏳ סיים/ה "${esc(wsTitle(done.worksheet_id))}"</span>` : "";
+      const nx = q ? `<span class="ap-nx">הבא: ${esc(wsTitle(q.worksheet_id))}</span>${open ? "" : `<button type="button" class="ap-b ap-rel" data-relp="${q.id}">✓ שחרור</button>`}`
+        : `<span class="ap-x">אין דפים בתור</span><button type="button" class="ap-b" data-addp="${esc(s.student_id)}" data-subj="${esc(x)}">+ דפים</button>`;
+      return `<div class="ap-s">${two ? `<span class="subj-chip ${subjCls(x)} on sm">${esc(sh(x))}</span>` : ""}${now}${nx}</div>`; }).join("") + `</div>`; };
+  // 1.20: שורה קצרה של הדפים מתחת לשם (על מה עובד/ת / סיים/ה / אין דפים)
+  const ATT_PAGES_LINE = (r) => { const s = stById(String(r.student_id)); if (!s || !s.has_account) return "";
+    const subs = s.subjects || [], two = subs.length > 1, sh = (x) => x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x;
+    return subs.map(x => { const pl = planOf(s.student_id, x), q = queueOf(s.student_id, x)[0];
+      const open = pl.filter(p => p.status === "נשלח").sort((a, b) => String(b.released_at).localeCompare(String(a.released_at)))[0];
+      const done = pl.filter(p => p.status === "הושלם").sort((a, b) => String(b.done_at).localeCompare(String(a.done_at)))[0];
+      const t = open ? `<span class="pn">✎ ${esc(wsTitle(open.worksheet_id))}</span>` : !q ? `<span class="px">אין דפים בתור</span>` : `<span class="pw">⏳ ${done ? "ממתין/ה לדף" : "עוד לא נשלח דף"}</span>`;
+      return (two ? `<span class="ps">${sh(x)}</span> ` : "") + t; }).join(" · "); };
+  const ATT_ADD = (sid, subj) => { if (attChanged()) { toast("יש סימון שלא נשמר – קודם שמירה"); return; } close(); setTimeout(() => { openStudent(String(sid), subj); const s = stById(String(sid)); if (s) setTimeout(() => startPick(s), 80); }, 50); };
+  const DOW = ["א","ב","ג","ד","ה","ו","ש"];
+const DAY_FULL = { "א":"ראשון","ב":"שני","ג":"שלישי","ד":"רביעי","ה":"חמישי","ו":"שישי","ש":"שבת" };
+const todayIL = () => { const p = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date()); return p; };
+const addDays = (iso, n) => { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const dayLetter = (iso) => DOW[new Date(iso + "T12:00:00Z").getUTCDay()];
+const fmtIso = (iso) => iso ? iso.slice(8, 10) + "." + iso.slice(5, 7) + "." + iso.slice(0, 4) : "";
+const rng = (a, b) => !a && !b ? "" : `<span dir="ltr" style="unicode-bidi:isolate; white-space:nowrap">${esc(a)}${b ? "–" + esc(b) : ""}</span>`;   // 5.19.72: מפגש בלי שעות - ריק
+const addMin = (hhmm, m) => { const [h, mi] = String(hhmm).split(":").map(Number); const t = h * 60 + mi + m; return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+const fmtDate = (iso) => { if (!iso) return ""; const d = new Date(iso); return d.toLocaleDateString("he-IL", {day:"2-digit", month:"2-digit", year:"numeric"}) + " " + d.toLocaleTimeString("he-IL", {hour:"2-digit", minute:"2-digit"}); };
+const fullName = (a, b) => [a, b].filter(Boolean).join(" ");
+const DAY_ORDER = { "א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6 };
+function classLabel(grade, num){
+  const g = String(grade || "").trim(), n = String(num || "").trim();
+  if (!n) return g;
+  if (/^[א-ת]/.test(n)) return n;
+  return (g || "") + n;
+}
+function subjFromStatus(n){
+  n = String(n || ""); if (!/נרשם|משובץ|ממתין/.test(n) || /קיץ/.test(n)) return "";
+  const m = /מת|מתמטיקה/.test(n), e = /אנג|אנגלית/.test(n);
+  return m && e ? "מתמטיקה ואנגלית" : m ? "מתמטיקה" : e ? "אנגלית" : "";
+}
+function subjMini(s){ const g = subjGrp(s); return `<span class="subj-mini ${["s-m", "s-e", "s-b", "s-x"][g]}">${["מת'", "אנג'", "משולב", "בלי מקצוע"][g]}</span>`; }   // 5.19.14: מקוצר (הלקוחה)
+function uiDialog(msg, o){ o = o || {};
+  return new Promise((resolve) => {
+    const bg = document.createElement("div"); bg.className = "ui-dlg-bg";
+    const danger = o.danger != null ? o.danger : /למחוק|מחיקה|לבטל את|לסיים את הפיצול/.test(msg), ask = /^האם /.test(msg);
+    const okT = o.ok || (o.input ? "שמירה" : ask ? "כן" : danger ? (/למחוק/.test(msg) ? "מחיקה" : /לבטל/.test(msg) ? "כן, לבטל" : "כן") : "אישור"), noT = o.no || (ask ? "לא" : o.copy ? "סגירה" : "ביטול");
+    bg.innerHTML = `<div class="ui-dlg" role="dialog" aria-modal="true"><div class="ui-dlg-t"></div>${o.input ? `<${o.multi ? "textarea rows='3'" : "input type='text'"} class="ui-dlg-in"></${o.multi ? "textarea" : "input"}>` : ""}<div class="ui-dlg-b">${o.copy ? "" : `<button type="button" class="btn primary${danger ? " danger" : ""}" data-ok></button>`}<button type="button" class="btn" data-no></button></div></div>`;
+    bg.querySelector(".ui-dlg-t").textContent = msg; if (!o.copy) bg.querySelector("[data-ok]").textContent = okT; bg.querySelector("[data-no]").textContent = noT;
+    const inp = bg.querySelector(".ui-dlg-in"); if (inp) { inp.value = o.value != null ? o.value : ""; if (o.copy) inp.readOnly = true; }
+    const done = (v) => { document.removeEventListener("keydown", key, true); bg.remove(); resolve(v); };
+    const ok = () => done(o.input ? (inp ? inp.value : "") : true), no = () => done(o.input ? null : false);
+    const key = (ev) => { if (ev.key === "Escape") { ev.preventDefault(); ev.stopPropagation(); no(); } else if (ev.key === "Enter" && !(inp && inp.tagName === "TEXTAREA") && !o.copy) { ev.preventDefault(); ev.stopPropagation(); ok(); } };
+    document.addEventListener("keydown", key, true);
+    if (!o.copy) bg.querySelector("[data-ok]").onclick = ok; if (o.single) bg.querySelector("[data-no]").remove(); else bg.querySelector("[data-no]").onclick = no;
+    bg.addEventListener("click", (ev) => { if (ev.target === bg) no(); });
+    document.body.appendChild(bg);
+    setTimeout(() => { if (inp) { inp.focus(); inp.select(); } else (bg.querySelector("[data-ok]") || bg.querySelector("[data-no]")).focus(); }, 30);
+  });
+}
+const uiConfirm = (msg, o) => uiDialog(msg, o);
+const HOL = { rows: null };
+const HOL_KIND = { holiday: "חג – אין פעילות", vacation: "חופשת בית ספר", note: "יום ציון" };
+async function loadHol(force){ if (HOL.rows && !force) return; try { HOL.rows = await getAll("days_off", "select=*&order=date_from"); } catch(e) { HOL.rows = []; } }
+// הימים המיוחדים בתאריך (לפי עיר/בית ספר אם נתונים)
+const holOn = (date, city, school) => (HOL.rows || []).filter(h => date >= h.date_from && date <= h.date_to && (!h.city || !city || h.city === city) && (!h.school || !school || h.school === school));
+const holGlobal = (date) => (HOL.rows || []).filter(h => date >= h.date_from && date <= h.date_to && !h.city && !h.school);
+function lessonCx(se, date, cancelled, reason){
+  if (cancelled === true) return { reason: reason || "", auto: false };
+  if (cancelled === false || !date || se.kind === "מרתון") return null;
+  const hs = holOn(date, se.city, se.location).filter(h => h.kind !== "note");
+  const h = hs.find(x => x.kind === "holiday") || hs[0];
+  return h ? { reason: h.name, auto: true } : null;
+}
+  const A = { date: todayIL(), city: "", groups: [], sheet: null, rows: [], curG: null };
+  // הקבוצה הקודמת / הבאה – לפי הסינון במסך הקבוצות (עיר, מתרגל/ת)
+  const attCityOk = (g) => !AD.waitCity || AD.waitCity === "*" || g.city === AD.waitCity;
+  const attInsOk = (g) => { if (!AD.waitIns) return true; const want = AD.waitIns === "__me" ? (AD.myName || "") : AD.waitIns;
+    const gr = (AD.groups || []).find(x => x.id === String(g.session_id)); return gr ? gr.ins.includes(want) : String(g.instructors || "").split(/,\s*/).includes(want); };
+  // "חזרה" – חוזרים למסך הקבוצות
+  const showAttList = () => close(true);
+  const loadAttGroups = () => {};
+  // מעבר לקבוצה הקודמת / הבאה באותו יום (לפי השעה, לפי העיר והמתרגל/ת שנבחרו)
+A.sibCache = {};
+async function shNavFill(sid){
+  const nav = $("shNav"), d = A.date; nav.hidden = true;
+  try {
+    if (!A.sibCache[d]) A.sibCache[d] = await rpc("attendance_groups", { p_date: d, p_city: null });
+    if (A.date !== d || !A.sheet || A.sheet.session_id !== sid) return;
+    const hm = (t) => String(t || "").slice(0, 5);
+    const gs = (A.sibCache[d] || []).filter(g => g.session_id === sid || (attCityOk(g) && attInsOk(g))).sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"));
+    const i = gs.findIndex(g => g.session_id === sid); if (i < 0 || gs.length < 2) return;
+    const lbl = (g) => `<small>${hm(g.start_time)}</small> ${esc(g.location)}`;
+    const pv = gs[i - 1], nx = gs[i + 1];
+    // 1.20: בכותרת – רק חצים קטנים (השם והשעה בריחוף)
+    $("shPrevG").innerHTML = `<span dir="ltr">›</span>`; $("shPrevG").title = pv ? "הקבוצה הקודמת: " + hm(pv.start_time) + " " + pv.location : ""; $("shPrevG").hidden = !pv; $("shPrevG").onclick = () => shGo(pv);
+    $("shNextG").innerHTML = `<span dir="ltr">‹</span>`; $("shNextG").title = nx ? "הקבוצה הבאה: " + hm(nx.start_time) + " " + nx.location : ""; $("shNextG").hidden = !nx; $("shNextG").onclick = () => shGo(nx);
+    nav.hidden = false;
+  } catch(e) {}
+}
+async function shGo(g){
+  if (!g) return;
+  if (attChanged() && !await uiConfirm("יש סימון נוכחות שעוד לא נשמר. לעבור לקבוצה אחרת בלי לשמור? (הסימון נשמר בטלפון ויחזור כשתפתחי שוב את הקבוצה)")) return;
+  A.dirty = false; A.curG = g; openSheet(g.session_id);
+}
+async function openSheet(sessionId, retry){
+  attFiltTo(true);
+  A.openRows = new Set();
+  if (attSide()) { $("attList").hidden = false; $("attSheet").hidden = false; $("view-att").classList.add("att-side"); $("attSideBg").hidden = false; $("attSheet").scrollTop = 0; }
+  else { $("attList").hidden = true; $("attSheet").hidden = false; window.scrollTo(0, 0); }
+  $("shRows").innerHTML = "<li class='muted'>טוען...</li>"; $("shErr").textContent = ""; $("shMeta").textContent = "";
+  try {
+    // 5.19.29: לא מחכים ללוח המבחנים (טעינה ארוכה בפעם הראשונה) - הרשימה מוצגת מיד, תגיות המבחן מתווספות כשהוא מגיע
+    const exReady = !!EX.rows, exP = loadExams();
+    const sh = await rpc("attendance_sheet", { p_session: sessionId, p_date: A.date });
+    if (!exReady) exP.then(() => { if (A.sheet && A.sheet.session_id === sessionId && !$("attSheet").hidden) renderSheetRows(); });
+    A.sheet = sh;
+    // 5.19.15: זוכרים את הקבוצה הפתוחה (עד סוף היום) - "נוכחות" בתפריט חוזר ישר אליה
+    store("telem_att_last", JSON.stringify({ sid: sessionId, date: A.date, day: todayIL(), label: [sh.location, sh.day ? "יום " + sh.day + "'" : "", (!sh.day && (A.groups || []).some(g => g.session_id === sessionId && g.kind === "מרתון") ? "מרתון · " : "") + sh.time_label].filter(Boolean).join(" · ") }));
+    A.rows = sh.rows.map(r => ({ ...r, present: r.present == null ? null : r.present, did_math: !!r.did_math, did_english: !!r.did_english, saved: r.present != null || !!r.planned, present0: r.present == null ? null : r.present, skip: !!r.skip, skip0: !!r.skip }));
+    A.hasPlan = sh.rows.some(r => "skip" in r);   // 5.19.29 (קובץ 59): "לא מגיע/ה היום" ו"אמור/ה להגיע"
+    // ילד/ה שנוסף/ה לשיעור: המקצוע לפי ההרשמה שלו/ה (ומתקנים סימון ישן שנשמר רק מת' - נשמר בשמירה הבאה)
+    // 5.19.25: המקצוע תמיד לפי הסטטוס הנוכחי - גם לילדים בקבוצה (לא לפי מה שנשמר ביום השיבוץ)
+    A.rows.forEach(r => { const s = r.reg_status != null ? subjFromStatus(r.reg_status) : stSubjOf(r.student_id);
+      if (s) r.subject = s; else if (!r.in_group && !r.subject) r.subject = regSubj(r.student_id, r.reg_status);
+      if (r.subject && r.present && subjGrp(r.subject) !== 2) { const d = subjDefault(r.subject); r.did_math = d.m; r.did_english = d.e; } });
+    // 5.19.47: מרתון = מתמטיקה בלבד (גם לילד/ה שרשום/ה לשוטף במת' + אנג')
+    if (((A.groups || []).find(g => g.session_id === sessionId) || {}).kind === "מרתון" || (!sh.day && (G.sessions || []).some(x => x.session_id === sessionId && x.kind === "מרתון")))
+      A.rows.forEach(r => { r.subject = "מתמטיקה"; if (r.present) { r.did_math = true; r.did_english = false; } });
+    A.rows.sort(attTimeSort);   // 5.19.20: לפי שעת ההגעה (שעה אישית, או שעת הקבוצה) ואז שם
+    A.removed = [];
+    A.splitView = "";   // פיצול לתת-קבוצות/חדרים - לא בשימוש (הלקוחה 11.10): תמיד כל הילדים
+    $("shAddPanel").hidden = true; $("shAddQ").value = ""; $("shAddRes").innerHTML = ""; $("shAddBox").hidden = !sh.can_edit;
+    // 5.19.47 (הלקוחה): בקבוצת מרתון - "מרתון" בשם הקבוצה
+    const gMar = (A.groups || []).find(g => g.session_id === sessionId), isMarSh = (gMar && gMar.kind === "מרתון") || (!sh.day && !!(G.sessions || []).find(x => x.session_id === sessionId && x.kind === "מרתון"));
+    $("shTitle").textContent = `${isMarSh ? "🏁 מרתון · " : ""}${sh.time_label} · ${sh.location}`;
+    const mySp = null;
+    $("shSub").innerHTML = `יום <b>${DAY_FULL[sh.day || dayLetter(sh.date)]}</b> · <b>${fmtIso(sh.date)}</b> · ${esc(sh.city)}${mySp ? ` · תת-קבוצה <b>${esc(mySp.name)}</b>` : ""}${(mySp && mySp.room) || sh.room ? ` · חדר <b><bdi>${esc((mySp && mySp.room) || sh.room)}</bdi></b>` : ""}`;
+    $("shLocked").hidden = !!sh.can_edit;
+    // "ילדים שלא רשומים" אוחד עם ההערות
+    { const ex = ((sh.lesson && sh.lesson.extra_students) || "").trim(), nt = ((sh.lesson && sh.lesson.notes) || "").trim();
+      $("shExtra").value = ""; $("shNotes").value = ex ? (nt ? nt + "\n" : "") + "ילדים שלא רשומים: " + ex : nt; }
+    ["shExtra","shNotes","shSave","shAll"].forEach(id => $(id).disabled = !sh.can_edit);
+    $("shMeta").textContent = sh.lesson && sh.lesson.updated_at ? `נשמר לאחרונה: ${fmtDate(sh.lesson.updated_at)}${sh.lesson.updated_by ? " · " + sh.lesson.updated_by : ""}` : "";
+    A.dirty = false; A.base = attSnap(); attDraftRestore();
+    shNavFill(sh.session_id);
+    A.prev = {}; renderSheetRows();
+    renderSheetCx();
+    if (ME.role !== "instructor") loadHistory(sessionId, A.date);
+    loadPrevSubj(sessionId);
+  } catch(e) {
+    // 5.19.32: אחרי חזרה מוואטסאפ / שליחה הטלפון לפעמים עוד לא מחובר - מנסים שוב לבד, ואם לא - כפתור "לנסות שוב"
+    if (!retry) { setTimeout(() => { if (currentView === "att" && !$("attSheet").hidden) openSheet(sessionId, true); }, 1500); return; }
+    $("shRows").innerHTML = "<li class='err'>לא ניתן לטעון את רשימת הילדים (אולי אין חיבור). <button type='button' class='btn small' id='shRetry'>לנסות שוב</button><div class='muted' style='font-size:11px;direction:ltr'>" + esc(String(e && e.message || "")).slice(0, 120) + "</div></li>";
+    const rb = $("shRetry"); if (rb) rb.onclick = () => openSheet(sessionId);
+  }
+}
+// מקצוע לתצוגה: מהשיבוץ; לילד/ה שנוסף/ה לשיעור - לפי מה שנשמר (מת' / אנג' / שניהם)
+// המקצוע שהילד/ה רשום/ה אליו (לפי הסטטוס: נרשם מת. / אנג. / מת. + אנג.) - מה שרשום זה מה שעושה
+function regSubj(studentId, status){
+  const ld = (L.leads || []).find(l => l.student && l.student.id === studentId);
+  return subjFromStatus(status || "") || (ld ? subjFromStatus(statusName(ld.status_id)) : "") || null;
+}
+const rowSubj = (r) => r.subject || (r.did_math && r.did_english ? "מתמטיקה ואנגלית" : r.did_math ? "מתמטיקה" : r.did_english ? "אנגלית" : null);
+const subjDefault = (subj) => ({ m: !subj || subj.indexOf("מתמטיקה") >= 0, e: !!subj && subj.indexOf("אנגלית") >= 0 });
+const shVisible = (r) => !r.skip && (!A.splitView || r.split_id === Number(A.splitView));
+function renderSplitBar(){
+  const sp = (A.sheet && A.sheet.splits) || [], bar = $("shSplitBar");
+  if (true || !sp.length || ME.role === "instructor") { bar.hidden = true; bar.innerHTML = ""; return; }   // לא בשימוש
+  bar.hidden = false;
+  bar.innerHTML = `<span class="lbl2">תת-קבוצות:</span><button type="button" data-sv2="" aria-pressed="${!A.splitView}">כולם (${A.rows.length})</button>` + sp.map(s => `<button type="button" data-sv2="${s.id}" aria-pressed="${String(A.splitView) === String(s.id)}">${esc(s.name)}${s.room ? " · " + esc(s.room) : ""}${s.instructor ? " · " + esc(s.instructor) : ""} (${A.rows.filter(r => r.split_id === s.id).length})</button>`).join("");
+  bar.querySelectorAll("[data-sv2]").forEach(b => b.onclick = () => { A.splitView = b.dataset.sv2; renderSheetRows(); });
+}
+// מיון בדף הנוכחות: מתמטיקה, אנגלית, מתמטיקה+אנגלית (ובלי מקצוע בסוף), ובתוך כל מקצוע לפי שכבה ואז שם
+const GRADE_ORD = ["ה","ו","ז","ח","ט","י","יא","יב"];
+const gradeKey = (g) => String(g || "").replace(/['׳"״\s]/g, "");
+const subjGrp = (v) => { v = String(v || ""); const m = v.includes("מתמטיקה"), e = v.includes("אנגלית"); return m && e ? 2 : m ? 0 : e ? 1 : 3; };
+const SUBJ_GRP_T = ["מתמטיקה", "אנגלית", "מתמטיקה + אנגלית", "בלי מקצוע"];
+// דף הנוכחות: רשימה אחת לפי א"ב של השם הפרטי (בלי חלוקה למקצועות - קל למצוא ילד). המקצוע מסומן ליד השם.
+// הערת מעקב לתלמיד/ה (students.tracking) - מחלון הקבוצה ומדף הנוכחות (מנהלים). מופיעה ב-📌 בכל המקומות.
+async function editTracking(studentId, cur){
+  const v0 = await uiPrompt("הערת מעקב (מופיעה עם 📌 בנוכחות, בקבוצה ובטבלת התלמידים). ריק = מחיקה:", cur || "");
+  if (v0 === null) return null;
+  const v = v0.trim() || null;
+  if (v === (cur || null)) return null;
+  try { await patch("students", "id=eq." + studentId, { tracking: v }); }
+  catch(e) { toast("השמירה נכשלה: " + e.message); return null; }
+  (L.leads || []).forEach(l => { if (l.student && l.student.id === studentId) l.student.tracking = v; });
+  (G.roster || []).forEach(k => { if (k.student_id === studentId) k.tracking = v; });
+  (A.rows || []).forEach(r => { if (r.student_id === studentId) r.tracking = v; });
+  toast(v ? "הערת המעקב נשמרה" : "הערת המעקב נמחקה");
+  return { v };
+}
+// חלון הקבוצה (לוח הקבוצות): קודם לפי מקצוע (מתמטיקה, אנגלית, משולב) - כדי שכל מקצוע יהיה ביחד - ובתוכו לפי שם פרטי
+function rosterSort(a, b){ return subjGrp(a.subject) - subjGrp(b.subject) || attSort(a, b); }
+function attSort(a, b){
+  return (a.first_name || "").localeCompare(b.first_name || "", "he") || (a.last_name || "").localeCompare(b.last_name || "", "he");
+}
+// 5.19.20: דף הנוכחות לפי שעת ההגעה - שעה אישית אם יש, אחרת שעת תחילת הקבוצה; באותה שעה לפי שם פרטי
+const attGrpStart = () => { const sh = A.sheet || {}, g = A.curG && A.curG.session_id === sh.session_id ? A.curG : null;
+  return hmMin(sh.start_time || (g && g.start_time) || sh.time_label); };
+const attArr = (r) => { const t = hmMin(r.arrival_time); return t != null ? t : attGrpStart(); };
+function attTimeSort(a, b){ return (attArr(a) ?? 9999) - (attArr(b) ?? 9999) || attSort(a, b); }
+const minHm = (m) => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+// שיעור כפול: ★ ליד השם (שתי קבוצות באותו יום באותו בית ספר, או שעה אישית ארוכה)
+const hmMin = (t) => { const m = String(t || "").match(/^(\d{1,2}):(\d{2})/); return m ? Number(m[1]) * 60 + Number(m[2]) : null; };
+function isDouble(sid, day, loc, arr, pend){
+  const a = hmMin(arr), b = hmMin(pend);
+  if (a != null && b != null && b - a >= 80) return true;
+  if (typeof G !== "undefined" && G.roster && G.sessions) {
+    const n = new Set(G.roster.filter(k => k.student_id === sid).map(k => G.sessions.find(x => x.session_id === k.session_id)).filter(x => x && x.day === day && x.location === loc && x.kind !== "מרתון").map(x => x.session_id)).size;
+    if (n >= 2) return true;
+  }
+  const L0 = (typeof L !== "undefined" && L.asg && L.asg[sid]) || [];
+  return new Set(L0.filter(x => x.day === day && x.location && x.location.name === loc).map(x => x.start_time)).size >= 2;
+}
+// 5.19.17: סימן שיעור כפול "×2" (במקום ★ - הכוכב שמור ל"כוכב" של תלמיד; הלקוחה בחרה מתוך 3)
+// 5.19.26: שיעור כפול - בשתי הקבוצות אותו טווח: מהשעה שמגיע/ה (תחילת השיעור או שעה אישית) + 90 דקות
+function dblRange(sid, day, loc){
+  let rows = [];
+  if (typeof G !== "undefined" && G.roster && G.sessions) rows = G.roster.filter(k => k.student_id === sid).map(k => { const s = G.sessions.find(x => x.session_id === k.session_id);
+    return s && s.kind !== "מרתון" && s.day === day && s.location === loc ? { a: k.arrival_time, st: s.start_time } : null; }).filter(Boolean);
+  if (new Set(rows.map(r => r.st)).size < 2 && typeof L !== "undefined" && L.asg && L.asg[sid])
+    rows = L.asg[sid].filter(x => x.day === day && x.location && x.location.name === loc).map(x => ({ a: x.arrival_time, st: x.start_time }));
+  if (new Set(rows.map(r => r.st)).size < 2) return null;
+  const ms = rows.map(r => hmMin(r.a) != null ? hmMin(r.a) : hmMin(r.st)).filter(x => x != null); if (!ms.length) return null;
+  const s = Math.min(...ms); return [minHm(s), minHm(s + 90)];
+}
+const dblStar = (on) => on ? `<span class="dbl-star dbl-x2" dir="ltr" title="שיעור כפול" aria-label="שיעור כפול">×2</span>` : "";
+// שכבה + מספר כיתה (ח'3), צבע עדין לפי שכבה
+const gradeBadge = (g, n) => { const k = gradeKey(g); return `<span class="gbadge g-${GRADE_ORD.includes(k) ? k : "x"}">${k ? esc(k + "'" + (n || "")) : "?"}</span>`; };
+// "לא התקיים תרגול": מנהלים מסמנים (וסיבה). מתרגלים רואים, וכותבים בהערות אם לא התקיים.
+const CX_REASONS = ["חג", "חופשה", "אירוע בבית הספר", "מתרגל/ת חסר/ה"];
+// 5.19.25: למשולבים - מה עשה/תה בשיעור הקודם (מת' / אנג'), כדי לדעת מה לעשות היום
+async function loadPrevSubj(sessionId){
+  // 5.19.26 (קובץ 57): השיעור הקודם מגיע כבר עם הדף (גם למדריכים) - לא צריך לשלוף
+  if (A.rows.some(r => "prev" in r)) { const prev = {}; A.rows.forEach(r => { if (r.prev) prev[r.student_id] = { lesson_date: r.prev.d, did_math: r.prev.m, did_english: r.prev.e }; }); A.prev = prev; renderSheetRows(); return; }
+  const ids = A.rows.filter(r => subjGrp(rowSubj(r)) === 2).map(r => r.student_id); if (!ids.length) return;
+  const d0 = A.sheet.date || A.date;
+  let rows; try { rows = await get("attendance", `select=student_id,lesson_date,did_math,did_english&student_id=in.(${ids.join(",")})&lesson_date=lt.${d0}&present=is.true&order=lesson_date.desc&limit=${ids.length * 6}`); }
+  catch(e) { return; }   // מדריכים - אין הרשאה לטבלה (בינתיים רק למנהלים)
+  if (!A.sheet || A.sheet.session_id !== sessionId || (A.sheet.date || A.date) !== d0) return;
+  const prev = {}; rows.forEach(x => { if (!prev[x.student_id] && (x.did_math || x.did_english)) prev[x.student_id] = x; });
+  A.prev = prev; renderSheetRows();
+}
+const prevTag = (r) => { const x = (A.prev || {})[r.student_id]; if (!x) return "";
+  const t = x.did_math && x.did_english ? "מת'+אנג'" : x.did_math ? "מת'" : "אנג'";
+  return `<span class="att-prev" title="בשיעור הקודם (${fmtIso(x.lesson_date)}) עשה/תה ${t}">↩ ${t}</span>`; };
+// 5.19.26: השעה האישית / שיעור כפול - באותה שורה עם בית הספר (הלקוחה 14.10)
+function attPtHtml(r){
+  // 5.19.27 (קובץ 58): dbl_from מגיע עם הדף - גם למדריכים
+  const dr = r.dbl_from ? [r.dbl_from, minHm(hmMin(r.dbl_from) + 90)] : "dbl_from" in r ? null : dblRange(r.student_id, A.sheet.day || dayLetter(A.sheet.date), A.sheet.location);
+  const pt = dr ? rng(dr[0], dr[1]) : r.arrival_time ? rng(String(r.arrival_time).slice(0, 5), String(r.personal_end || addMin(String(r.arrival_time).slice(0, 5), 45)).slice(0, 5)) : "";
+  return pt ? `<span class="att-pt att-pt-s"${dr ? ` title="שיעור כפול - 90 דקות"` : ""}>⏰ <span class="att-pt-l">${dr ? "שיעור כפול " : "שעה אישית "}</span><bdi>${pt}</bdi></span>` : "";
+}
+// טיוטת נוכחות: כל סימון נשמר גם בטלפון עצמו, כך שאם השמירה נכשלה (אין קליטה), הדף התרענן או יצאו מהמערכת - הסימון לא הולך לאיבוד
+const attDraftKey = () => A.sheet ? "telem_att_draft_" + A.sheet.session_id + "_" + A.sheet.date : "";
+function attDirty(){
+  if (!A.sheet || !A.sheet.can_edit) return;
+  A.dirty = true;
+  store(attDraftKey(), JSON.stringify({ t: Date.now(), extra: $("shExtra").value, notes: $("shNotes").value,
+    rows: A.rows.map(r => ({ id: r.student_id, p: r.present, m: r.did_math, e: r.did_english, s: !!r.skip })), removed: A.removed || [] }));
+}
+// האם שונה משהו מאז הטעינה / השמירה האחרונה (רק אז שואלים לפני יציאה)
+function attSnap(){ return JSON.stringify({ r: (A.rows || []).map(r => [r.student_id, r.present, !!r.did_math, !!r.did_english, !!r.skip]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))), n: ($("shNotes") || {}).value || "", rm: A.removed || [] }); }
+const attChanged = () => !!(A.sheet && A.sheet.can_edit && A.base != null && !$("attSheet").hidden && attSnap() !== A.base);
+function attLast(){ try { const m = JSON.parse(store("telem_att_last") || "null"); return m && m.day === todayIL() && m.sid ? m : null; } catch(e) { return null; } }
+function attDraftClear(){ if (A.sheet) store(attDraftKey(), null); A.dirty = false; }
+function attDraftRestore(){
+  let d = null; try { d = JSON.parse(store(attDraftKey()) || "null"); } catch(e) {}
+  if (!d || !A.sheet.can_edit) return;
+  const saved = A.sheet.lesson && A.sheet.lesson.updated_at ? new Date(A.sheet.lesson.updated_at).getTime() : 0;
+  if (d.t < saved) { store(attDraftKey(), null); return; }   // נשמר במערכת אחרי הטיוטה - אין מה לשחזר
+  const by = {}; (d.rows || []).forEach(x => by[x.id] = x);
+  A.rows.forEach(r => { const x = by[r.student_id]; if (x) { r.present = x.p; r.did_math = !!x.m; r.did_english = !!x.e; if ("s" in x) r.skip = !!x.s; } });
+  A.removed = d.removed || []; A.rows = A.rows.filter(r => !A.removed.includes(r.student_id));
+  if (d.extra != null) $("shExtra").value = d.extra; if (d.notes != null) $("shNotes").value = d.notes;
+  // 5.19.14: אם הטיוטה זהה למה שכבר שמור - אין מה לשחזר ולא שואלים ביציאה
+  if (attSnap() === A.base) { store(attDraftKey(), null); A.dirty = false; return; }
+  A.dirty = true; toast("שוחזר סימון שעוד לא נשמר - לא לשכוח ללחוץ \"שמירה\"");
+}
+window.addEventListener("beforeunload", (e) => { if (attChanged()) { e.preventDefault(); e.returnValue = ""; } });
+function setPresent(r, v){
+  r.present = v;
+  // משולב: לא מסמנים מראש - המתרגל/ת מסמן/ת מה עשו בפועל (מת' / אנג' / שניהם)
+  if (v && !r.did_math && !r.did_english && subjGrp(rowSubj(r)) !== 2) { const d = subjDefault(rowSubj(r)); r.did_math = d.m; r.did_english = d.e; }
+  if (!v) { r.did_math = false; r.did_english = false; }
+}
+// 5.19.23: חלון פרטים מהיר של ילד/ה מתוך הנוכחות (מנהלים)
+async function attKidPop(l){
+  const s = l.student, f = s.family || {}, sch = schoolOf(s), city = leadCity(l);
+  let o = $("kidPop"); if (!o) { o = document.createElement("div"); o.id = "kidPop"; o.className = "ex-pop"; document.body.appendChild(o);
+    o.addEventListener("click", (ev) => { if (ev.target === o || ev.target.closest("[data-kpclose]")) o.hidden = true; }); }
+  const ph = (v) => v ? `<a class="kp-ph" dir="ltr" href="tel:${esc(v)}">${esc(String(v).replace(/^(05\d|0[2-9])(\d{7})$/, "$1-$2"))}</a>` : "";
+  const row = (k, v) => v ? `<div class="kp-r"><span class="kp-k">${k}</span><span>${v}</span></div>` : "";
+  const paint = (asg) => {
+    o.innerHTML = `<div class="ex-pop-box kp-box" role="dialog" aria-modal="true">
+      <div class="ex-pop-h"><b>${esc(fullName(s.first_name, s.last_name))}</b><button type="button" class="kp-x" data-kpclose aria-label="סגירה" title="סגירה">✕</button></div>
+      <div class="kp-tags">${statusName(l.status_id) ? `<span class="kp-st"${statusColor(l.status_id) ? ` style="background:${statusColor(l.status_id)}; color:#fff;"` : ""}>${esc(statusName(l.status_id))}</span>` : ""}
+        ${city ? `<span class="muted">${esc(city)}</span>` : ""}</div>
+      <div class="kp-r"><span class="kp-k">בית ספר</span><span>${sch.name ? scChip(sch.name) : "<span class='muted'>לא ידוע</span>"}</span><span class="kp-k" style="min-width:0; margin-inline-start:10px;">כיתה</span><span>${s.grade ? `<b>${esc(classLabel(s.grade, s.class_num))}</b>` : "<span class='muted'>לא ידוע</span>"}</span></div>
+      ${row("הורה", [esc(fullName(f.parent1_first, f.parent1_last)), ph(f.parent1_phone)].filter(Boolean).join(" · "))}
+      ${f.parent2_phone ? row("הורה 2", [esc(fullName(f.parent2_first, f.parent2_last)), ph(f.parent2_phone)].filter(Boolean).join(" · ")) : ""}
+      ${row("תלמיד/ה", ph(s.phone))}
+      ${s.tracking ? row("📌 מעקב", esc(s.tracking)) : ""}
+      <div class="kp-k" style="margin-top:4px;">שיבוצים</div>
+      <div class="kp-asg">${asg == null ? "<span class='muted'>טוען…</span>" : asg.length ? asg.map(a => { const se = a.session, arr = String(a.arrival_time || "").slice(0, 5), st = String(se.start_time || "").slice(0, 5);
+        return `<div class="kp-a"><span class="asg-pill"><span class="${scCls(se.location && se.location.name)}"><i></i>${se.kind === "מרתון" ? "מרתון" : esc(se.day) + "'"} ${rng(st, String(se.end_time || "").slice(0, 5))} · ${esc((se.location && se.location.name) || "")}</span></span>${arr && arr !== st ? ` <span class="kp-pt">⏰ שעה אישית ${rng(arr, String(a.personal_end || "").slice(0, 5) || addMin(arr, 45))}</span>` : ""}${a.status === "ממתין" ? ` <span class="muted">(מוצע)</span>` : ""}</div>`; }).join("") : "<span class='muted'>לא משובץ/ת</span>"}</div>
+      <div class="kp-btns"><button type="button" class="btn small primary" data-kpopen>לכרטיס התלמיד ←</button></div></div>`;
+    o.querySelector("[data-kpopen]").onclick = () => { o.hidden = true; A.ret = { sid: A.sheet.session_id, date: A.date }; openLead(l.id); };
+  };
+  paint(null); o.hidden = false;
+  try { const r = await get("assignments", "select=id,status,arrival_time,personal_end,session:sessions(day,start_time,end_time,kind,school_year,location:locations(name))&student_id=eq." + s.id + "&order=id");
+    paint(r.filter(a => a.session && a.session.school_year === CONFIG.schoolYear && (a.status === "משובץ" || a.status === "ממתין"))
+      .sort((a, b) => (DAY_ORDER[a.session.day] ?? 9) - (DAY_ORDER[b.session.day] ?? 9) || String(a.session.start_time).localeCompare(String(b.session.start_time)))); }
+  catch(e) { paint([]); }
+}
+document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && $("kidPop") && !$("kidPop").hidden) $("kidPop").hidden = true; });
+$("shRows").addEventListener("click", async (e) => {
+  // 5.19.14: מנהלים - לחיצה על שם הילד/ה פותחת את כרטיס התלמיד; "חזרה לנוכחות" מחזיר לאותה קבוצה ואותו יום (הסימון נשמר בטלפון)
+  const kl = e.target.closest("[data-kl]");
+  // 5.19.23: לחיצה על השם - חלון עם הפרטים העיקריים והשיבוצים; לכרטיס (לעריכה) רק בכפתור
+  if (kl) { ATT_KID(kl.dataset.kl); return; }
+  const tg = e.target.closest("[data-tog]");
+  if (tg && !e.target.closest("button, input, label, .seg, .att-sj2")) { const r = A.rows[Number(tg.closest("li").dataset.i)]; if (r) { A.openRows.has(r.student_id) ? A.openRows.delete(r.student_id) : A.openRows.add(r.student_id); renderSheetRows(); } return; }
+  const exb = e.target.closest("[data-ex]"); if (exb) { exSheet(exb.dataset.ex); return; }
+  const relp = e.target.closest("[data-relp]"); if (relp) { relp.disabled = true; releaseItems([Number(relp.dataset.relp)]); return; }
+  const addp = e.target.closest("[data-addp]"); if (addp) { ATT_ADD(addp.dataset.addp, addp.dataset.subj); return; }
+  const skb = e.target.closest("[data-skip], [data-unskip]");
+  if (skb && A.sheet.can_edit) { const r = A.rows[Number(skb.closest("li").dataset.i)]; r.skip = skb.hasAttribute("data-skip");
+    if (r.skip) { r.present = null; r.did_math = false; r.did_english = false; } attDirty(); renderSheetRows(); return; }
+  const rm = e.target.closest("[data-rm]");
+  if (rm && A.sheet.can_edit) { const i = Number(rm.closest("li").dataset.i), r = A.rows[i]; if (r.saved) A.removed.push(r.student_id); A.rows.splice(i, 1); attDirty(); renderSheetRows(); return; }
+  const b = e.target.closest("[data-p]"); if (!b || !A.sheet.can_edit) return;
+  const r = A.rows[Number(b.closest("li").dataset.i)];
+  // 5.19.30: לחיצה שוב על הסימון הנבחר - מבטלת אותו (סומן/ה בטעות); נמחק בשמירה (קובץ 60)
+  const pv = b.dataset.p === "1";
+  if (r.present === pv) { r.present = null; r.did_math = false; r.did_english = false; if (r.saved && !r.planned || r.present0 != null) r.unmark = true; }
+  else { setPresent(r, pv); r.unmark = false; }
+  attDirty(); renderSheetRows(); $("shErr").textContent = "";
+});
+$("shRows").addEventListener("change", (e) => {
+  const li = e.target.closest("li"); if (!li) return; const r = A.rows[Number(li.dataset.i)];
+  if (e.target.hasAttribute("data-m")) r.did_math = e.target.checked;
+  if (e.target.hasAttribute("data-e")) r.did_english = e.target.checked;
+  if (e.target.checked && r.present !== true) { r.present = true; attDirty(); renderSheetRows(); return; }   // סימון מקצוע = נוכח/ת
+  $("shErr").textContent = ""; attDirty();
+});
+["shExtra", "shNotes"].forEach(id => $(id).addEventListener("input", attDirty));
+$("shNoteBtn").addEventListener("click", () => noteSheet());
+$("shAll").addEventListener("click", () => { A.rows.filter(shVisible).forEach(r => { if (r.present == null) setPresent(r, true); }); attDirty(); renderSheetRows(); });
+$("shGroup").addEventListener("click", async () => {
+  if (attChanged() && !await uiConfirm("יש סימונים שלא נשמרו. לעבור בכל זאת? (הסימון נשמר בטלפון ויחזור כשתפתחי שוב את הנוכחות)")) return;
+  G.fromAtt = A.sheet ? { sid: A.sheet.session_id, date: A.sheet.date || A.date } : null; A.fromGrp = null; if (A.sheet) grpEdit(A.sheet.session_id);
+});
+$("shBack").addEventListener("click", async () => {
+  if (attChanged() && !await uiConfirm("יש סימון נוכחות שעוד לא נשמר. לצאת בלי לשמור?")) return;
+  attDraftClear(); store("telem_att_last", null);
+  // 5.19.27: באו מחלון הקבוצה ("✓ נוכחות") - "חזרה" חוזרת לחלון הקבוצה
+  if (A.fromGrp && A.sheet && A.fromGrp === A.sheet.session_id) { const sid = A.fromGrp; A.fromGrp = null; showAttList(); loadAttGroups(); grpEdit(sid); return; }
+  A.fromGrp = null; showAttList(); loadAttGroups(); });
+$("shSave").addEventListener("click", async () => {
+  const err = $("shErr"); err.textContent = "";
+  const missing = A.rows.filter(r => r.present == null && !r.skip && !(r.added && !r.in_group)).length;   // מותר לשמור גם בלי לסמן את כולם - מי שלא סומן פשוט לא נשמר
+  // 5.19.14: בלי הודעה על סימון חלקי - משולב/ת שסומן/ה נוכח/ת בלי מת'/אנג' נשמר/ת כנוכח/ת (הלקוחה)
+  $("shSave").disabled = true;
+  try {
+    await rpc("save_attendance", { p_session: A.sheet.session_id, p_date: A.sheet.date,
+      p_rows: A.rows.map(r => { const o = { student_id: r.student_id, present: r.skip ? null : r.present, did_math: r.did_math, did_english: r.did_english };
+          if (r.skip) o.plan = "skip"; else if (r.skip0) o.plan = "clear"; else if (!r.in_group && r.added && r.present == null && !r.planned) o.plan = "add";
+          if (r.unmark && r.present == null && !r.skip) o.unmark = true;
+          return o; })
+        .concat((A.removed || []).map(id => ({ student_id: id, present: null, remove: true }))),
+      p_extra: "", p_notes: $("shNotes").value });
+    toast(missing ? `הנוכחות נשמרה (${missing} לא סומנו)` : "הנוכחות נשמרה"); attDraftClear();
+    // 5.19.18: נשארים בדף הקבוצה אחרי שמירה (אפשר לשמור חלק ולהמשיך לסמן כשמגיעים עוד ילדים). לרשימה - "חזרה".
+    A.rows.forEach(r => { if (r.unmark) { r.unmark = false; r.present0 = null; } if (r.present != null) { r.saved = true; r.present0 = r.present; } r.skip0 = r.skip; if (A.hasPlan && r.added && !r.in_group) { r.planned = true; r.saved = true; } }); A.rows = A.rows.filter(r => !(A.removed || []).includes(r.student_id)); A.removed = [];
+    A.base = attSnap(); renderSheetRows(); loadAttGroups();
+  } catch(e2) {
+    err.textContent = /only save attendance for today/.test(e2.message) ? "אפשר לשמור נוכחות רק ביום השיעור." : (/fetch|network|Failed/i.test(e2.message) ? "אין חיבור לאינטרנט - הסימון שמור בטלפון. כשהקליטה תחזור, לוחצים שוב \"שמירה\"." : "השמירה נכשלה: " + e2.message);
+  }
+  $("shSave").disabled = false;
+});
+// הוספת ילד/ה רשום/ה מקבוצה אחרת לשיעור הזה (השיבוץ הקבוע לא משתנה)
+$("shAddBtn").addEventListener("click", () => { const p = $("shAddPanel"); p.hidden = !p.hidden; if (!p.hidden) $("shAddQ").focus(); });
+let shAddT = null;
+$("shAddQ").addEventListener("input", () => {
+  clearTimeout(shAddT);
+  const q = $("shAddQ").value.trim(), res = $("shAddRes");
+  if (q.length < 2) { res.innerHTML = ""; return; }
+  shAddT = setTimeout(async () => {
+    res.innerHTML = "<li class='muted'>מחפש...</li>";
+    try {
+      // 5.19.81 (נועה, קובץ 80): בשיעור שכבר היה - אפשר להוסיף גם ילד/ה שנכנס/ה לקבוצה רק אחרי השיעור (נרשם/ה למחרת)
+      let list; try { list = await rpc("attendance_find_student", { p_session: A.sheet.session_id, p_q: q, p_date: A.sheet.date }); }
+      catch(e1) { if (e1.status === 404 || e1.code === "PGRST202") list = await rpc("attendance_find_student", { p_session: A.sheet.session_id, p_q: q }); else throw e1; }
+      list = list.filter(k => !A.rows.some(r => r.student_id === k.student_id));
+      if ($("shAddQ").value.trim() !== q) return;
+      const firstOther = list.findIndex(k => k.same_city === false);
+      res.innerHTML = list.length ? list.map((k, i) => (i === firstOther ? `<li class="muted" style="font-size:12.5px; padding:8px 4px 2px;">מערים אחרות:</li>` : "") +
+          `<li><button type="button" data-add='${esc(JSON.stringify(k))}'><b>${esc(k.first_name)} ${esc(k.last_name || "")}</b><small>${esc([k.grade && "כיתה " + classLabel(k.grade, k.class_num), k.school, k.same_city === false ? k.city : ""].filter(Boolean).join(" · "))}</small></button></li>`).join("")
+        : "<li class='muted' style='padding:6px 0;'>לא נמצא ילד/ה רשום/ה בשם הזה. אם לא רשום/ה - לכתוב בשדה למטה.</li>";
+    } catch(e) { res.innerHTML = `<li class="err">${e.status === 404 || e.code === "PGRST202" ? "צריך להריץ את קובץ 32." : "החיפוש נכשל."}</li>`; }
+  }, 300);
+});
+$("shAddRes").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-add]"); if (!b) return;
+  const k = JSON.parse(b.dataset.add);
+  A.removed = (A.removed || []).filter(id => id !== k.student_id);
+  // המקצוע של הילד/ה: מהסטטוס ("נרשם מת. + אנג." ...) - מהחיפוש, או מרשימת התלמידים (מנהלים)
+  const subj = regSubj(k.student_id, k.status);
+  const r = { student_id: k.student_id, first_name: k.first_name, last_name: k.last_name, grade: k.grade, school: k.school, subject: subj, in_group: false, added: true, present: null, did_math: false, did_english: false, saved: false };
+  // 5.19.30: נוסף/ה לשיעור = "אמור/ה להגיע" - בלי סימון נוכחות (מסמנים כשמגיע/ה). בלי קובץ 59 - נשאר הסימון הקודם (נוכח/ת)
+  if (!A.hasPlan) setPresent(r, true); A.rows.push(r);
+  $("shAddQ").value = ""; $("shAddRes").innerHTML = ""; $("shAddPanel").hidden = true;
+  if (!A.hasPlan) { attDirty(); renderSheetRows(); toast(`${k.first_name} נוסף/ה לשיעור - לא לשכוח לשמור`); return; }
+  // 5.19.81 (נועה): הוספת ילד/ה לשיעור נשמרת מיד, לבד - בלי לשמור את שאר הסימונים בדף (הם נשארים כמו שהם, לשמירה רגילה)
+  renderSheetRows();
+  (async () => { let base = null; try { base = JSON.parse(A.base || "null"); } catch(e) {}
+    try {
+      await rpc("save_attendance", { p_session: A.sheet.session_id, p_date: A.sheet.date, p_rows: [{ student_id: r.student_id, present: null, did_math: false, did_english: false, plan: "add" }], p_extra: "", p_notes: base ? base.n : $("shNotes").value });
+      r.planned = true; r.saved = true;
+      if (base) { base.r.push([r.student_id, null, false, false, false]); base.r.sort((a, b) => String(a[0]).localeCompare(String(b[0]))); A.base = JSON.stringify(base); }
+      if (attSnap() === A.base) attDraftClear(); else attDirty();
+      renderSheetRows(); toast(`${k.first_name} נוסף/ה לשיעור ונשמר/ה`); loadAttGroups();
+    } catch(e2) { attDirty(); toast(`${k.first_name} נוסף/ה לרשימה, אבל לא נשמר/ה - לשמור עם "שמירה"`); }
+  })();
+});
+// 1.20 (נועה): עיצוב חדש לדף הנוכחות – שורה אחת לכל ילד/ה (✗/✓, ובמשולב מת'/אנג'), לחיצה על השורה פותחת את הפרטים
+// (מבחן, מעקב, שעה אישית, הדפים: שחרור / + דפים, לא מגיע/ה היום). למטה: לא התקיים · הערה · שמירה.
+function renderSheetCx(){
+  const sh = A.sheet, L0 = sh.lesson || {}, adm = ME.role !== "instructor", box = $("shCx"), btn = $("shCxBtn");
+  const g = A.curG || {}, cx = lessonCx({ kind: g.kind || "שוטף", city: sh.city, location: sh.location }, A.date, L0.cancelled, L0.cancel_reason);
+  wrap.classList.toggle("cx-off", !!cx);
+  box.hidden = !cx;
+  if (cx) box.innerHTML = `<b>⊘ התרגול לא התקיים</b>${cx.reason ? " · " + esc(cx.reason) : ""}${cx.auto ? ` <span class="muted">(לפי לוח החגים)</span>` : ""}
+    ${adm ? `<span class="cx-acts"><button type="button" data-cx="held">התקיים בכל זאת</button>${cx.auto ? "" : `<button type="button" data-cx="auto">ביטול הסימון</button>`}</span>` : ""}`;
+  btn.hidden = !adm || !!cx;
+  const set = async (v, reason) => { try { await rpc("set_lesson_cancelled", { p_session: sh.session_id, p_date: A.date, p_cancelled: v, p_reason: reason || null });
+      sh.lesson = Object.assign({}, sh.lesson || {}, { cancelled: v, cancel_reason: v ? reason : null }); toast(v ? "סומן: לא התקיים" : "נשמר"); renderSheetCx(); }
+    catch(e) { toast("לא נשמר: " + e.message); } };
+  box.querySelectorAll("[data-cx]").forEach(b => b.onclick = () => b.dataset.cx === "held" ? set(false, null) : set(null, null));
+  btn.onclick = () => openSheet(`<h2>⊘ התרגול לא התקיים</h2><p class="muted small" style="margin:-6px 0 10px">${esc(sh.time_label || "")} · ${esc(sh.location || "")} · ${esc(fmtIso(A.date))}</p>
+      <div class="cx-reasons">${CX_REASONS.map(r => `<button type="button" class="btn ghost" data-r="${esc(r)}">${esc(r)}</button>`).join("")}</div>
+      <input id="cxOther" class="cx-other" placeholder="סיבה אחרת…" style="width:100%;margin:8px 0;padding:10px;border:1.5px solid var(--border);border-radius:10px;font:inherit">
+      <button class="btn primary block" id="cxSave">סימון: לא התקיים</button>`,
+    (S) => { let r = ""; S.querySelectorAll("[data-r]").forEach(b => b.onclick = () => { r = b.dataset.r; S.querySelectorAll("[data-r]").forEach(x => x.classList.toggle("on", x === b)); });
+      S.querySelector("#cxSave").onclick = () => { const v = r || S.querySelector("#cxOther").value.trim() || "אחר"; closeSheet(); set(true, v); }; });
+}
+// הערה – בחלונית
+function noteSheet(){
+  const can = A.sheet && A.sheet.can_edit;
+  openSheet(`<h2>✎ הערה לשיעור</h2><p class="muted small" style="margin:-6px 0 8px">כולל ילדים שלא רשומים – שם + הערה</p>
+    <textarea id="ntxt" rows="5" style="width:100%;font:inherit;padding:10px;border:1.5px solid var(--border);border-radius:10px" ${can ? "" : "disabled"}>${esc($("shNotes").value)}</textarea>
+    ${can ? `<button class="btn primary block" id="ntOk" style="margin-top:10px">אישור</button>` : ""}<p class="muted small">ההערה נשמרת עם "שמירה".</p>`,
+    (S) => { const ok = S.querySelector("#ntOk"); if (ok) ok.onclick = () => { $("shNotes").value = S.querySelector("#ntxt").value; attDirty(); paintNoteBtn(); closeSheet(); }; });
+}
+function paintNoteBtn(){ const has = !!$("shNotes").value.trim(); $("shNoteBtn").innerHTML = has ? "✎ הערה <i class='dot'></i>" : "✎ הערה"; }
+A.openRows = new Set();
+function renderSheetRows(){
+  const can = A.sheet.can_edit; paintNoteBtn();
+  if (!A.rows.length) { $("shRows").innerHTML = "<li class='muted' style='padding:14px'>אין ילדים משובצים לקבוצה הזאת.</li>"; updateCount(); return; }
+  A.rows.sort(attTimeSort);
+  const tSet = new Set(A.rows.filter(shVisible).map(attArr).filter(t => t != null)), multiT = tSet.size > 1;
+  let prevT = null;
+  $("shRows").innerHTML = A.rows.map((r, i) => { if (!shVisible(r)) return "";
+    const t = attArr(r); let head = "";
+    if (multiT && t != null && t !== prevT) { const n = A.rows.filter(x => shVisible(x) && attArr(x) === t).length;
+      head = `<li class="ar-sec"><span>⏰ <bdi>${minHm(t)}</bdi>${t === attGrpStart() ? " · שעת הקבוצה" : ""}</span><span>${n === 1 ? "ילד/ה 1" : n + " ילדים"}</span></li>`; prevT = t; }
+    const two = subjGrp(rowSubj(r)) === 2, open = A.openRows.has(r.student_id);
+    const ex = kidExTag(r), pt = attPtHtml(r), dbl = !!r.dbl_from || isDouble(r.student_id, A.sheet.day || dayLetter(A.sheet.date), A.sheet.location, r.arrival_time, r.personal_end);
+    const ic = (ex ? `<i title="מבחן / לומדים עכשיו">📝</i>` : "") + (r.tracking ? `<i title="${esc(r.tracking)}">📌</i>` : "") + (dbl ? `<i class="dbl">×2</i>` : "");
+    const ptS = r.arrival_time && !dbl ? ` · <span class="ar-pt">⏰ ${esc(String(r.arrival_time).slice(0, 5))}</span>` : "";
+    const sub = `${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${two ? "" : `<span class="ar-subj">${esc(subjMiniTxt(rowSubj(r)))}</span>`}${ptS}${r.added && !r.in_group ? ` · <b class="added-tag">נוסף/ה לשיעור</b>` : !r.in_group ? " · <b>כבר לא בקבוצה</b>" : ""}`;
+    const pg = ATT_PAGES_LINE(r);
+    return head + `<li data-i="${i}" class="ar${r.present === true ? " p" : r.present === false ? " a" : ""}${open ? " open" : ""}">
+      <div class="ar-main" data-tog>${gradeBadge(r.grade, r.class_num)}
+        <div class="ar-nm"><span class="ar-n1"><b>${esc(r.first_name)} ${esc(r.last_name || "")}</b>${ic ? `<span class="ar-ic">${ic}</span>` : ""}</span><small>${sub}</small>${pg ? `<small class="ar-pg">${pg}</small>` : ""}</div>
+        ${two && r.present !== false ? `<span class="att-sj2${r.present && !r.did_math && !r.did_english ? " need" : ""}"><label><input type="checkbox" data-m ${r.did_math ? "checked" : ""} ${can ? "" : "disabled"}>מת'</label><label><input type="checkbox" data-e ${r.did_english ? "checked" : ""} ${can ? "" : "disabled"}>אנג'</label></span>` : ""}
+        <div class="seg" role="group" aria-label="נוכחות"><button type="button" class="no ${r.present === false ? "on" : ""}" data-p="0" ${can ? "" : "disabled"} aria-label="חסר/ה">✗</button><button type="button" class="yes ${r.present === true ? "on" : ""}" data-p="1" ${can ? "" : "disabled"} aria-label="נוכח/ת">✓</button></div>
+      </div>
+      ${open ? `<div class="ar-x">
+        ${ex || r.tracking ? `<div class="ar-l">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""}
+        ${pt || (two && prevTag(r)) ? `<div class="ar-l">${pt}${two ? prevTag(r) : ""}</div>` : ""}
+        ${ATT_PAGES(r)}
+        <div class="ar-l ar-acts">${r.in_group && can && A.hasPlan ? `<button type="button" class="skip-b" data-skip>⊘ לא מגיע/ה היום</button>` : ""}${r.added && can ? `<button type="button" class="rm" data-rm="1">הסרה מהשיעור</button>` : ""}</div>
+      </div>` : ""}</li>`; }).join("");
+  const sk = A.rows.map((r, i) => [r, i]).filter(([r]) => r.skip);
+  if (sk.length) $("shRows").insertAdjacentHTML("beforeend", `<li class="ar-sec"><span>לא מגיעים היום (רק בשיעור הזה)</span><span>${sk.length}</span></li>` +
+    sk.map(([r, i]) => `<li data-i="${i}" class="ar skip"><div class="ar-main">${gradeBadge(r.grade, r.class_num)}<div class="ar-nm"><b>${esc(r.first_name)} ${esc(r.last_name || "")}</b></div>${can ? `<button type="button" class="ar-un" data-unskip>↺ החזרה</button>` : ""}</div></li>`).join(""));
+  updateCount();
+}
+const subjMiniTxt = (s) => ["מת'", "אנג'", "משולב", ""][subjGrp(s)];
+function updateCount(){
+  const rows = A.rows.filter(shVisible), N = rows.length, p = rows.filter(r => r.present === true).length, x = rows.filter(r => r.present === false).length, n = N - p - x;
+  $("shBar").innerHTML = N ? `<i class="by" style="width:${p / N * 100}%"></i><i class="bn" style="width:${x / N * 100}%"></i>` : "";
+  $("shTopCnt").innerHTML = `<span><b>${N}</b> ילדים</span><span class="c-yes"><b>${p}</b> נוכחים</span><span class="c-no"><b>${x}</b> חסרים</span>${n ? `<span class="c-un">${n} לא סומנו</span>` : ""}`;
+  const nSk = A.rows.filter(r => r.skip).length; $("shTotal").innerHTML = nSk ? `${nSk} לא מגיעים היום` : "";
+}
+async function loadHistory(sessionId, date){
+  $("shHistList").innerHTML = "<li class='muted'>טוען...</li>";
+  try {
+    const logs = await get("attendance_log", "select=saved_at,saved_by,payload&session_id=eq." + sessionId + "&lesson_date=eq." + date + "&order=saved_at.desc");
+    $("shHistList").innerHTML = logs.length ? logs.map(l => {
+      const rows = (l.payload && l.payload.rows) || [], p = rows.filter(r => r.present).length;
+      return `<li><b>${esc(fmtDate(l.saved_at))}</b> · ${esc(staffName(l.saved_by) || "")} · ${p} נוכחים מתוך ${rows.length}${l.payload && l.payload.extra_students ? " · נוספים: " + esc(l.payload.extra_students) : ""}${l.payload && l.payload.notes ? " · הערות: " + esc(l.payload.notes) : ""}</li>`;
+    }).join("") : "<li class='muted'>עוד לא נשמר.</li>";
+  } catch(e) { $("shHistList").innerHTML = ""; }
+}
+  let isOpen = false;
+  function open(sessionId, date, g){
+    A.groups = g ? [{ session_id: Number(sessionId), kind: g.mar ? "מרתון" : "שוטף" }] : [];
+    A.date = date || todayIL(); A.curG = g ? { session_id: Number(sessionId), kind: g.mar ? "מרתון" : "שוטף", start_time: g.start ? g.start + ":00" : null, city: g.city, location: g.loc } : null;
+    const T = $("adBody"); if (!T) return;
+    T.innerHTML = ""; T.appendChild(wrap); isOpen = true; document.body.dataset.att = "1";
+    if (!STAFF) get("staff", "select=id,full_name").then(r => { STAFF = r || []; if (isOpen && A.sheet) loadHistory(A.sheet.session_id, A.date); }).catch(() => { STAFF = []; });
+    if (!AD.info && AD.role !== "instructor") loadInfo().then(() => { if (isOpen && A.sheet) renderSheetRows(); });
+    loadHol().then(() => { if (isOpen && A.sheet) renderSheetCx(); });
+    history.pushState({ ad: "att", d: navD() + 1 }, "");
+    openSheet(Number(sessionId));
+  }
+  function close(fromBtn){
+    if (!isOpen) return; isOpen = false; delete document.body.dataset.att;
+    if (fromBtn && history.state && history.state.ad === "att") { AD.skipPop = true; history.back(); }
+    if (AD.role === "instructor") { AD.attG = null; insRender(); } else renderWait();
+  }
+  // "אחורה" של הטלפון
+  async function onPop(){ if (!isOpen) return false;
+    if (attChanged() && !await uiConfirm("יש סימון נוכחות שעוד לא נשמר. לצאת בלי לשמור?")) { history.pushState({ ad: "att", d: navD() + 1 }, ""); return true; }
+    attDraftClear(); close(false); return true; }
+  // מעבר למסך אחר (תלמידים / מאגר) – בלי לרנדר את הקבוצות
+  const refresh = () => { if (isOpen && A.sheet) renderSheetRows(); };
+  const detach = () => { isOpen = false; delete document.body.dataset.att; };
+  return { open, close, onPop, detach, refresh, get isOpen(){ return isOpen; } };
+})();
+// ===================== /נוכחות =====================
 // עדכון אוטומטי: בכל חזרה לאפליקציה (וכל חצי שעה) בודקים אם יש גרסה חדשה.
 // כשיש – מרעננים מיד אם שום דבר לא פתוח; אחרת פס קטן "גרסה חדשה – לרענון".
 if ("serviceWorker" in navigator) window.addEventListener("load", () => {
