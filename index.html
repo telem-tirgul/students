@@ -661,6 +661,10 @@
   #adminView .who{ margin-inline-start:auto; display:flex; align-items:center; gap:8px; font-size:12.5px; }
   #adminView .who > span{ opacity:.8; }
   #adminView .main{ flex:1; min-width:0; width:100%; max-width:1500px; margin:0 auto; padding:20px 16px 90px; }
+  /* 1.25.1 (נועה): בלי כותרת "מאגר תרגולים" (כמו הלשונית); יציאה וגרסה – ב-⚙ (מתרגלים: נשאר בפס / למטה) */
+  .crmws #view-ws > .page-head h1{ display:none; } .crmws #view-ws > .page-head:not(:has(button, a, input, select)){ display:none; }
+  body:not(.v-ins) #adLogout, body:not(.v-ins) .ad-ver{ display:none !important; }
+  .tools-foot{ display:flex; gap:8px; margin-top:12px; } .tools-foot .btn{ flex:1; }
   .ad-ver{ text-align:center; font-size:12px; color:var(--ink-soft); opacity:.6; padding:0 0 70px; }
   /* כפתורים, כרטיסים וכותרות – כמו במערכת הניהול */
   #adminView .btn{ font-family:var(--font-display); font-weight:700; font-size:13.5px; border-radius:8px; padding:8px 14px; min-height:0;
@@ -1935,7 +1939,6 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
     <div class="wrap row">
       <img src="logo.png" alt="">
       <div class="ttl"><span id="stHello">היי</span><small>תלם שלי</small></div>
-      <button class="icon-btn" id="stRefresh" aria-label="רענון"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
       <button class="icon-btn" id="stMenu" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
     </div>
   </header>
@@ -1987,7 +1990,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.25",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.25.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2450,14 +2453,13 @@ function doneByTopic(done){
   });
   return h;
 }
-$("stRefresh").onclick = () => { loadStudentPages(); toast("מתעדכן…"); };
 $("stMenu").onclick = () => openSheet(`
   <h2>תפריט</h2>
-  <button class="btn block" id="mInstall" style="margin-bottom:10px">איך מוסיפים למסך הבית</button>
+  ${isStandalone() ? "" : `<button class="btn block" id="mInstall" style="margin-bottom:10px">איך מוסיפים למסך הבית</button>`}
   <button class="btn block" id="mCode" style="margin-bottom:10px">החלפת קוד</button>
   <button class="btn block" id="mOut">יציאה</button>
   <p class="muted small" style="text-align:center;margin:12px 0 0">גרסה ${esc(CONFIG.version)}</p>`, (sh) => {
-    sh.querySelector("#mInstall").onclick = () => { closeSheet(); showInstallHelp(); };
+    if (sh.querySelector("#mInstall")) sh.querySelector("#mInstall").onclick = () => { closeSheet(); showInstallHelp(); };
     sh.querySelector("#mCode").onclick = () => { closeSheet(); LAST_CODE = ""; showCodeChange(); $("codeView").querySelector("h1").textContent = "החלפת קוד"; };
     sh.querySelector("#mOut").onclick = () => { closeSheet(); logout(); };
   });
@@ -2863,8 +2865,6 @@ async function renderWait(){
   let h = byGroup ? `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1><p>הקבוצות של היום לפי השעה – סימון נוכחות, מי ממתין/ה ומה הבא בתור.</p></div></div>
 `
     : `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
-    <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "הקבוצות של היום לפי השעה – מי ממתין/ה, מי עובד/ת, ומה הבא בתור." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
-</div>
 `;
   const reqs = myReqs();
   if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
@@ -3397,7 +3397,7 @@ async function renderStudentMobile(T, s){
   const doneRow = (p) => row(p, `${tt(p, (multi ? "" : wsTopicName(p.worksheet_id) + " · ") + ago(p.done_at))}<span class="ok-ic">${IC.circleCheck.replace("<svg", '<svg width="20" height="20"')}</span>`);
   const EMPTY = { queue: "התור ריק.", now: "אין דף פתוח.", done: "עוד לא סיים/ה דפים." };
   const secBody = (tab) => { let body = "", hid = 0;
-    if (tab === "queue") body += `<div class="stm-hint">${qn ? (multi ? "גרירה בנקודות משנה את הסדר." : `"שליחת הדף הבא" שולח את דף 1. גרירה בנקודות שמשמאל משנה את הסדר.`) : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
+    if (tab === "queue") body += `<div class="stm-hint">${qn ? "" : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
     const part = (x) => {   // מה שמוצג במקצוע אחד
       let h = "";
       if (tab === "queue") { const qAll = queueOf(s.student_id, x), q = AD.showQ ? qAll : qAll.slice(0, 2); hid += qAll.length - q.length;
@@ -3611,26 +3611,18 @@ function confirmSheet(text, okLabel, onOk){
       sh.querySelector("#cfGo").onclick = () => { closeSheet(); onOk(); };
     });
 }
-// 1.17: מחיקת חשבון – לא בכרטיס (שלא יילחץ בטעות במקום "שליחה"), אלא ב"ניהול" בכותרת: בוחרים תלמיד/ה ומוחקים
+// 1.25.1 (נועה): מחיקת חשבון עברה למערכת הניהול; כאן – קוד ראשוני, ייבוא דפים, יציאה וגרסה
 function toolsSheet(){
   const st = AD.settings;
   openSheet(`<h2>⚙ הגדרות</h2>
     ${st ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${st.initial_code ? `<b class="code">${esc(st.initial_code)}</b><span class="muted small">· תקף ${esc(st.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${st.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
-    <h3 class="tl-h">מחיקת חשבון</h3>
-    <p class="muted small" style="margin-top:-4px">התלמיד/ה לא יוכל/תוכל להיכנס; התוכנית והדפים נשמרים.</p>
-    <input class="search" id="tlQ" type="search" placeholder="חיפוש תלמיד/ה לפי שם או טלפון" autocomplete="off">
-    <div id="tlList" class="tl-list"></div>
     <h3 class="tl-h">ייבוא דפים מהמחשב</h3>
     <p class="muted small" style="margin-top:-4px">בוחרים במחשב את התיקייה הראשית של דפי התרגול. המערכת מוצאת לבד את הדפים שברשימה, מעלה אותם ומחליפה דפים קיימים בגרסה החדשה. ${isDesk() ? "" : "<b>רק מהמחשב.</b>"}</p>
     ${isDesk() ? `<input type="file" id="wsFolderP" webkitdirectory directory multiple><div id="wsImportMsgP" class="small" style="margin-top:6px"></div>` : ""}
-    <button class="btn ghost block" onclick="closeSheet()" style="margin-top:10px">סגירה</button>`, (sh) => {
+    <div class="tools-foot"><button class="btn ghost" onclick="closeSheet()">סגירה</button><button class="btn ghost" id="tsOut">יציאה</button></div>
+    <p class="muted small" style="text-align:center;margin:10px 0 0">תלם שלי · גרסה ${esc(CONFIG.version)}</p>`, (sh) => {
+      sh.querySelector("#tsOut").onclick = () => { closeSheet(); logout(); };
       if (sh.querySelector("#wsFolderP")) sh.querySelector("#wsFolderP").onchange = (e) => wsImportFolder(e.target, sh.querySelector("#wsImportMsgP"));
-      const draw = () => { const q = sh.querySelector("#tlQ").value.trim();
-        const L = AD.students.filter(x => x.has_account && (!q || stName(x).includes(q) || (digits(q).length > 2 && digits(x.login_phone || x.phone).includes(digits(q)))));
-        sh.querySelector("#tlList").innerHTML = L.slice(0, 40).map(x => `<div class="tl-row"><span class="tl-n"><b>${esc(stName(x))}</b> <small class="muted ltr">${esc(fmtPhone(x.login_phone))}</small></span><button class="btn sm acc-del" data-del="${esc(x.student_id)}">מחיקת חשבון</button></div>`).join("")
-          || `<div class="muted small" style="padding:8px 2px">${q ? "לא נמצא/ה תלמיד/ה עם חשבון." : "אין חשבונות."}</div>`;
-        sh.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { const x = stById(b.dataset.del); if (x) deleteAccount(x); }); };
-      sh.querySelector("#tlQ").oninput = draw; draw();
       if (sh.querySelector("#icEdit")) sh.querySelector("#icEdit").onclick = initialCodeSheet;
     });
 }
@@ -4004,7 +3996,6 @@ async function renderWs(){
       }
       return `<div class="ws-stars"><div class="ws-stars-h"><span>⭐ חשובים בנושא</span>${tiles.length > 1 ? `<button type="button" class="btn small" id="wsStAll">${wsMobile() ? "שליחת כולם" : "הורדת כולם"} (${st.length})</button>` : ""}</div>
         <div class="ws-stars-row">${tiles.join("")}</div></div>`; })()}
-    ${canSel ? `<div class="ws-selhint">לחיצה ארוכה על דף - ${WS_SHARE ? "שליחה" : "העתקה"} בלי לפתוח אותו. לכל הדפים יחד - לחיצה ארוכה על שם ${list.some(r => r.sub) ? (WS.kind === "unseen" ? "היחידה" : "תת-הנושא") + " (או הנושא)" : "הנושא"}.</div>` : ""}
     ${list.some(r => r.level != null || r.is_word) ? `<div class="ws-lvleg"><i>🟡</i> בסיסי · <i>🟣</i> מתקדם · <i>🧩</i> אתגר${list.some(r => r.is_word) ? " · <i>📖</i> שאלות מילוליות" : ""}</div>` : ""}
     ${WS.tab === "answers" ? `<div class="ws-warn">פתרונות - לשימוש הצוות. לשלוח לתלמיד רק אם החלטתם.</div>` : ""}`;
   WS.sign = sign;
@@ -4756,7 +4747,7 @@ async function insRender(){
   const rel = diff === 0 ? "היום" : diff === 1 ? "מחר" : diff === -1 ? "אתמול" : "";
   const rng = (a, b) => !a && !b ? "" : `<span dir="ltr" style="unicode-bidi:isolate; white-space:nowrap">${esc(a)}${b ? "–" + esc(b) : ""}</span>`;
   let holC = "";
-  const top = (sel) => `<div class="crmatt" id="attListV">${ins ? "" : `<div class="page-head att-head"><h1>נוכחות</h1></div>`}<div id="attMark"><div class="att-stick">
+  const top = (sel) => `<div class="crmatt" id="attListV"><div id="attMark"><div class="att-stick">
     <div class="att-date card"><div class="att-dayname">יום ${DF[dl]}${rel === "היום" ? ' · <span class="today-word">היום</span>' : ""}${holC ? ` <span class="hol-chips" style="display:inline-flex">${holC}</span>` : ""}</div>
       <div class="att-date-row"><button class="btn" type="button" data-wd="-1" aria-label="יום קודם">→<span class="lg-t"> יום קודם</span></button>
         <label class="att-dlbl"><span><span class="d-full">יום ${DF[dl]} ${dm}.${d.getFullYear()}</span><span class="d-short">יום ${dl}' ${dm}</span>${rel ? ` <span class="today-word">· ${rel}</span>` : ""}</span><input type="date" id="wdDate" value="${iso}" aria-label="תאריך"></label>
