@@ -334,6 +334,11 @@
   .sr-q{ width:100%; height:44px; font:inherit; font-size:16px; padding:0 12px; border:1.5px solid var(--border); border-radius:12px; margin-bottom:8px; }
   .sr-list{ max-height:55vh; overflow:auto; } .sr-row{ display:flex; align-items:center; gap:10px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:8px 10px; margin-bottom:6px; cursor:pointer; }
   .sr-t{ display:flex; flex-direction:column; min-width:0; } .sr-t small{ color:var(--ink-soft); font-size:12.5px; }
+  .crmws .ws-vbot .cb-stu-v{ background:var(--accent); border-color:var(--accent); color:#fff; padding-inline:10px; font-size:13.5px; flex:0 0 auto; } .crmws .ws-vbot .ws-copy{ min-width:70px; } .crmws .ws-vbot .cb-stu-v[hidden]{ display:none; }
+  .bk-cities button{ flex:1 1 auto; padding-inline:8px !important; white-space:nowrap; }
+  body:not(.ws-app-on) .crmws .ws-vbot:has(.cb-stu-v:not([hidden])){ gap:4px; padding-inline:6px; } body .crmws .ws-vbot:has(.cb-stu-v:not([hidden])) .ws-nav{ width:36px; } body .crmws .ws-vbot:has(.cb-stu-v:not([hidden])) #wsDl{ padding-inline:8px; font-size:14px; }
+  .bk-ins{ margin:0 0 8px; } .bk-day{ flex-basis:100%; font-weight:800; font-size:13px; color:var(--ink-soft); margin:6px 2px 0; } .bk-today-w{ color:#B07D1E; }
+  .bk-groups .gchip .school-chip{ font-size:12px; }
   .ins-g{ display:flex; flex-direction:column; gap:6px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-inline-start:5px solid var(--accent); border-radius:14px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
   .ins-g.live{ border-color:var(--ok); border-inline-start-color:var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, var(--paper)); }
   .ins-g.done{ border-inline-start-color:var(--ok); }
@@ -593,7 +598,7 @@
   @media (min-width:700px){ .sheet.wide{ width:min(980px, calc(100vw - 40px)); max-height:90vh; display:flex; flex-direction:column; } }
   .bk-head{ display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
   .bk-head > div{ flex:1; } .bk-head h2{ margin-bottom:4px; }
-  .bk-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  .bk-grid{ display:grid; grid-template-columns:minmax(0,1fr); gap:14px; } .bk-grid > section{ min-width:0; }   /* 1.24.2: בלי גלילה הצידה בנייד */
   @media (min-width:860px){ .bk-grid{ grid-template-columns:260px 1fr; flex:1; min-height:0; } .bk-grid > section{ min-height:0; display:flex; flex-direction:column; } .bk-plist{ overflow:auto; } .bk-list{ max-height:none !important; flex:1; } }
   .bk-sec{ font-family:var(--font-display); font-weight:800; color:var(--ink-soft); font-size:14px; margin-bottom:8px; }
   .bk-pages{ background:var(--bg); border-radius:16px; padding:12px; }
@@ -606,7 +611,7 @@
   .bk-cities{ display:flex; gap:4px; background:var(--muted); border-radius:12px; padding:3px; margin-bottom:8px; overflow-x:auto; }
   .bk-cities button{ flex:1; border:none; background:none; padding:8px 10px; border-radius:9px; font-weight:800; font-family:var(--font-display); color:var(--ink-soft); cursor:pointer; white-space:nowrap; }
   .bk-cities button.on{ background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.12); }
-  .bk-groups{ display:flex; flex-wrap:wrap; gap:6px; max-height:150px; overflow:auto; margin-bottom:8px; }
+  .bk-groups{ display:flex; flex-wrap:wrap; gap:6px; max-height:260px; overflow:auto; margin-bottom:8px; }
   .gchip{ display:flex; align-items:center; gap:6px; border:1.5px solid var(--border); background:var(--paper); border-radius:12px; padding:6px 10px; cursor:pointer; text-align:start; }
   .gchip b{ font-family:var(--font-display); font-size:14px; } .gchip small{ color:var(--ink-soft); font-size:12.5px; }
   .gchip .n{ background:var(--muted); border-radius:10px; padding:0 7px; font-size:12px; font-weight:800; color:var(--ink-soft); }
@@ -1135,7 +1140,7 @@
   .staff-foot .linkish{ font-size:12.5px; color:var(--ink-soft); text-decoration:none; opacity:.8; }
   .staff-foot .linkish:hover{ text-decoration:underline; opacity:1; }
   .inst-note{ font-size:14.5px; font-weight:600; color:var(--ink); background:var(--accent-soft); border-radius:12px; padding:10px 12px; margin:10px 0 14px; }
-  @media (max-width:760px){ .kpi-row{ flex-wrap:nowrap; overflow-x:auto; gap:4px; font-size:12px; scrollbar-width:none; } .kpi-row::-webkit-scrollbar{ display:none; } .kpi{ padding:2px 8px; } .kpi b{ font-size:13px; } }
+  @media (max-width:760px){ .kpi-row{ display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:12px; } .kpi-row .kpi{ text-align:center; }   /* 1.24.2: שתיים בשורה – בלי חיתוך */ .kpi-row::-webkit-scrollbar{ display:none; } .kpi{ padding:2px 8px; } .kpi b{ font-size:13px; } }
 
   /* ===== 1.18: מאגר תרגולים – העתק של המסך ממערכת הניהול (5.19.85). רק הצבעים של התלם שלי ===== */
 .crmws{ --card:var(--paper); }
@@ -1407,6 +1412,10 @@ body.ws-vopen.v-stm .crmws .ws-stick{top:0;} body.ws-vopen.v-stm .crmws .ws-view
 .crmws .ws-nav:disabled{opacity:.3;}
 .crmws .ws-vimg{flex:1; overflow:auto; display:flex; justify-content:center; align-items:flex-start; padding:4px 10px; -webkit-overflow-scrolling:touch;}
 .crmws .ws-vimg img{max-width:min(100%, 820px); height:auto; background:#fff; border-radius:4px; -webkit-touch-callout:default; transform-origin:center top; transition:transform .05s;}
+/* 1.24.2 (נועה): הדף כולו בחלון – בלי לגלול (מתאים את עצמו לגובה ולרוחב); בהגדלה – כמו קודם */
+.crmws .ws-vimg{min-height:0; align-items:center;} .crmws .ws-vimg img{max-height:100%; width:auto; object-fit:contain;}
+/* בלי פס לבן למטה באייפון (אפליקציה במסך הבית) – הרקע מתחת לחלון כהה כמו החלון */
+html:has(body.ws-vopen), body.ws-vopen{background:#161118 !important;}
 .crmws .ws-vimg{touch-action:pan-y;}
 .crmws .ws-vimg:has(img.zoomed){touch-action:none; overflow:hidden;}
 .crmws .ws-vbot{display:flex; gap:8px; padding:10px 14px max(14px, env(safe-area-inset-bottom)); justify-content:center; align-items:center; flex-wrap:nowrap;}
@@ -1971,7 +1980,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.24.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.24.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2805,9 +2814,6 @@ async function renderWait(){
   const list = waitingList();
   await loadGroups();
   const fresh = AD.students.filter(s => s.has_account && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
-  const week = Date.now() - 7 * 864e5;
-  const openN = AD.plan.filter(p => p.status === "נשלח").length;
-  const doneWeek = AD.plan.filter(p => p.done_at && new Date(p.done_at).getTime() > week).length;
   const noAcc = AD.students.filter(s => !s.has_account).length;
   const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
   const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
@@ -2815,7 +2821,7 @@ async function renderWait(){
   const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
   let h = byGroup ? `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1><p>הקבוצות של היום לפי השעה – סימון נוכחות, מי ממתין/ה ומה הבא בתור.</p></div></div>
 `
-    : `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(openN, "דפים פתוחים", "k-acc", "students", "all")}${kpi(doneWeek, "הושלמו השבוע", "k-ok", "students", "all")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
+    : `<div class="kpi-row">${kpi(list.length, "ממתינים לדף", "k-gold", "wait")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
     <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "הקבוצות של היום לפי השעה – מי ממתין/ה, מי עובד/ת, ומה הבא בתור." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
 </div>
 `;
@@ -4426,7 +4432,12 @@ CB.onOpen = (r) => { const box = document.getElementById("wsAppBtns"); if (!box)
   if (tt && lv && !tt.textContent.endsWith(lv)) tt.textContent += lv;
   document.body.classList.toggle("ws-app-on", CB.ctx !== "browse" || r.type === "page");
   if (r.type !== "page") { box.innerHTML = ""; return; }
-  if (CB.ctx === "browse") { box.innerHTML = `<button type="button" class="btn primary" id="cbStu">לתלמידים…</button>`; box.querySelector("#cbStu").onclick = () => cbToStudents([String(r.id)]); return; }
+  // 1.24.2 (נועה): "לתלמידים…" בשורה של השליחה (למטה), לא בשורה משלו
+  const vb = document.querySelector(".crmws-v .ws-vbot"); let stuV = document.getElementById("cbStuV");
+  if (CB.ctx === "browse" && vb) { if (!stuV) { stuV = document.createElement("button"); stuV.type = "button"; stuV.id = "cbStuV"; stuV.className = "btn cb-stu-v"; stuV.textContent = "לתלמידים…"; const cp = document.getElementById("wsCopy"); vb.insertBefore(stuV, cp || null); }
+    stuV.hidden = false; stuV.onclick = () => cbToStudents([String(r.id)]); box.innerHTML = ""; document.body.classList.remove("ws-app-on"); return; }
+  if (stuV) stuV.hidden = true;
+  if (CB.ctx === "browse") { box.innerHTML = ""; return; }
   // תלמיד/ה (מהמאגר או מהתוכנית): לפי מצב הדף בתוכנית שלו/ה
   const sid = CB.ctx === "plan" ? CB.plan.s.student_id : AD.bank.pick && AD.bank.pick.sid;
   const p = AD.plan.find(x => x.student_id === String(sid) && String(x.worksheet_id) === String(r.id));
@@ -4550,11 +4561,13 @@ async function bulkSheet(){
   const cities = [...new Set(groups.map(g => g.city))];
   // עיר ברירת מחדל: זו שיש בה הכי הרבה ילדים מתאימים
   const cityN = (c) => groups.filter(g => g.city === c).reduce((n, g) => n + AD.students.filter(st => g.kids.has(st.student_id) && (st.subjects || []).includes(subj)).length, 0);
-  const B = { q: "", city: cities.slice().sort((a, b) => cityN(b) - cityN(a))[0] || "", grp: "", today: false, todaySet: null, sel: new Set() };
+  const B = { q: "", city: cities.slice().sort((a, b) => cityN(b) - cityN(a))[0] || "", ins: AD.waitIns || "", grp: "", today: false, todaySet: null, sel: new Set() };
+  // 1.24.2 (נועה): כמו בנוכחות – מתרגל/ת, עיר, ואז הקבוצות לפי יום ושעה (מהיום והלאה)
+  const insNames = [...new Set(groups.flatMap(g => g.ins || []))].sort((a, b) => a.localeCompare(b, "he"));
   const elig = AD.students.filter(s => (s.subjects || []).includes(subj));
   const status = (sid) => { const pl = planOf(sid); const st = wids.map(w => (pl.find(p => String(p.worksheet_id) === w) || {}).status).filter(Boolean);
     return st.length === wids.length && wids.length ? (st.every(x => x !== "מתוכנן") ? "יש" : "בתור") : st.length ? "חלק" : ""; };
-  const dayName = { "א":"א'","ב":"ב'","ג":"ג'","ד":"ד'","ה":"ה'","ו":"ו'" };
+  const dayName = { "א":"א'","ב":"ב'","ג":"ג'","ד":"ד'","ה":"ה'","ו":"ו'","ש":"ש'" };
   const g0 = await sign(wids.map(w => (AD.wsById.get(w) || {}).storage_path));
   openSheet(`
     <div class="bk-head"><div><h2>שליחת דפים לתלמידים</h2><div class="small muted"><span class="subj-chip ${subjCls(subj)} on sm">${esc(subj)}</span> רק תלמידים שרשומים ל${esc(subj)}</div></div>
@@ -4563,7 +4576,8 @@ async function bulkSheet(){
       <section class="bk-pages"><div class="bk-sec">הדפים שנבחרו · <span id="bkPN"></span></div><div class="bk-plist" id="bkPages"></div></section>
       <section class="bk-who">
         <div class="bk-sec">למי לשלוח</div>
-        ${groups.length ? `<div class="bk-cities">${cities.map(c => `<button data-city="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+        ${groups.length ? `${insNames.length ? `<select id="bkIns" class="wg-ins bk-ins" aria-label="מתרגל/ת"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${insNames.filter(n => n !== AD.myName).map(n => `<option>${esc(n)}</option>`).join("")}</select>` : ""}
+          <div class="bk-cities">${cities.length > 1 ? `<button data-city="*">כל הערים</button>` : ""}${cities.map(c => `<button data-city="${esc(c)}">${esc(c)}</button>`).join("")}</div>
           <div class="bk-groups" id="bkGroups"></div>
           <label class="chk bk-today" id="bkTodayL" hidden><input type="checkbox" id="bkToday"> רק מי שסומן/ה נוכח/ת היום</label>` : ""}
         <div class="bk-searchrow"><label class="bank-search">${IC.search}<input id="bkQ" type="search" placeholder="חיפוש לפי שם"></label>
@@ -4588,10 +4602,16 @@ async function bulkSheet(){
       const drawGroups = () => {
         if (!$$("#bkGroups")) return;
         sh.querySelectorAll("[data-city]").forEach(b => b.classList.toggle("on", b.dataset.city === B.city));
-        const gs = groups.filter(g => g.city === B.city);
-        $$("#bkGroups").innerHTML = `<button class="gchip all ${!B.grp ? "on" : ""}" data-g="">כל התלמידים</button>` +
-          gs.map(g => { const n = elig.filter(s => g.kids.has(s.student_id)).length;
-            return `<button class="gchip ${B.grp === g.id ? "on" : ""}" data-g="${esc(g.id)}" ${n ? "" : "disabled"}><b>${esc(dayName[g.day] || g.day)} ${esc(g.time)}</b><small>${esc(g.loc)}</small><span class="n">${n}</span></button>`; }).join("");
+        const want = B.ins === "__me" ? (AD.myName || "") : B.ins, td = new Date().getDay();
+        const dOrd = (d) => (DAY_L.indexOf(d) - td + 7) % 7;   // מהיום והלאה
+        const gs = groups.filter(g => (B.city === "*" || g.city === B.city) && (!B.ins || (g.ins || []).includes(want)))
+          .sort((a, b) => dOrd(a.day) - dOrd(b.day) || String(a.start).localeCompare(String(b.start)) || a.loc.localeCompare(b.loc, "he"));
+        let h = `<button class="gchip all ${!B.grp ? "on" : ""}" data-g="">כל התלמידים</button>`, lastD = null;
+        gs.forEach(g => { const n = elig.filter(s => g.kids.has(s.student_id)).length;
+          if (g.day !== lastD) { h += `<div class="bk-day">יום ${esc(dayName[g.day] || g.day)}${dOrd(g.day) === 0 ? ` <span class="bk-today-w">· היום</span>` : dOrd(g.day) === 1 ? " · מחר" : ""}</div>`; lastD = g.day; }
+          h += `<button class="gchip ${B.grp === g.id ? "on" : ""}" data-g="${esc(g.id)}" ${n ? "" : "disabled"}><b>${esc(g.start || g.time)}</b>${scChip(g.loc)}${B.city === "*" ? `<small>${esc(g.city)}</small>` : ""}<span class="n">${n}</span></button>`; });
+        if (!gs.length) h += `<div class="bk-empty">אין קבוצות${B.ins ? " למתרגל/ת שנבחר/ה" : ""}.</div>`;
+        $$("#bkGroups").innerHTML = h;
         sh.querySelectorAll("[data-g]").forEach(b => b.onclick = async () => {
           B.grp = b.dataset.g; B.today = false; B.todaySet = null; $$("#bkToday").checked = false; $$("#bkTodayL").hidden = true;
           if (B.grp) { const g = curGroup(); B.sel = new Set(elig.filter(s => g.kids.has(s.student_id) && status(s.student_id) !== "יש").map(s => s.student_id)); }
@@ -4615,6 +4635,7 @@ async function bulkSheet(){
         $$("#bkSum").innerHTML = n ? `<b>${p === 1 ? "דף אחד" : p + " דפים"}</b> ← <b>${n === 1 ? "תלמיד/ה אחד/ת" : n + " תלמידים"}</b>` : `<span class="muted">לבחור תלמידים</span>`;
         $$("#bkQueue").disabled = $$("#bkSend").disabled = !n || !p; };
       sh.querySelectorAll("[data-city]").forEach(b => b.onclick = () => { B.city = b.dataset.city; drawGroups(); });
+      if ($$("#bkIns")) { $$("#bkIns").value = B.ins; $$("#bkIns").onchange = (e) => { B.ins = e.target.value; B.grp = ""; drawGroups(); draw(); }; }
       if ($$("#bkToday")) $$("#bkToday").onchange = (e) => { B.today = e.target.checked; if (B.today && B.todaySet) B.sel = new Set([...B.sel].filter(x => B.todaySet.has(x))); draw(); };
       $$("#bkQ").oninput = (e) => { B.q = e.target.value; draw(); };
       $$("#bkAll").onchange = (e) => { list().filter(s => status(s.student_id) !== "יש").forEach(s => e.target.checked ? B.sel.add(s.student_id) : B.sel.delete(s.student_id)); draw(); };
