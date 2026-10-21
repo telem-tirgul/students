@@ -337,7 +337,14 @@
   .crmws .ws-vbot .cb-stu-v{ background:var(--accent); border-color:var(--accent); color:#fff; padding-inline:10px; font-size:13.5px; flex:0 0 auto; } .crmws .ws-vbot .ws-copy{ min-width:70px; } .crmws .ws-vbot .cb-stu-v[hidden]{ display:none; }
   .bk-cities button{ flex:1 1 auto; padding-inline:8px !important; white-space:nowrap; }
   body:not(.ws-app-on) .crmws .ws-vbot:has(.cb-stu-v:not([hidden])){ gap:4px; padding-inline:6px; } body .crmws .ws-vbot:has(.cb-stu-v:not([hidden])) .ws-nav{ width:36px; } body .crmws .ws-vbot:has(.cb-stu-v:not([hidden])) #wsDl{ padding-inline:8px; font-size:14px; }
-  .bk-ins{ margin:0 0 8px; } .bk-day{ flex-basis:100%; font-weight:800; font-size:13px; color:var(--ink-soft); margin:6px 2px 0; } .bk-today-w{ color:#B07D1E; }
+  .bk-ins{ margin:0 0 8px; } .bk-insl{ font-size:13px; margin:0 0 8px; }
+  /* 1.25: בחירת מתרגל/ת בפס העליון */
+  #adminView .ins-pick{ display:inline-flex; align-items:center; gap:5px; max-width:44vw; border:1px solid rgba(255,255,255,.35) !important; border-radius:999px; padding:4px 10px !important; }
+  #adminView .ins-pick .ins-t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
+  #adminView .ins-pick .ins-car{ font-size:10px; opacity:.8; }
+  .ins-opts{ display:flex; flex-direction:column; gap:6px; max-height:55vh; overflow:auto; }
+  .ins-opt{ text-align:start; font:inherit; padding:11px 14px; border-radius:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); cursor:pointer; }
+  .ins-opt.on{ border-color:var(--accent); background:var(--accent); color:#fff; font-weight:700; } .bk-day{ flex-basis:100%; font-weight:800; font-size:13px; color:var(--ink-soft); margin:6px 2px 0; } .bk-today-w{ color:#B07D1E; }
   .bk-groups .gchip .school-chip{ font-size:12px; }
   .ins-g{ display:flex; flex-direction:column; gap:6px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-inline-start:5px solid var(--accent); border-radius:14px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
   .ins-g.live{ border-color:var(--ok); border-inline-start-color:var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, var(--paper)); }
@@ -1951,10 +1958,10 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
       <div class="brand"><img class="brand-logo" src="logo.png" alt="תלם"><span class="brand-t">תלם שלי<small>מערכת ניהול · דפי תרגול</small></span></div>
       <nav class="nav" id="adNav" aria-label="תפריט"></nav>
       <div class="who"><span id="adWho"></span>
-        <button class="btn small ghost hdr-btn" id="adNotify" title="התראות" hidden><svg class="ic" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="ib-t">התראות</span></button>
+        <button class="btn small ghost ins-pick" id="adIns" type="button" title="של איזה מתרגל/ת להציג" hidden></button>
         <button class="btn small ghost hdr-btn" id="adSearch" title="חיפוש תלמיד/ה"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="ib-t">חיפוש</span></button>
         <button class="btn small ghost hdr-btn" id="adTools" title="הגדרות"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.8 1l-.3 2h-4l-.3-2a7 7 0 0 1-1.8-1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3L3 9.3l2-3.4 1.9.7a7 7 0 0 1 1.8-1l.3-2h4l.3 2a7 7 0 0 1 1.8 1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"/></svg><span class="ib-t">ניהול</span></button>
-        <button class="btn small ghost hdr-btn" id="adRefresh" title="רענון"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="ib-t">רענון</span></button>
+        
         <button class="btn small ghost" id="adLogout">יציאה</button></div>
     </header>
     <main class="main" id="adBody"><div class="card muted">טוען…</div></main>
@@ -1980,7 +1987,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.24.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.25",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2648,16 +2655,15 @@ function adminStart(fast){
   if (!$("adminView").hidden && AD.started) return;
   AD.started = true;
   showView("adminView");
-  $("adRefresh").onclick = async () => { toast("מתעדכן…"); AD.groups = null; AD.present = null; AD.info = null; await adLoad(); };
   $("adLogout").onclick = logout;
   $("adTools").onclick = toolsSheet;
   $("adSearch").onclick = searchSheet;
-  rpc("my_role").then(r => { if (r && r.full_name) { $("adWho").textContent = r.full_name; AD.myName = r.full_name; } }).catch(() => {});
+  rpc("my_role").then(r => { if (r && r.full_name) { $("adWho").textContent = r.full_name; AD.myName = r.full_name; insChanged(); } }).catch(() => {});
+  insBtn();
   $("drawerClose").onclick = $("drawerBg").onclick = () => closeDrawer();
   renderNav();
   if (fast && AD.loaded) { adRender(); adBusy(true); }
   adLoad();
-  notifyBtn();
   rtStart("portal:staff", () => adPoll());
 }
 // ---------- התראות במסך הניהול: בדיקה כל 15 שניות ----------
@@ -2674,9 +2680,9 @@ async function adPoll(){
             .map(r => Object.assign(r, { student_id: String(r.student_id) })).filter(r => stById(r.student_id)); } catch(e) {}
     const sig = (P, R) => JSON.stringify([P.map(p => [p.id, p.status, p.seen_at ? 1 : 0]), R.map(r => r.id)]);
     if (sig(plan, reqs) === sig(AD.plan, AD.codeReqs || [])) return;
-    const beforeW = new Set(waitingList().map(w => w.s.student_id + "|" + w.subj)), beforeR = new Set((AD.codeReqs || []).map(r => r.id));
+    const beforeW = new Set(waitingList().map(w => w.s.student_id + "|" + w.subj)), beforeR = new Set(myReqs().map(r => r.id));
     AD.plan = plan; AD.codeReqs = reqs; refreshWaitingLocal();
-    const newW = waitingList().filter(w => !beforeW.has(w.s.student_id + "|" + w.subj)), newR = AD.codeReqs.filter(r => !beforeR.has(r.id));
+    const newW = waitingList().filter(w => !beforeW.has(w.s.student_id + "|" + w.subj)), newR = myReqs().filter(r => !beforeR.has(r.id));
     if (newW.length || newR.length) {
       const names = [...newW.map(w => stName(w.s).trim()), ...newR.map(r => stName(stById(r.student_id)).trim() + " (קוד)")];
       const msg = newW.length && !newR.length ? (newW.length === 1 ? `🔔 ${names[0]} סיים/ה דף ומחכה לדף הבא` : `🔔 ${newW.length} תלמידים מחכים לדף: ${names.join(", ")}`)
@@ -2690,10 +2696,12 @@ async function adPoll(){
   } catch(e) {}
   finally { AD_POLLING = false; updateTitle(); }
 }
-function updateTitle(){ const n = AD.loaded ? waitingList().length + (AD.codeReqs || []).length : 0; document.title = (n ? `(${n}) ` : "") + "תלם שלי"; }
+function updateTitle(){ const n = AD.loaded ? waitingList().length + myReqs().length : 0; document.title = (n ? `(${n}) ` : "") + "תלם שלי"; }
 let AD_TICK = 0;
 setInterval(() => { if (RT.live && (++AD_TICK % 4)) return; adPoll(); }, 15000);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) adPoll(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) return; adPoll();
+  // 1.25: בלי כפתור רענון – כשחוזרים לאפליקציה, רשימת הקבוצות של הנוכחות נטענת מחדש (אם לא באמצע דף נוכחות / חלון)
+  if (!$("adminView").hidden && !SHEET && (AD.view === "att" || AD.role === "instructor") && !(typeof ATTM !== "undefined" && ATTM.isOpen) && AD.attG && Date.now() - AD.attG.at > 60e3) insRender(); });
 // כפתור "התראות" – התראה של הדפדפן גם כשהלשונית ברקע (במחשב)
 function notifyBtn(){
   const b = $("adNotify"); if (!b) return;
@@ -2704,7 +2712,7 @@ function notifyBtn(){
 DESK.addEventListener("change", () => { if (!$("adminView").hidden) { if (!isDesk()) closeDrawer(true); adRender(); } });
 
 function renderNav(){
-  const n = waitingList().length + (AD.codeReqs || []).length;
+  const n = waitingList().length + myReqs().length;
   try { if (AD.loaded) document.title = (n ? `(${n}) ` : "") + "תלם שלי"; } catch(e) {}
   $("adNav").innerHTML = NAV.map(([v, l, ic, sl]) => `<button data-v="${v}" data-sl="${sl}" ${AD.view === v ? 'aria-current="page"' : ""}>${ic}<span>${l}</span>${v === "wait" && n ? `<span class="badge">${n}</span>` : ""}</button>`).join("");
   $("adNav").querySelectorAll("button").forEach(b => b.onclick = () => adGo(b.dataset.v));
@@ -2750,6 +2758,7 @@ async function adLoad(){
   if (wasCache && AD.st && !isDesk()) { rerenderPlan(); return; }
   adRender();
   // ברקע: קבוצות, נוכחות היום, מבחנים וכרטיסים – מוכנים כשנכנסים ל"תלמידים"
+  loadGroups().then(() => { if (insWant()) insChanged(); }).catch(() => {});
   Promise.all([loadGroups(), presentAllToday(), loadInfo()]).then(() => { if (AD.view === "students" && !AD.st && !SHEET) adRender(); }).catch(() => {});
 }
 async function loadWs(force){
@@ -2801,10 +2810,42 @@ const initials = (s) => ((s.first_name || "").trim()[0] || "") + ((s.last_name |
 const avatar = (s) => `<span class="avatar">${esc(initials(s))}</span>`;
 const thumbOf = (g, wid, extra) => { const w = AD.wsById.get(String(wid)); return w ? `<span class="thumb" data-zoom="${esc(w.id)}" style="background-image:url('${esc(g(w.storage_path))}')" ${extra || ""}></span>` : `<span class="thumb"></span>`; };
 
+// ---------- 1.25 (נועה): מתרגל/ת – בחירה אחת לכל האפליקציה (כפתור בפס העליון) ----------
+// חל על הנוכחות, ממתינים (גם המספר בלשונית וההתראות) ו"לתלמידים…". ילד/ה בלי קבוצה – מופיע/ה תמיד.
+function insWant(){ return AD.waitIns === "__me" ? (AD.myName || null) : (AD.waitIns || null); }   // null = כולם
+function stMine(sid){
+  const w = insWant(); if (!w || !AD.groups) return true;
+  const k = String(sid); let inAny = false;
+  for (const g of AD.groups) if (g.kids.has(k)) { inAny = true; if (g.ins.includes(w)) return true; }
+  return !inAny;
+}
+const myReqs = () => (AD.codeReqs || []).filter(r => stMine(r.student_id));
+function insLabel(){ return !AD.waitIns ? "כל המתרגלים" : AD.waitIns === "__me" ? "הקבוצות שלי" : AD.waitIns; }
+function insBtn(){
+  const b = $("adIns"); if (!b || AD.role === "instructor") return;
+  b.hidden = false;
+  b.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="ins-t">${esc(insLabel())}</span><span class="ins-car">▾</span>`;
+  b.onclick = insSheet;
+}
+async function insSheet(){
+  const gs = await loadGroups();
+  const names = [...new Set(gs.flatMap(g => g.ins))].filter(n => n !== AD.myName).sort((a, b) => a.localeCompare(b, "he"));
+  const opt = (v, l) => `<button type="button" class="ins-opt${(AD.waitIns || "") === v ? " on" : ""}" data-v="${esc(v)}">${esc(l)}</button>`;
+  openSheet(`<h2>של מי להציג?</h2><p class="muted small" style="margin-top:-4px">חל על הנוכחות, הממתינים ושליחה לתלמידים.</p>
+    <div class="ins-opts">${AD.myName ? opt("__me", "הקבוצות שלי") : ""}${opt("", "כל המתרגלים")}${names.map(n => opt(n, n)).join("")}</div>
+    <button class="btn ghost block" onclick="closeSheet()" style="margin-top:10px">סגירה</button>`, (sh) => {
+      sh.querySelectorAll("[data-v]").forEach(x => x.onclick = () => { AD.waitIns = x.dataset.v; store("telem_portal_waitins", AD.waitIns || null); closeSheet(); insChanged(); }); }, "ins-sheet");
+}
+function insChanged(){
+  insBtn(); renderNav(); updateTitle();
+  if ($("adminView").hidden || SHEET) return;
+  if (AD.view === "att") { if (!(typeof ATTM !== "undefined" && ATTM.isOpen)) insRender(); }
+  else if (AD.view === "wait" && !AD.st) renderWait();
+}
 // ---------- ממתינים לדף ----------
 function waitingList(){
   const out = [];
-  AD.students.forEach(s => (s.waiting_subjects || []).forEach(subj => {
+  AD.students.forEach(s => stMine(s.student_id) && (s.waiting_subjects || []).forEach(subj => {
     const last = planOf(s.student_id, subj).filter(p => p.done_at).sort((a, b) => b.done_at.localeCompare(a.done_at))[0];
     out.push({ s, subj, done_at: last ? last.done_at : s.last_done_at, last });
   }));
@@ -2813,8 +2854,8 @@ function waitingList(){
 async function renderWait(){
   const list = waitingList();
   await loadGroups();
-  const fresh = AD.students.filter(s => s.has_account && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
-  const noAcc = AD.students.filter(s => !s.has_account).length;
+  const fresh = AD.students.filter(s => s.has_account && stMine(s.student_id) && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
+  const noAcc = AD.students.filter(s => !s.has_account && stMine(s.student_id)).length;
   const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
   const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
   const byGroup = AD.view === "att";   // 1.20.1: נוכחות = הקבוצות של היום; ממתינים = הרשימה
@@ -2825,7 +2866,7 @@ async function renderWait(){
     <div class="page-h"><div style="flex:1;min-width:200px"><h1>ממתינים לדף</h1><p>${byGroup ? "הקבוצות של היום לפי השעה – מי ממתין/ה, מי עובד/ת, ומה הבא בתור." : "מי שסיים/ה דף ומחכה לדף הבא. הכי ותיקים – ראשונים."}</p></div>
 </div>
 `;
-  const reqs = AD.codeReqs || [];
+  const reqs = myReqs();
   if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
       return `<div class="wcard req"><div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div>
         <div class="sub">שכח/ה את הקוד · <span class="ltr">${esc(fmtPhone(r.phone))}</span> · ${esc(ago(r.created_at))}</div></div><span class="chip warn">קוד</span></div>
@@ -4525,7 +4566,8 @@ async function addToPlan(releaseNow){
 }
 // ---------- שליחה לכמה תלמידים (לפי קבוצה / יום ושעה, או ידנית) ----------
 async function loadGroups(){
-  if (AD.groups) return AD.groups;
+  if (AD.groups && Date.now() - (AD.groupsAt || 0) < 15 * 60e3) return AD.groups;
+  AD.groupsAt = Date.now();
   const yr = encodeURIComponent('תשפ"ז');
   try {
     const [ss, sins, ssp, asg] = await Promise.all([
@@ -4560,7 +4602,7 @@ async function bulkSheet(){
   const groups = await loadGroups();
   const cities = [...new Set(groups.map(g => g.city))];
   // עיר ברירת מחדל: זו שיש בה הכי הרבה ילדים מתאימים
-  const cityN = (c) => groups.filter(g => g.city === c).reduce((n, g) => n + AD.students.filter(st => g.kids.has(st.student_id) && (st.subjects || []).includes(subj)).length, 0);
+  const cityN = (c) => groups.filter(g => g.city === c && (!insWant() || (g.ins || []).includes(insWant()))).reduce((n, g) => n + AD.students.filter(st => g.kids.has(st.student_id) && (st.subjects || []).includes(subj)).length, 0);
   const B = { q: "", city: cities.slice().sort((a, b) => cityN(b) - cityN(a))[0] || "", ins: AD.waitIns || "", grp: "", today: false, todaySet: null, sel: new Set() };
   // 1.24.2 (נועה): כמו בנוכחות – מתרגל/ת, עיר, ואז הקבוצות לפי יום ושעה (מהיום והלאה)
   const insNames = [...new Set(groups.flatMap(g => g.ins || []))].sort((a, b) => a.localeCompare(b, "he"));
@@ -4576,7 +4618,7 @@ async function bulkSheet(){
       <section class="bk-pages"><div class="bk-sec">הדפים שנבחרו · <span id="bkPN"></span></div><div class="bk-plist" id="bkPages"></div></section>
       <section class="bk-who">
         <div class="bk-sec">למי לשלוח</div>
-        ${groups.length ? `${insNames.length ? `<select id="bkIns" class="wg-ins bk-ins" aria-label="מתרגל/ת"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${insNames.filter(n => n !== AD.myName).map(n => `<option>${esc(n)}</option>`).join("")}</select>` : ""}
+        ${groups.length ? `<div class="bk-insl">👤 ${esc(insLabel())} <span class="muted">· לשינוי – הכפתור בפס העליון</span></div>
           <div class="bk-cities">${cities.length > 1 ? `<button data-city="*">כל הערים</button>` : ""}${cities.map(c => `<button data-city="${esc(c)}">${esc(c)}</button>`).join("")}</div>
           <div class="bk-groups" id="bkGroups"></div>
           <label class="chk bk-today" id="bkTodayL" hidden><input type="checkbox" id="bkToday"> רק מי שסומן/ה נוכח/ת היום</label>` : ""}
@@ -4602,15 +4644,15 @@ async function bulkSheet(){
       const drawGroups = () => {
         if (!$$("#bkGroups")) return;
         sh.querySelectorAll("[data-city]").forEach(b => b.classList.toggle("on", b.dataset.city === B.city));
-        const want = B.ins === "__me" ? (AD.myName || "") : B.ins, td = new Date().getDay();
+        const want = insWant(), td = new Date().getDay();
         const dOrd = (d) => (DAY_L.indexOf(d) - td + 7) % 7;   // מהיום והלאה
-        const gs = groups.filter(g => (B.city === "*" || g.city === B.city) && (!B.ins || (g.ins || []).includes(want)))
+        const gs = groups.filter(g => (B.city === "*" || g.city === B.city) && (!want || (g.ins || []).includes(want)))
           .sort((a, b) => dOrd(a.day) - dOrd(b.day) || String(a.start).localeCompare(String(b.start)) || a.loc.localeCompare(b.loc, "he"));
         let h = `<button class="gchip all ${!B.grp ? "on" : ""}" data-g="">כל התלמידים</button>`, lastD = null;
         gs.forEach(g => { const n = elig.filter(s => g.kids.has(s.student_id)).length;
           if (g.day !== lastD) { h += `<div class="bk-day">יום ${esc(dayName[g.day] || g.day)}${dOrd(g.day) === 0 ? ` <span class="bk-today-w">· היום</span>` : dOrd(g.day) === 1 ? " · מחר" : ""}</div>`; lastD = g.day; }
           h += `<button class="gchip ${B.grp === g.id ? "on" : ""}" data-g="${esc(g.id)}" ${n ? "" : "disabled"}><b>${esc(g.start || g.time)}</b>${scChip(g.loc)}${B.city === "*" ? `<small>${esc(g.city)}</small>` : ""}<span class="n">${n}</span></button>`; });
-        if (!gs.length) h += `<div class="bk-empty">אין קבוצות${B.ins ? " למתרגל/ת שנבחר/ה" : ""}.</div>`;
+        if (!gs.length) h += `<div class="bk-empty">אין קבוצות${want ? " למתרגל/ת שנבחר/ה" : ""}.</div>`;
         $$("#bkGroups").innerHTML = h;
         sh.querySelectorAll("[data-g]").forEach(b => b.onclick = async () => {
           B.grp = b.dataset.g; B.today = false; B.todaySet = null; $$("#bkToday").checked = false; $$("#bkTodayL").hidden = true;
@@ -4635,7 +4677,6 @@ async function bulkSheet(){
         $$("#bkSum").innerHTML = n ? `<b>${p === 1 ? "דף אחד" : p + " דפים"}</b> ← <b>${n === 1 ? "תלמיד/ה אחד/ת" : n + " תלמידים"}</b>` : `<span class="muted">לבחור תלמידים</span>`;
         $$("#bkQueue").disabled = $$("#bkSend").disabled = !n || !p; };
       sh.querySelectorAll("[data-city]").forEach(b => b.onclick = () => { B.city = b.dataset.city; drawGroups(); });
-      if ($$("#bkIns")) { $$("#bkIns").value = B.ins; $$("#bkIns").onchange = (e) => { B.ins = e.target.value; B.grp = ""; drawGroups(); draw(); }; }
       if ($$("#bkToday")) $$("#bkToday").onchange = (e) => { B.today = e.target.checked; if (B.today && B.todaySet) B.sel = new Set([...B.sel].filter(x => B.todaySet.has(x))); draw(); };
       $$("#bkQ").oninput = (e) => { B.q = e.target.value; draw(); };
       $$("#bkAll").onchange = (e) => { list().filter(s => status(s.student_id) !== "יש").forEach(s => e.target.checked ? B.sel.add(s.student_id) : B.sel.delete(s.student_id)); draw(); };
@@ -4700,9 +4741,8 @@ function instructorStart(role){
   AD.role = "instructor"; AD.myName = (role && role.full_name) || "";
   showView("adminView"); document.body.classList.add("v-ins");
   $("adWho").textContent = AD.myName; $("adNav").innerHTML = `<button aria-current="page"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><span>נוכחות</span></button>`;
-  $("adTools").hidden = true; $("adNotify").hidden = true; $("adSearch").hidden = true;
+  $("adTools").hidden = true; $("adSearch").hidden = true; $("adIns").hidden = true;
   $("adLogout").onclick = logout;
-  $("adRefresh").onclick = () => { AD.attG = null; insRender(); };
   insRender();
 }
 // 1.20.1 (נועה): מסך הנוכחות – כמו בנוכחות במערכת הניהול: יום (→ / תאריך / להיום / ←), מתרגלים, ערים, ולכל קבוצה כרטיס
@@ -4739,7 +4779,7 @@ async function insRender(){
     if (AD.waitIns && AD.waitIns !== "__me" && !names.includes(AD.waitIns)) names.push(AD.waitIns);
     const want = AD.waitIns === "__me" ? (AD.myName || "") : AD.waitIns;
     gs = list.filter(x => !AD.waitIns || insOf(x).includes(want));
-    sel = `<div class="att-filt"><select id="attIns" aria-label="מתרגל"><option value="">כל המתרגלים</option>${AD.myName ? `<option value="__me">הקבוצות שלי</option>` : ""}${names.filter(n => n !== AD.myName).map(n => `<option>${esc(n)}</option>`).join("")}</select></div>`;
+    if (AD.waitIns === "__me" && !AD.myName) gs = list;   // עוד לא ידוע מי נכנס/ה
   }
   gs = gs.slice().sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)) || String(a.location).localeCompare(String(b.location), "he"));
   const card = (g) => `<button type="button" class="att-group ${scCls(g.location)} ${g.marked ? "done" : ""}${g.cx ? " hol-fade" : ""}" data-att="${esc(String(g.session_id))}">
