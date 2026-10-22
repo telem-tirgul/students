@@ -342,9 +342,10 @@
   #adminView .ins-pick{ display:inline-flex; align-items:center; gap:5px; max-width:44vw; border:1px solid rgba(255,255,255,.35) !important; border-radius:999px; padding:4px 10px !important; }
   #adminView .ins-pick .ins-t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
   #adminView .ins-pick .ins-car{ font-size:10px; opacity:.8; }
-  .ins-opts{ display:flex; flex-direction:column; gap:6px; max-height:55vh; overflow:auto; }
-  .ins-opt{ text-align:start; font:inherit; padding:11px 14px; border-radius:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); cursor:pointer; }
-  .ins-opt.on{ border-color:var(--accent); background:var(--accent); color:#fff; font-weight:700; } .bk-day{ flex-basis:100%; font-weight:800; font-size:13px; color:var(--ink-soft); margin:6px 2px 0; } .bk-today-w{ color:#B07D1E; }
+  .ins-pop{ position:fixed; z-index:400; min-width:150px; max-width:220px; max-height:50vh; overflow:auto; background:var(--paper); border:1px solid var(--border); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.18); padding:4px; display:flex; flex-direction:column; }
+  .ins-opt{ text-align:start; font:inherit; font-size:13.5px; padding:7px 10px; border:0; border-radius:8px; background:none; color:var(--ink); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ins-opt:hover{ background:rgba(0,0,0,.05); } .ins-opt.on{ color:var(--accent); font-weight:700; }
+  .ins-sep{ height:1px; background:var(--border); margin:3px 6px; } .bk-day{ flex-basis:100%; font-weight:800; font-size:13px; color:var(--ink-soft); margin:6px 2px 0; } .bk-today-w{ color:#B07D1E; }
   .bk-groups .gchip .school-chip{ font-size:12px; }
   .ins-g{ display:flex; flex-direction:column; gap:6px; width:100%; text-align:start; font:inherit; color:inherit; background:var(--paper); border:1px solid var(--border); border-inline-start:5px solid var(--accent); border-radius:14px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
   .ins-g.live{ border-color:var(--ok); border-inline-start-color:var(--ok); background:color-mix(in srgb, var(--ok-bg) 70%, var(--paper)); }
@@ -1990,7 +1991,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2841,14 +2842,22 @@ function insBtn(){
   b.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="ins-t">${esc(insLabel())}</span><span class="ins-car">▾</span>`;
   b.onclick = insSheet;
 }
+// 1.26.1 (נועה): תפריט קטן מתחת לכפתור (לא חלון על כל המסך) – פחות לחיצות בטעות
 async function insSheet(){
+  const old = document.getElementById("insPop"); if (old) { old.remove(); return; }
   const gs = await loadGroups();
   const names = [...new Set(gs.flatMap(g => g.ins))].filter(n => n !== AD.myName).sort((a, b) => a.localeCompare(b, "he"));
-  const opt = (v, l) => `<button type="button" class="ins-opt${(AD.waitIns || "") === v ? " on" : ""}" data-v="${esc(v)}">${esc(l)}</button>`;
-  openSheet(`<h2>של מי להציג?</h2><p class="muted small" style="margin-top:-4px">חל על הנוכחות, הממתינים ושליחה לתלמידים.</p>
-    <div class="ins-opts">${AD.myName ? opt("__me", "הקבוצות שלי") : ""}${opt("", "כל המתרגלים")}${names.map(n => opt(n, n)).join("")}</div>
-    <button class="btn ghost block" onclick="closeSheet()" style="margin-top:10px">סגירה</button>`, (sh) => {
-      sh.querySelectorAll("[data-v]").forEach(x => x.onclick = () => { AD.waitIns = x.dataset.v; store("telem_portal_waitins", AD.waitIns || null); closeSheet(); insChanged(); }); }, "ins-sheet");
+  const opt = (v, l) => `<button type="button" class="ins-opt${(AD.waitIns || "") === v ? " on" : ""}" data-v="${esc(v)}">${(AD.waitIns || "") === v ? "✓ " : ""}${esc(l)}</button>`;
+  const b = $("adIns"), r = b.getBoundingClientRect();
+  const pop = document.createElement("div"); pop.id = "insPop"; pop.className = "ins-pop"; pop.setAttribute("role", "menu");
+  pop.innerHTML = `${AD.myName ? opt("__me", "הקבוצות שלי") : ""}${opt("", "כל המתרגלים")}${names.length ? `<div class="ins-sep"></div>` : ""}${names.map(n => opt(n, n)).join("")}`;
+  pop.style.top = (r.bottom + 4) + "px"; pop.style.right = Math.max(8, window.innerWidth - r.right) + "px";
+  document.body.appendChild(pop);
+  const close = () => { pop.remove(); document.removeEventListener("pointerdown", out, true); window.removeEventListener("scroll", close, true); };
+  const out = (e) => { if (!pop.contains(e.target) && !b.contains(e.target)) close(); };
+  setTimeout(() => { document.addEventListener("pointerdown", out, true); window.addEventListener("scroll", close, true); }, 0);
+  pop.querySelectorAll("[data-v]").forEach(x => x.onclick = () => { const v = x.dataset.v; close();
+    if ((AD.waitIns || "") === v) return; AD.waitIns = v; store("telem_portal_waitins", AD.waitIns || null); insChanged(); });
 }
 function insChanged(){
   insBtn(); renderNav(); updateTitle();
