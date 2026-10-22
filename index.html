@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>תלם שלי</title>
 <meta name="theme-color" content="#5A1216">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -666,6 +666,7 @@
   .crmws #view-ws > .page-head h1{ display:none; } .crmws #view-ws > .page-head:not(:has(button, a, input, select)){ display:none; }
   body:not(.v-ins) #adLogout, body:not(.v-ins) .ad-ver{ display:none !important; }
   .tools-foot{ display:flex; gap:8px; margin-top:12px; } .tools-foot .btn{ flex:1; }
+  html{ touch-action:pan-x pan-y; } .ws-vimg, .viewer{ touch-action:auto; }   /* 1.26.2: בלי הגדלה בשתי אצבעות, חוץ מהדף עצמו */
   .ad-ver{ text-align:center; font-size:12px; color:var(--ink-soft); opacity:.6; padding:0 0 70px; }
   /* כפתורים, כרטיסים וכותרות – כמו במערכת הניהול */
   #adminView .btn{ font-family:var(--font-display); font-weight:700; font-size:13.5px; border-radius:8px; padding:8px 14px; min-height:0;
@@ -1991,7 +1992,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2002,6 +2003,10 @@ const CONFIG = {
 // עזר
 // ======================================================================
 const $ = (id) => document.getElementById(id);
+// 1.26.2 (נועה): בלי הגדלה בשתי אצבעות באפליקציה (רק על הדף עצמו בחלון הדף)
+const ZOOM_OK = (t) => !!(t && t.closest && t.closest(".ws-vimg, .viewer, #viewer, .pv-img, .zoomable"));
+["gesturestart", "gesturechange"].forEach(ev => document.addEventListener(ev, (e) => { if (!ZOOM_OK(e.target)) e.preventDefault(); }, { passive: false }));
+document.addEventListener("touchmove", (e) => { if (e.touches && e.touches.length > 1 && !ZOOM_OK(e.target)) e.preventDefault(); }, { passive: false });
 // 1.26 (מנ-45, נועה): עדכון ברקע בלי "ריפרוש" נראה – מציירים רק אם משהו השתנה, ושומרים את הגלילה
 function paint(el, html){
   if (!el) return false;
@@ -2790,6 +2795,8 @@ async function loadWs(force){
 }
 function adGo(v){
   if (typeof ATTM !== "undefined" && ATTM.isOpen) ATTM.detach();
+  try { if (CBM.viewerOpen()) CBM.wsViewerOff(); } catch(e) {}   // 1.26.2 (נועה): מעבר ללשונית אחרת סוגר את הדף הפתוח
+  if (VIEWER) closeViewer(true);
   AD.view = v; AD.sel.clear();
   if (!isDesk()) AD.st = null;
   if (v !== "bank" || isDesk()) AD.bank.pick = null;
@@ -5354,7 +5361,7 @@ function renderSheetRows(){
   // 5.19.20: כותרת שעה רק כשיש בקבוצה יותר משעת הגעה אחת (מי מגיע קודם ומי אחר כך)
   const tSet = new Set(A.rows.filter(shVisible).map(attArr).filter(t => t != null)), multiT = tSet.size > 1;
   let prevT = null;
-  paint($("shRows"), A.rows.map((r, i) => { if (!shVisible(r)) return "";
+  let shH = A.rows.map((r, i) => { if (!shVisible(r)) return "";
     const grp = subjGrp(r.subject), t = attArr(r);
     let head = "";
     if (multiT && t != null && t !== prevT) { const n = A.rows.filter(x => shVisible(x) && attArr(x) === t).length;
@@ -5371,12 +5378,13 @@ function renderSheetRows(){
       </div>
 
     </div>${(() => { const ex = kidExTag(r, A.sheet.city, A.sheet.date || A.date);   // 5.19.19: מבחן / לומדים עכשיו - באותה שורה עם השעה האישית והמעקב (לא דוחקים את השם)
-      return r.tracking || ex ? `<div class="att-track-row">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""; })()}${ATT_PG_ROW(r)}</li>`; }).join(""));
+      return r.tracking || ex ? `<div class="att-track-row">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""; })()}${ATT_PG_ROW(r)}</li>`; }).join("");
   // 5.19.29: "לא מגיעים היום" - בסוף הרשימה, באפור, עם החזרה
   const sk = A.rows.map((r, i) => [r, i]).filter(([r]) => r.skip);
-  if (sk.length) $("shRows").insertAdjacentHTML("beforeend", `<li class="att-sec att-skip-h"><span>לא מגיעים היום (רק בשיעור הזה)</span><span>${sk.length}</span></li>` +
+  if (sk.length) shH += (`<li class="att-sec att-skip-h"><span>לא מגיעים היום (רק בשיעור הזה)</span><span>${sk.length}</span></li>` +
     sk.map(([r, i]) => `<li data-i="${i}" class="att-skip">${gradeBadge(r.grade, r.class_num)}<div class="att-name"><b class="att-nm"><span>${esc(r.first_name)} ${esc(r.last_name || "")}</span></b><span class="meta">${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}</span></div>
       <div class="att-ctl">${can ? `<button type="button" class="btn small" data-unskip>↺ החזרה</button>` : ""}</div></li>`).join(""));
+  paint($("shRows"), shH);   // 1.26.2: פעם אחת – בלי כפילות של "לא מגיעים היום"
   updateCount();
 }
 function renderSheetCx(){
