@@ -1990,7 +1990,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.25.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2001,6 +2001,15 @@ const CONFIG = {
 // עזר
 // ======================================================================
 const $ = (id) => document.getElementById(id);
+// 1.26 (מנ-45, נועה): עדכון ברקע בלי "ריפרוש" נראה – מציירים רק אם משהו השתנה, ושומרים את הגלילה
+function paint(el, html){
+  if (!el) return false;
+  if (el._ph === html && el._pn && el.firstElementChild === el._pn) return false;   // אותו תוכן – לא נוגעים
+  const y = window.scrollY;
+  el.innerHTML = html; el._ph = html; el._pn = el.firstElementChild;
+  if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
+  return true;
+}
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const digits = (s) => String(s || "").replace(/\D/g, "");
 function normPhone(p){ let d = digits(p); if (/^9725\d{8}$/.test(d)) d = "0" + d.slice(3); return d; }
@@ -2399,7 +2408,7 @@ function renderStudent(){
     h += `<div class="seg dv-seg"><button data-dv="order" class="${dv === "order" ? "on" : ""}">לפי הסדר</button><button data-dv="topics" class="${dv === "topics" ? "on" : ""}">לפי נושאים</button></div>`;
     h += dv === "topics" ? doneByTopic(done) : doneByOrder(done, kick);
   }
-  $("stBody").innerHTML = h;
+  paint($("stBody"), h);
   $("stBody").querySelectorAll("[data-i]").forEach(b => b.onclick = () => openStudentPage(Number(b.dataset.i)));
   $("stBody").querySelectorAll("[data-dv]").forEach(b => b.onclick = () => { store("telem_portal_done_view", b.dataset.dv); renderStudent(); });
   $("stBody").querySelectorAll("details.dt").forEach(d => d.ontoggle = () => { d.open ? ST.openT.add(d.dataset.k) : ST.openT.delete(d.dataset.k); });
@@ -2732,8 +2741,10 @@ const AD_CACHE = {
   clear(){ store(this.key, null); }
 };
 function adBusy(on){ document.body.classList.toggle("ad-busy", !!on); }
+const adSig = () => { try { return JSON.stringify([AD.students, (AD.plan || []).map(p => [p.id, p.status, p.position, p.seen_at ? 1 : 0]), (AD.ws || []).length]); } catch(e) { return Math.random(); } };
 async function adLoad(){
   adBusy(true);
+  const sig0 = AD.loaded ? adSig() : null;
   const opt = (p) => p.catch(e => { if (e && e.message === "not signed in") throw e; return undefined; });
   try {
     const [students, plan, settings, reqs] = await Promise.all([
@@ -2756,6 +2767,7 @@ async function adLoad(){
   }
   const wasCache = AD.fromCache; AD.fromCache = false; adBusy(false); AD_CACHE.save();
   // אם כבר עובדים על משהו (חלון, דף פתוח, מאגר) – לא לקפוץ; רק לעדכן את מה שבטוח
+  if (wasCache && sig0 === adSig()) { renderNav(); loadGroups().then(() => { if (insWant()) insChanged(); }).catch(() => {}); return; }   // 1.26: לא השתנה כלום – לא מציירים מחדש
   if (wasCache && (SHEET || VIEWER || AD.bank.pick || !$("drawer").hidden)) { renderNav(); return; }
   if (wasCache && AD.st && !isDesk()) { rerenderPlan(); return; }
   adRender();
@@ -2821,7 +2833,7 @@ function stMine(sid){
   for (const g of AD.groups) if (g.kids.has(k)) { inAny = true; if (g.ins.includes(w)) return true; }
   return !inAny;
 }
-const myReqs = () => (AD.codeReqs || []).filter(r => stMine(r.student_id));
+const myReqs = () => [];   // 1.26 (מנ-50): בקשות "שכחתי קוד" – בתיבת 📥 במערכת הניהול, לא כאן
 function insLabel(){ return !AD.waitIns ? "כל המתרגלים" : AD.waitIns === "__me" ? "הקבוצות שלי" : AD.waitIns; }
 function insBtn(){
   const b = $("adIns"); if (!b || AD.role === "instructor") return;
@@ -2879,7 +2891,7 @@ async function renderWait(){
     h += `<div class="sec-h" style="margin-top:26px">יש חשבון, עוד לא נשלח אף דף (${fresh.length})</div><div class="wait-grid">`;
     h += fresh.map(s => waitCard(g, s, (s.subjects || [])[0], s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : "עוד לא נכנס/ה", false)).join("") + `</div>`;
   }
-  $("adBody").innerHTML = h;
+  paint($("adBody"), h);
   const B = $("adBody");
   B.querySelectorAll("[data-newcode]").forEach(b => b.onclick = () => accountSheet(stById(b.dataset.newcode), true));
   B.querySelectorAll("[data-dismiss]").forEach(b => b.onclick = () => codeReqDone(b.dataset.dismiss));
@@ -3103,7 +3115,6 @@ function studentsListHtml(){
   return `
     <input class="search" id="stSearch" type="search" placeholder="חיפוש לפי שם או טלפון" value="${esc(AD.q)}">
     <div class="filters">${F.map(([k, l]) => `<button data-f="${k}" class="${AD.filter === k ? "on" : ""}">${l}</button>`).join("")}</div>
-    ${AD.filter === "noacc" && AD.settings && list.length ? `<button class="btn primary bulk-btn" id="bulkAcc" data-ids="${esc(list.map(x => x.student_id).join(","))}">יצירת חשבון לכל הרשימה (${list.length})</button>` : ""}
     <div class="small muted" style="margin:0 2px 8px">${list.length} תלמידים רשומים</div>
     ${ST_LEG}<div class="list-scroll">${todaySections(list, stRowHtml) || `<div class="card muted">אין תלמידים שמתאימים.</div>`}</div>`;
 }
@@ -3257,10 +3268,10 @@ async function renderStudentPlan(T, mobile){
   if (AD.st !== s.student_id) return;   // בינתיים נבחר/ה תלמיד/ה אחר/ת
   const waiting = (s.waiting_subjects || []).includes(AD.subj);
   const acc = !s.has_account
-    ? `<span class="chip">אין עדיין חשבון</span><span class="sp" style="flex:1"></span><button class="btn primary sm" id="accCreate">יצירת חשבון ושליחת קוד</button>`
+    ? `<span class="chip">אין עדיין חשבון</span>`
     : `<span class="chip ok">יש חשבון</span><span class="ltr small">${esc(fmtPhone(s.login_phone))}</span>
-       <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג – ללחוץ "קוד חדש"</span>` : "עוד לא בחר/ה קוד אישי" + (s.code_expires_at ? " · הקוד עובד עד " + esc(fmtDay(s.code_expires_at)) : "")) : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
-       <span style="flex:1"></span><button class="btn sm" id="accReset">קוד חדש</button>`;
+       <span class="small muted">${s.must_change_code ? (codeExpired(s) ? `<span class="chip bad">הקוד הראשוני פג</span>` : "עוד לא בחר/ה קוד אישי" + (s.code_expires_at ? " · הקוד עובד עד " + esc(fmtDay(s.code_expires_at)) : "")) : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : ""}</span>
+`;
   T.innerHTML = `
     ${mobile ? `<div class="crumb"><button class="btn sm ghost" id="stBack">${IC.back} חזרה</button></div>` : ""}
     <div class="card">
@@ -3423,8 +3434,8 @@ async function renderStudentMobile(T, s){
 
   // 1.18: החשבון בשורה קטנה מתחת לפרטים (בלי "חשבון ◂"): טלפון · כניסה אחרונה · קוד חדש
   const acc = !s.has_account
-    ? `<span>אין עדיין חשבון</span><button class="linkish" id="accCreate">יצירת חשבון</button>`
-    : `<span class="ltr">${esc(fmtPhone(s.login_phone))}</span><span>${s.must_change_code ? (codeExpired(s) ? `<b class="bad-t">הקוד פג</b>` : "עוד לא נכנס/ה") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : "עוד לא נכנס/ה"}</span><button class="linkish" id="accReset">קוד חדש</button>`;
+    ? `<span>אין עדיין חשבון</span>`
+    : `<span class="ltr">${esc(fmtPhone(s.login_phone))}</span><span>${s.must_change_code ? (codeExpired(s) ? `<b class="bad-t">הקוד פג</b>` : "עוד לא נכנס/ה") : s.last_seen_at ? "נכנס/ה " + esc(ago(s.last_seen_at)) : "עוד לא נכנס/ה"}</span>`;
 
   if (!AD.info) loadInfo().then(() => { if (AD.st === s.student_id && !isDesk()) renderStudentMobile(T, s); });
   const I = infoOf(s), exL = exLines(I);
@@ -3433,7 +3444,7 @@ async function renderStudentMobile(T, s){
   const accIc = !s.has_account ? `<i class="si si-noacc" title="בלי חשבון">🚫</i>` : s.must_change_code ? `<i class="si ${codeExpired(s) ? "si-bad" : "si-key"}" title="${codeExpired(s) ? "הקוד הראשוני פג" : "עוד לא נכנס/ה"}">🔑</i>` : "";
   const det = `<div class="st-det">${[I.school ? esc(I.school) + (I.city ? `<span class="muted">, ${esc(I.city)}</span>` : "") : "",
     I.grade ? "כיתה " + esc(gradeKey(I.grade) + "'" + (I.cls || "")) : "", lvl.length ? "הקבצה " + esc(lvl.join(" · ").replace(/מתמטיקה: /, "מת' ").replace(/אנגלית: /, "אנג' ")) : ""].filter(Boolean).join(" · ") || `<span class="muted">אין פרטים בכרטיס</span>`}</div>`;
-  T.innerHTML = `
+  paint(T, `
     <div class="stm-head${pick ? " picking" : ""}">
       <div class="l1">${gradeBadge(I.grade, I.cls)}<b class="nm">${esc(stName(s))}</b>${scChip(I.school)}${subjMini(subs)}${accIc}<span style="flex:1"></span><button class="btn small stm-back2" id="stBack">→ חזרה</button></div>
       ${pick ? "" : `<div class="acc-mini">${acc}${lvl.length ? `<span class="lvl">הקבצה ${esc(lvl.join(" · ").replace(/מתמטיקה: /, "מת' ").replace(/אנגלית: /, "אנג' "))}</span>` : ""}</div>`}
@@ -3441,7 +3452,7 @@ async function renderStudentMobile(T, s){
       ${pick ? `<div class="stm-peekbar">${tabs.map(([k, , n]) => `<button type="button" class="pk-${k}${AD.peek === k ? " on" : ""}" data-peek="${k}"><span>${SEC[k][0]} ${SEC[k][1]}</span><b>${n}</b></button>`).join("")}</div>
         ${AD.peek ? `<div class="stm-peek">${peekList(AD.peek)}</div>` : ""}` : ""}
     </div>
-    ${pick ? `<section class="stm-bank" id="stBankSec"><div id="stBank"></div></section>` : `<div class="stm-body">${body}</div>`}`;
+    ${pick ? `<section class="stm-bank" id="stBankSec"><div id="stBank"></div></section>` : `<div class="stm-body">${body}</div>`}`);
 
   const q = (sel) => T.querySelector(sel);
   q("#stBack").onclick = leaveStudent; wireExLines(T);
@@ -4561,12 +4572,15 @@ async function loadGroups(){
   AD.groupsAt = Date.now();
   const yr = encodeURIComponent('תשפ"ז');
   try {
-    const [ss, sins, ssp, asg] = await Promise.all([
+    const [ss, sins, ssp, asg, lds] = await Promise.all([
       get("session_summary", "select=*&school_year=eq." + yr),
       get("session_instructors", "select=session_id,staff(full_name)").catch(() => []),
       get("session_splits", "select=session_id,date_to,staff(full_name)").catch(() => []),
-      getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")")
+      getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")"),
+      getAll("leads", "select=student_id,topic,st:lead_statuses(name)&student_id=not.is.null").catch(() => null)   // 1.26: רק "נרשם" ברשימת השליחה
     ]);
+    // 1.26 (נועה 22.10, מנ-33): ב"לתלמידים…" רק ילדים בסטטוס "נרשם" (כמו בנוכחות: מתחיל ב"נרשם")
+    AD.regSet = Array.isArray(lds) ? new Set(lds.filter(l => /^נרשם/.test((l.st && l.st.name) || "") || l.topic === "נרשם").map(l => String(l.student_id))) : null;
     const kids = new Map(); (asg || []).forEach(a => { const k = String(a.session_id); if (!kids.has(k)) kids.set(k, new Set()); kids.get(k).add(String(a.student_id)); });
     // 1.18.3: מתרגלים לכל קבוצה (כמו בנוכחות: מתרגלי הקבוצה + מתרגלי חלוקות שעוד בתוקף)
     const td = new Date(), tIso = td.getFullYear() + "-" + String(td.getMonth() + 1).padStart(2, "0") + "-" + String(td.getDate()).padStart(2, "0");
@@ -4597,7 +4611,7 @@ async function bulkSheet(){
   const B = { q: "", city: cities.slice().sort((a, b) => cityN(b) - cityN(a))[0] || "", ins: AD.waitIns || "", grp: "", today: false, todaySet: null, sel: new Set() };
   // 1.24.2 (נועה): כמו בנוכחות – מתרגל/ת, עיר, ואז הקבוצות לפי יום ושעה (מהיום והלאה)
   const insNames = [...new Set(groups.flatMap(g => g.ins || []))].sort((a, b) => a.localeCompare(b, "he"));
-  const elig = AD.students.filter(s => (s.subjects || []).includes(subj));
+  const elig = AD.students.filter(s => (s.subjects || []).includes(subj) && (!AD.regSet || AD.regSet.has(s.student_id)));
   const status = (sid) => { const pl = planOf(sid); const st = wids.map(w => (pl.find(p => String(p.worksheet_id) === w) || {}).status).filter(Boolean);
     return st.length === wids.length && wids.length ? (st.every(x => x !== "מתוכנן") ? "יש" : "בתור") : st.length ? "חלק" : ""; };
   const dayName = { "א":"א'","ב":"ב'","ג":"ג'","ד":"ד'","ה":"ה'","ו":"ו'","ש":"ש'" };
@@ -4778,7 +4792,7 @@ async function insRender(){
       <span class="w">${scChip(g.location)}${!ins ? " · " + esc(g.city || "") : ""}</span><span class="ag-br"></span>${g.room ? `<span class="m">חדר: <b><bdi>${esc(g.room)}</bdi></b></span>` : ""}
       ${!ins && g.instructors ? `<span class="ag-ins">${esc(g.instructors)}</span>` : ""}
       <span class="ag-st">${g.marked ? `<span class="ok">✓ סומן · <b>${g.marked_count}</b> נוכחים מתוך ${g.kids}</span>` : `<span class="m kn">${g.kids} ילדים</span> · ${g.cx ? `<span class="cx-tag" title="לא התקיים${g.cx.reason ? " · " + esc(g.cx.reason) : ""}">לא התקיים${g.cx.reason ? " · " + esc(g.cx.reason) : ""}</span>` : `<span class="m">טרם סומן</span>`}`}</span></button>`;
-  T.innerHTML = top(sel) + `<div class="att-groups">${gs.length ? gs.map(card).join("") : `<div class="card muted">${ins ? "אין לך קבוצות ביום הזה." : AD.waitIns && list.length ? "אין קבוצות ביום הזה למתרגל/ת שנבחר/ה." : "אין קבוצות ביום הזה."}</div>`}</div></div></div>`;
+  paint(T, top(sel) + `<div class="att-groups">${gs.length ? gs.map(card).join("") : `<div class="card muted">${ins ? "אין לך קבוצות ביום הזה." : AD.waitIns && list.length ? "אין קבוצות ביום הזה למתרגל/ת שנבחר/ה." : "אין קבוצות ביום הזה."}</div>`}</div></div></div>`);
   wireIns(T); attSideH();
   T.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { const x = gs.find(g => String(g.session_id) === b.dataset.att) || {};
     ATTM.open(b.dataset.att, iso, { id: b.dataset.att, city: x.city, loc: x.location, start: hm(x.start_time), end: hm(x.end_time), mar: x.kind === "מרתון" }); });
@@ -5331,7 +5345,7 @@ function renderSheetRows(){
   // 5.19.20: כותרת שעה רק כשיש בקבוצה יותר משעת הגעה אחת (מי מגיע קודם ומי אחר כך)
   const tSet = new Set(A.rows.filter(shVisible).map(attArr).filter(t => t != null)), multiT = tSet.size > 1;
   let prevT = null;
-  $("shRows").innerHTML = A.rows.map((r, i) => { if (!shVisible(r)) return "";
+  paint($("shRows"), A.rows.map((r, i) => { if (!shVisible(r)) return "";
     const grp = subjGrp(r.subject), t = attArr(r);
     let head = "";
     if (multiT && t != null && t !== prevT) { const n = A.rows.filter(x => shVisible(x) && attArr(x) === t).length;
@@ -5348,7 +5362,7 @@ function renderSheetRows(){
       </div>
 
     </div>${(() => { const ex = kidExTag(r, A.sheet.city, A.sheet.date || A.date);   // 5.19.19: מבחן / לומדים עכשיו - באותה שורה עם השעה האישית והמעקב (לא דוחקים את השם)
-      return r.tracking || ex ? `<div class="att-track-row">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""; })()}${ATT_PG_ROW(r)}</li>`; }).join("");
+      return r.tracking || ex ? `<div class="att-track-row">${ex}${r.tracking ? `<span class="att-track">📌 ${esc(r.tracking)}</span>` : ""}</div>` : ""; })()}${ATT_PG_ROW(r)}</li>`; }).join(""));
   // 5.19.29: "לא מגיעים היום" - בסוף הרשימה, באפור, עם החזרה
   const sk = A.rows.map((r, i) => [r, i]).filter(([r]) => r.skip);
   if (sk.length) $("shRows").insertAdjacentHTML("beforeend", `<li class="att-sec att-skip-h"><span>לא מגיעים היום (רק בשיעור הזה)</span><span>${sk.length}</span></li>` +
