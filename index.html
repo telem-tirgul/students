@@ -1844,7 +1844,12 @@ html:has(body.ws-vopen), body.ws-vopen{background:#161118 !important;}
 }
 /* 1.23 – תלם שלי: השלמות קטנות */
 .crmatt .sc{ --scb:var(--l); --sci:var(--h); --scd:var(--d, var(--h)); }
-.crmatt #shAll{ display:none !important; }   /* נועה: "כולם נוכחים" – מיותר */
+.crmatt #shAll{ display:none !important; }
+/* 1.26.3 (נועה): בלי שורה ריקה בראש הכרטיס; "לא התקיים" – למטה, אחרי "שמירה" */
+.crmatt #attSheet .sh-tools:not(:has(#shCount:not(:empty))){ display:none; }
+.crmatt .cx-box.sh-cx-bot{ margin:10px 0 0 !important; justify-content:flex-start; }
+.crmatt .sh-totrow:not(:has(#shTotal:not(:empty))){ display:none; }
+.crmatt #attSheet #shRows{ margin-top:0 !important; } .crmatt #attSheet #shRows > li:first-child{ margin-top:0 !important; padding-top:2px; } .crmatt #attSheet > .card, .crmatt #attSheet .card:has(#shRows){ padding-top:10px; }   /* נועה: "כולם נוכחים" – מיותר */
 .crmatt .ar-pgl{ flex-basis:100%; display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); min-width:0; padding-inline-start:40px; } .crmatt .ar-pgl .ar-pg{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .crmatt .ar-pg .pn{ color:#1E5C9A; font-weight:700; } .crmatt .ar-pg .pw{ color:#B07D1E; font-weight:700; } .crmatt .ar-pg .px{ color:var(--bad); font-weight:700; } .crmatt .ar-pg .ps{ color:var(--ink-soft); font-weight:800; }
 .crmatt .ap-row{ flex-basis:100%; box-sizing:border-box; margin-inline-start:40px; display:flex; flex-direction:column; gap:3px; margin-top:6px; padding:6px 8px; background:var(--muted); border-radius:10px; font-size:13px; }
@@ -1992,7 +1997,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -4839,7 +4844,7 @@ const ATTM = (() => {
         </div>
         <div class="sh-head2">
           <div class="lead-sub" id="shSub"></div>
-          <div class="sh-totrow"><div class="sh-total" id="shTotal"></div><div class="cx-box" id="shCx" hidden></div></div>
+          <div class="sh-totrow"><div class="sh-total" id="shTotal"></div></div>
         </div>
         <div class="notice" id="shLocked" hidden>אפשר לסמן ולתקן נוכחות רק ביום השיעור.</div>
         <div class="card">
@@ -4860,6 +4865,7 @@ const ATTM = (() => {
           </div>
           <div class="err" id="shErr"></div>
           <div class="actions sh-actions"><button class="btn primary" type="button" id="shSave">שמירה</button></div>
+          <div class="cx-box sh-cx-bot" id="shCx" hidden></div>
           <div class="meta-line" id="shMeta"></div>
           <details id="shHist" data-admin><summary>היסטוריית שמירות</summary><ul class="hist" id="shHistList"></ul></details>
         </div>
