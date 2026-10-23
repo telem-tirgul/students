@@ -1925,7 +1925,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
       <img class="logo" src="logo.png" alt="תלם">
       <h1>תלם שלי</h1>
       <span class="login-sub">המרכז לשיעורי תרגול</span>
-      <p class="lead muted">דפי התרגול האישיים שלך</p>
+      <p class="lead muted">משימות התרגול האישיות שלך</p>
       <div id="studentFields">
         <label class="field"><span>מספר הטלפון שלך</span>
           <input id="lgPhone" type="tel" inputmode="tel" autocomplete="username" placeholder="05X-XXXXXXX" class="ltr">
@@ -1997,7 +1997,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
   <main class="wrap">
     <div id="installBanner" class="card install-banner" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/></svg>
-      <div><b>להוסיף למסך הבית?</b><div class="small muted">ככה תפתחו את הדפים בלחיצה אחת.</div></div>
+      <div><b>להוסיף למסך הבית?</b><div class="small muted">ככה תפתחו את המשימות בלחיצה אחת.</div></div>
       <button class="btn sm primary" id="installHow">איך?</button>
     </div>
     <div class="seg" id="stSeg" hidden></div>
@@ -2042,7 +2042,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.30.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.30.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2410,7 +2410,7 @@ async function boot(){
   try { me = await rpc("portal_me"); } catch(e) { showMsg("אין חיבור", "לא הצלחנו להתחבר. כדאי לנסות שוב."); return; }
   if (!me || me.status === "no_account") { showMsg("אין גישה", "המשתמש הזה לא מוגדר כתלמיד/ה. אם זו טעות – לכתוב לנו."); return; }
   if (me.status === "code_expired") { showMsg("הקוד הראשוני כבר לא בתוקף", "הקוד שקיבלת עבד רק " + (me.days || 5) + " ימים. צריך לבקש קוד חדש: ללחוץ \"יציאה\" ואז \"שכחתי את הקוד\", או לכתוב לנו בוואטסאפ."); return; }
-  if (me.status === "inactive") { showMsg("החשבון לא פעיל כרגע", "הגישה לדפים פתוחה רק לתלמידים רשומים. לשאלות – לכתוב לנו בוואטסאפ."); return; }
+  if (me.status === "inactive") { showMsg("החשבון לא פעיל כרגע", "הגישה למשימות פתוחה רק לתלמידים רשומים. לשאלות – לכתוב לנו בוואטסאפ."); return; }
   ST.me = me;
   if (me.must_change_code) { showCodeChange(); return; }
   studentStart();
@@ -2467,7 +2467,7 @@ async function loadStudentPages(quiet){
     renderStudent();
   } catch(e) {
     if (e.message === "not signed in") return;
-    if (!quiet) $("stBody").innerHTML = "<div class='card'>לא הצלחנו לטעון את הדפים. <button class='btn sm' onclick='loadStudentPages()'>לנסות שוב</button></div>";
+    if (!quiet) $("stBody").innerHTML = "<div class='card'>לא הצלחנו לטעון את המשימות. <button class='btn sm' onclick='loadStudentPages()'>לנסות שוב</button></div>";
   }
 }
 function renderStudent(){
@@ -2513,7 +2513,7 @@ function renderStudent(){
   } else {
     h += `<div class="card empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
-      <h2 style="margin-top:8px">${done.length ? "כל הכבוד, סיימת הכול!" : "עוד אין דפים"}</h2>
+      <h2 style="margin-top:8px">${done.length ? "כל הכבוד, סיימת הכול!" : "עוד אין משימות"}</h2>
       <p class="muted">${done.length ? "עדכנו שסיימת. משימה חדשה תגיע לכאן בקרוב." : "כשתישלח אליך משימה, היא תופיע כאן."}</p></div>`;
   }
   if (done.length) {
@@ -2549,6 +2549,7 @@ function doneByOrder(done, kick){
 }
 // "סיימתי" מסודר כמו במאגר: ספר → נושא → תת-נושא, ובתוכם לפי סדר הדפים
 function doneByTopic(done){
+  done = stTaskColl(done);   // 1.30.2: משימה של כמה דפים = שורה אחת
   const num = (x) => { const n = parseFloat(x); return isNaN(n) ? 1e9 : n; };
   const kOrd = (k) => { const i = ["topic", "summary", "grammar", "unseen", "vocab", "general"].indexOf(k); return i < 0 ? 9 : i; };
   const rows = done.slice().sort((a, b) =>
@@ -2564,13 +2565,13 @@ function doneByTopic(done){
   });
   if (!ST.openT) { ST.openT = new Set(); const latest = topics.slice().sort((a, b) => b.last.localeCompare(a.last))[0]; if (latest) ST.openT.add(latest.k); }
   const books = new Set(topics.map(t => t.p.book || "")), kinds = new Set(topics.map(t => t.p.kind || ""));
-  const row = (p) => `<button class="done-row" data-i="${p.item_id}">${IC.circleCheck}<span style="flex:1;min-width:0"><b>${esc(p.title)}</b></span><span class="small muted">${esc(fmtDay(p.done_at))}</span></button>`;
+  const row = (p) => `<button class="done-row" data-i="${p.item_id}">${IC.circleCheck}<span style="flex:1;min-width:0"><b>${p._tn > 1 ? `📎 משימה: <bdi>${esc(p.sub || p.title)}</bdi>` : esc(p.title)}</b></span><span class="small muted">${esc(fmtDay(p.done_at))}</span></button>`;
   let h = "", lastBook = null;
   topics.forEach(t => {
     const p = t.p;
     if (books.size > 1 && p.book !== lastBook) { h += `<div class="dt-book">${esc(p.book_label || p.book || "")}</div>`; lastBook = p.book; }
     const no = p.topic_no ? String(Number(p.topic_no) || p.topic_no) : "";
-    const meta = [kinds.size > 1 && p.kind ? (WS_KIND[p.kind] || "") : "", t.rows.length === 1 ? "דף אחד" : t.rows.length + " דפים"].filter(Boolean).join(" · ");
+    const meta = [kinds.size > 1 && p.kind ? (WS_KIND[p.kind] || "") : "", t.rows.length === 1 ? "משימה אחת" : t.rows.length + " משימות"].filter(Boolean).join(" · ");
     // תתי-נושאים: לפי הסדר במאגר, כותרת רק כשיש
     const subs = []; t.rows.forEach(r => { const s = r.sub || ""; if (!subs.length || subs[subs.length - 1].s !== s) subs.push({ s, rows: [] }); subs[subs.length - 1].rows.push(r); });
     const inner = subs.some(x => x.s) ? subs.map(x => (x.s ? `<div class="dt-sub">${esc(x.s)}</div>` : "") + x.rows.map(row).join("")).join("") : t.rows.map(row).join("");
@@ -2678,7 +2679,7 @@ async function galDone(list, i){
   const rest = list.filter(x => x.status === "נשלח");
   renderStudent();
   if (!rest.length || list.length === 1) { closeViewer(); doneCheer(1); return; }
-  toast(`✓ כל הכבוד! ${rest.length === 1 ? "נשאר עוד דף אחד" : "נשארו עוד " + rest.length + " דפים"}`, 3500);
+  toast(`✓ כל הכבוד! ${rest.length === 1 ? "נשארה עוד משימה אחת" : "נשארו עוד " + rest.length + " משימות"}`, 3500);
   const nxt = list.slice(i + 1).find(x => x.status === "נשלח") || rest[0];
   openGallery(rest, nxt.item_id, true);
 }
@@ -2688,7 +2689,7 @@ async function markDoneMany(list, task){
   const res = await Promise.allSettled(todo.map(p => rpc("portal_mark_done", { p_item: p.item_id, p_done: true }).then(() => { p.status = "הושלם"; p.done_at = new Date().toISOString(); })));
   const bad = res.filter(r => r.status === "rejected").length;
   closeViewer(); renderStudent();
-  if (bad) toast(`לא הצלחנו לעדכן ${bad} דפים – לנסות שוב.`); else doneCheer(todo.length, task);
+  if (bad) toast(`לא הצלחנו לעדכן – לנסות שוב.`); else doneCheer(todo.length, task);
 }
 function doneCheer(k, task){
   openSheet(`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
