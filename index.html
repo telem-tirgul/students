@@ -622,11 +622,17 @@
   /* ---- חלון שליחה לתלמידים ---- */
   .sheet.wide{ max-width:980px; }
   /* 1.29: "לתלמידים…" – הכפתורים תמיד גלויים למטה; רק האמצע נגלל */
-  .sheet.bk-sheet{ display:flex; flex-direction:column; overflow:hidden; max-height:92dvh; max-width:620px; padding-bottom:calc(12px + var(--safe-b)); }
+  .sheet.bk-sheet{ display:flex; flex-direction:column; overflow:hidden; max-height:94dvh; height:94dvh; max-width:620px; padding-bottom:calc(12px + var(--safe-b)); }
   .bk-sheet .bk-scroll{ flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; display:flex; flex-direction:column; gap:12px; }
-  .bk-sheet .bk-foot{ flex:none; margin-top:8px; background:var(--paper); }
+  .bk-sheet .bk-foot{ flex:none; margin-top:8px; background:var(--paper); display:flex; flex-wrap:wrap; gap:8px; }
+  .bk-sheet .bk-foot .bk-sum{ flex:1 1 100%; font-size:13.5px; } .bk-sheet .bk-foot .btn{ flex:1 1 0; min-width:0; }   /* 1.29.2: "הוספה לתור" ליד "שליחה עכשיו", בשורה אחת */
   .bk-sheet .bk-list{ max-height:none !important; }
-  .bk-sheet .bk-plist{ display:flex; gap:8px; overflow-x:auto; } .bk-sheet .bk-pg{ flex:0 0 auto; max-width:220px; }
+  .bk-sheet .bk-plist{ display:flex; gap:8px; overflow-x:auto; } .bk-sheet .bk-pages{ padding:8px 10px !important; } .bk-sheet .bk-pg .thumb{ width:34px !important; height:44px !important; } .bk-sheet .bk-head{ margin-bottom:6px; } .bk-sheet .bk-head h2{ margin:0; } .bk-sheet .bk-pg{ flex:0 0 auto; max-width:220px; }
+  .bk-qbox{ display:flex; align-items:center; gap:8px; background:#fff; border:2px solid var(--accent); border-radius:12px; padding:0 12px; margin-top:4px; }
+  .bk-qbox svg{ width:20px; height:20px; color:var(--accent); flex:none; }
+  .bk-qbox input{ flex:1; min-width:0; border:0; outline:0; background:transparent; font:inherit; font-size:16px; padding:11px 0; color:var(--ink); }
+  .bk-qbox input::placeholder{ color:#8a7f78; }
+  .bk-or{ font-size:13px; color:var(--ink-soft); margin:10px 2px 0; }
   .bk-grprow{ display:flex; gap:10px; align-items:center; margin:8px 0 6px; } .bk-grp{ flex:1; min-width:0; font:inherit; font-weight:700; padding:8px 10px; border-radius:10px; border:1.5px solid var(--accent); background:var(--paper); color:var(--ink); }
   @media (min-width:700px){ .sheet.wide{ width:min(980px, calc(100vw - 40px)); max-height:90vh; display:flex; flex-direction:column; } }
   .bk-head{ display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
@@ -2027,7 +2033,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.29.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.29.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -4871,12 +4877,14 @@ async function bulkSheet(){
   const gLbl = (g) => `${g.start || g.time} · ${g.loc}${g.end && g.start <= nowHm && nowHm <= g.end ? " (עכשיו)" : ""}`;
   const g0 = await sign(wids.map(w => (AD.wsById.get(w) || {}).storage_path));
   openSheet(`
-    <div class="bk-head"><div><h2>שליחת דפים לתלמידים</h2><div class="small muted"><span class="subj-chip ${subjCls(subj)} on sm">${esc(subj)}</span> רק תלמידים שרשומים ל${esc(subj)}</div></div>
+    <div class="bk-head"><div><h2>שליחת דפים לתלמידים</h2></div>
       <button class="icon-btn dark" id="bkClose" aria-label="סגירה">${IC.x}</button></div>
     <div class="bk-scroll">
       <section class="bk-pages"><div class="bk-sec">הדפים שנבחרו · <span id="bkPN"></span></div><div class="bk-plist" id="bkPages"></div></section>
       <section class="bk-who">
-        <div class="bk-searchrow"><label class="bank-search">${IC.search}<input id="bkQ" type="search" placeholder="חיפוש תלמיד/ה לפי שם" enterkeyhint="done"></label></div>
+        <div class="bk-sec">למי לשלוח</div>
+        <label class="bk-qbox">${IC.search}<input id="bkQ" type="search" placeholder="הקלידו שם של תלמיד/ה…" enterkeyhint="done" autocomplete="off"></label>
+        <div class="bk-or">או מהקבוצה:</div>
         <div class="bk-grprow"><select id="bkGrp" class="bk-grp" aria-label="קבוצה">
           ${mineToday.map(g => `<option value="${esc(g.id)}">${esc(gLbl(g))}</option>`).join("")}
           <option value="">${mineToday.length ? "בלי קבוצה – רק חיפוש" : "אין לך קבוצה היום – חיפוש"}</option></select>
@@ -4912,7 +4920,7 @@ async function bulkSheet(){
         foot();
       };
       const foot = () => { const n = B.sel.size, p = wids.length;
-        $$("#bkSum").innerHTML = n ? `<b>${p === 1 ? "דף אחד" : p + " דפים"}</b> ← <b>${n === 1 ? "תלמיד/ה אחד/ת" : n + " תלמידים"}</b>` : `<span class="muted">לבחור תלמידים</span>`;
+        $$("#bkSum").innerHTML = n ? `<b>${p === 1 ? "דף אחד" : p + " דפים"}</b> ← <b>${n === 1 ? "תלמיד/ה אחד/ת" : n + " תלמידים"}</b>` : ""; $$("#bkSum").hidden = !n;
         $$("#bkQueue").disabled = $$("#bkSend").disabled = !n || !p; };
       $$("#bkGrp").value = B.grp;
       $$("#bkGrp").onchange = (e) => { B.grp = e.target.value; B.q = ""; $$("#bkQ").value = ""; draw(); };
