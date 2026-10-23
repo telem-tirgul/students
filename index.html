@@ -1582,6 +1582,9 @@ html:has(body.ws-vopen), body.ws-vopen{background:#161118 !important;}
 .crmatt .skip-t{display:none;}
 .crmatt .skip-b{padding:0 4px; font-size:11px; line-height:1.5;}
 }
+@media (max-width:760px){ .crmatt .att-rows li[data-i] .att-ctl{ flex-wrap:wrap !important; justify-content:flex-end; row-gap:4px !important; max-width:150px; }
+  .crmatt .att-rows li[data-i] .att-ctl .att-sj2{ order:3; flex:0 0 auto; } }   /* 1.29.4: משולב – מת'/אנג' בשורה מתחת, שהשם והתגיות לא יידחקו */
+.crmatt .att-ctl .skip-ctl{ width:30px; height:30px; padding:0; border-radius:50%; font-size:17px; line-height:1; margin:0; flex:none; display:inline-flex; align-items:center; justify-content:center; }   /* 1.29.4 (נועה): הסרה מהשיעור – ליד ✗ */
 .crmatt .skip-b:hover{border-color:var(--accent); color:var(--accent);}
 .crmatt #shRows li.att-skip{opacity:.55;}
 .crmatt #shRows .att-skip-h{margin-top:8px;}
@@ -2034,7 +2037,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.29.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.29.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -5597,10 +5600,11 @@ function renderSheetRows(){
       head = `<li class="att-sec att-tsec"><span>⏰ <bdi>${minHm(t)}</bdi>${t === attGrpStart() ? " · שעת הקבוצה" : ""}</span><span>${n === 1 ? "ילד/ה 1" : n + " ילדים"}</span></li>`; prevT = t; }
     return head + `<li data-i="${i}">${gradeBadge(r.grade, r.class_num)}
     <div class="att-name"><b class="att-nm"><span${!!stById(r.student_id) ? ` class="att-kl" data-kl="${r.student_id}" role="button" tabindex="0" title="פרטים ושיבוצים"` : ""}>${esc(r.first_name)} ${esc(r.last_name || "")}</span>${ME.role !== "instructor" ? pastBadge({ id: r.student_id }) + (((G.sessions || []).find(x => x.session_id === A.sheet.session_id) || {}).kind === "מרתון" ? "" : marFlag(r.student_id)) : ""}${payPendChip(r.student_id, A.sheet.session_id, ((G.sessions || []).find(x => x.session_id === A.sheet.session_id) || {}).kind === "מרתון")}${dblStar(!!r.dbl_from || isDouble(r.student_id, A.sheet.day || dayLetter(A.sheet.date), A.sheet.location, r.arrival_time, r.personal_end))}</b>
-      <span class="meta">${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${attPtHtml(r)}${subjGrp(rowSubj(r)) === 2 ? prevTag(r) : ""}${r.in_group ? (can && A.hasPlan ? ` <button type="button" class="skip-b" data-skip title="לא מגיע/ה היום - הסרה מהשיעור הזה בלבד (השיבוץ הקבוע לא משתנה)" aria-label="לא מגיע/ה היום">⊘<span class="skip-t"> לא היום</span></button>` : "") : r.added ? ` · <b class="added-tag">נוסף/ה לשיעור</b>${can ? ` <button type="button" class="rm" data-rm="1">הסרה</button>` : ""}` : " · <b>כבר לא בקבוצה</b>"}</span>
+      <span class="meta">${r.school ? `<span class="school-chip sch-sm ${scCls(r.school)}">${esc(r.school)}</span>` : ""}${attPtHtml(r)}${subjGrp(rowSubj(r)) === 2 ? prevTag(r) : ""}${r.in_group ? "" : r.added ? ` · <b class="added-tag">נוסף/ה לשיעור</b>` : " · <b>כבר לא בקבוצה</b>"}</span>
       </div>
     <div class="att-ctl">
       ${subjGrp(rowSubj(r)) === 2 && r.present !== false ? `<span class="att-sj2${r.present && !r.did_math && !r.did_english ? " need" : ""}" title="משולב - לסמן מה עשה/תה היום"><label><input type="checkbox" data-m ${r.did_math ? "checked" : ""} ${can ? "" : "disabled"}>מת'</label><label><input type="checkbox" data-e ${r.did_english ? "checked" : ""} ${can ? "" : "disabled"}>אנג'</label></span>` : subjMini(rowSubj(r))}
+      ${can && r.in_group && A.hasPlan ? `<button type="button" class="skip-b skip-ctl" data-skip title="לא מגיע/ה היום - הסרה מהשיעור הזה בלבד (השיבוץ הקבוע לא משתנה)" aria-label="לא מגיע/ה היום – הסרה מהשיעור">⊘</button>` : ""}${can && !r.in_group && r.added ? `<button type="button" class="skip-b skip-ctl" data-rm="1" title="הסרה מהשיעור" aria-label="הסרה מהשיעור">⊘</button>` : ""}
       <div class="seg" role="group" aria-label="נוכחות">
         <button type="button" class="no ${r.present === false ? "on" : ""}" data-p="0" ${can ? "" : "disabled"} aria-label="חסר/ה"><span class="lg">חסר/ה</span><span class="sm">✗</span></button>
         <button type="button" class="yes ${r.present === true ? "on" : ""}" data-p="1" ${can ? "" : "disabled"} aria-label="נוכח/ת"><span class="lg">נוכח/ת</span><span class="sm">✓</span></button>
