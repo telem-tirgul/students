@@ -149,6 +149,20 @@
   .viewer .vbar .btn{ flex:1; } .viewer .vbar{ flex-wrap:wrap; } .viewer .vbar [data-pa=up], .viewer .vbar [data-pa=down]{ flex:0 0 auto; }
   .viewer .vbar .btn.ghost{ color:#fff; border-color:#555; }
   .zoom{ display:flex; gap:2px; }
+  /* 1.27: דפדוף בין הדפים (כמו בתמונות) */
+  .viewer.gal .g-track{ flex:1; min-height:0; display:flex; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; overscroll-behavior:contain; scrollbar-width:none; background:#1b1b1b; -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y; }
+  .viewer.gal .g-track::-webkit-scrollbar{ display:none; }
+  .viewer.gal .g-track.locked{ overflow-x:hidden; scroll-snap-type:none; }
+  .viewer.gal .g-slide{ flex:0 0 100%; width:100%; height:100%; scroll-snap-align:center; scroll-snap-stop:always; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:6px; box-sizing:border-box; }
+  .viewer.gal .g-slide img{ display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; background:#fff; border-radius:3px; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+  .viewer.gal .g-slide.zoomed{ overflow:auto; align-items:flex-start; justify-content:flex-start; touch-action:pan-x pan-y; }
+  .viewer.gal .g-slide.zoomed img{ max-width:none; max-height:none; height:auto; flex:none; margin:auto; }
+  .viewer.gal .g-cnt{ color:#ddd; font-weight:700; font-size:14px; white-space:nowrap; padding:0 6px; direction:ltr; }
+  .viewer.gal .g-dots{ display:flex; justify-content:center; gap:6px; padding:6px 0 0; background:#111; flex-wrap:wrap; }
+  .viewer.gal .g-dots i{ width:7px; height:7px; border-radius:50%; background:#555; } .viewer.gal .g-dots i.on{ background:#fff; }
+  .viewer.gal .g-bar{ flex-wrap:wrap; } .viewer.gal .g-bar .g-nav{ flex:0 0 52px; font-size:20px; padding:0; } .viewer.gal .g-bar .g-nav:disabled{ opacity:.3; }
+  .viewer.gal .g-bar .g-all{ flex:1 1 100%; }
+  html.vw-open .toast{ top:calc(64px + var(--safe-t)); bottom:auto; }   /* בדף פתוח – ההודעה למעלה, לא על הכפתורים */
 
   /* sheet */
   .sheet-bg{ position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.45); display:flex; align-items:flex-end; justify-content:center; }
@@ -1997,7 +2011,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26.6",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.27",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2403,6 +2417,7 @@ function renderStudent(){
 
   const mine = ST.pages.filter(p => subs.length < 2 || p.subject === ST.subj);
   const open = mine.filter(p => p.status === "נשלח"), done = mine.filter(p => p.status === "הושלם");
+  ST.openList = open; ST.doneList = done.slice().sort((a, b) => String(b.done_at || "").localeCompare(String(a.done_at || "")));
   let h = "";
   const kick = (p) => { const no = p.topic_no ? String(Number(p.topic_no) || p.topic_no) : ""; return [no ? "נושא " + no : "", p.topic_name || ""].filter(Boolean).join(" · "); };
   if (open.length) {
@@ -2500,18 +2515,91 @@ setInterval(() => { if (RT.live && (++ST_TICK % 3)) return; if (!document.hidden
 
 // ---------- צפייה בדף ----------
 let VIEWER = null;
+// 1.27 (נועה): דף על כל המסך + דפדוף בין הדפים בהחלקה (כמו אפליקציית התמונות) + "סיימתי את כל הדפים"
 function openStudentPage(itemId){
   const p = ST.pages.find(x => x.item_id === itemId); if (!p) return;
-  if (p.is_new) { p.is_new = false; rpc("portal_seen", { p_item: itemId }).catch(() => {}); }
-  const done = p.status === "הושלם";
-  openViewer({ title: p.title, path: p.storage_path, url: ST.url(p.storage_path),
-    bar: `<button class="btn ghost" id="vSave">${IC.save} שמירה</button>
-          ${done ? `<button class="btn ghost" id="vUndo">${IC.undo} עוד לא סיימתי</button>` : `<button class="btn ok" id="vDone">${IC.check} סיימתי</button>`}`,
-    wire: (v) => {
-      v.querySelector("#vSave").onclick = () => saveImage(ST.url(p.storage_path), p.title);
-      if (v.querySelector("#vDone")) v.querySelector("#vDone").onclick = () => markDone(p, true);
-      if (v.querySelector("#vUndo")) v.querySelector("#vUndo").onclick = () => markDone(p, false);
-    } });
+  const list = p.status === "הושלם" ? (ST.doneList || [p]) : (ST.openList || [p]);
+  openGallery(list.some(x => x.item_id === itemId) ? list : [p], itemId);
+}
+function openGallery(list, startId, keep){
+  if (keep) closeViewer(true); else closeViewer();   // keep: מחליפים את הדפדוף במקום (בלי לגעת בהיסטוריה של "חזרה")
+  const isOpen = list[0] && list[0].status !== "הושלם", n = list.length;
+  let cur = Math.max(0, list.findIndex(x => x.item_id === startId)), z = 100;
+  const host = $("viewerHost");
+  host.innerHTML = `<div class="viewer gal" role="dialog" aria-modal="true">
+    <div class="vtop">
+      <button class="icon-btn" id="vClose" aria-label="חזרה">${IC.back}</button>
+      <div class="ttl" id="gTtl"></div>
+      ${n > 1 ? `<span class="g-cnt" id="gCnt"></span>` : ""}
+      <button class="icon-btn" id="vSave" aria-label="שמירה בטלפון">${IC.save}</button>
+    </div>
+    <div class="g-track" id="gTrack" dir="rtl">${list.map((p, i) => `<div class="g-slide" data-k="${i}"><img alt="${esc(p.title)}" src="${esc(ST.url(p.storage_path))}" ${Math.abs(i - cur) > 1 ? 'loading="lazy"' : ""} draggable="false"></div>`).join("")}</div>
+    ${n > 1 ? `<div class="g-dots" aria-hidden="true">${list.map((_, i) => `<i data-d="${i}"></i>`).join("")}</div>` : ""}
+    <div class="vbar g-bar">
+      ${n > 1 ? `<button class="btn ghost g-nav" id="gPrev" aria-label="הדף הקודם">→</button>` : ""}
+      ${isOpen ? `<button class="btn ok" id="gDone">${IC.check} סיימתי את הדף</button>` : `<button class="btn ghost" id="gUndo">${IC.undo} עוד לא סיימתי</button>`}
+      ${n > 1 ? `<button class="btn ghost g-nav" id="gNext" aria-label="הדף הבא">←</button>` : ""}
+      ${isOpen && n > 1 ? `<button class="btn primary g-all" id="gAll">${IC.check} סיימתי את כל ${n} הדפים</button>` : ""}
+    </div></div>`;
+  VIEWER = host.firstElementChild; vwLock(true);
+  const V = VIEWER, tr = V.querySelector("#gTrack"), slides = [...V.querySelectorAll(".g-slide")];
+  const img = (i) => slides[i] && slides[i].querySelector("img");
+  const setZ = (nz) => { z = Math.max(100, Math.min(400, nz)); const im = img(cur); if (!im) return;
+    slides[cur].classList.toggle("zoomed", z > 100); im.style.width = z > 100 ? z + "%" : ""; tr.classList.toggle("locked", z > 100); };
+  const show = () => { const p = list[cur]; V.querySelector("#gTtl").textContent = p.title || "";
+    if (V.querySelector("#gCnt")) V.querySelector("#gCnt").textContent = (cur + 1) + " / " + n;
+    V.querySelectorAll("[data-d]").forEach(d => d.classList.toggle("on", Number(d.dataset.d) === cur));
+    if (V.querySelector("#gPrev")) V.querySelector("#gPrev").disabled = cur === 0;
+    if (V.querySelector("#gNext")) V.querySelector("#gNext").disabled = cur === n - 1;
+    if (p.is_new) { p.is_new = false; rpc("portal_seen", { p_item: p.item_id }).catch(() => {}); }
+    [cur - 1, cur + 1].forEach(k => { const im = img(k); if (im) im.loading = "eager"; }); };
+  const go = (k, smooth) => { k = Math.max(0, Math.min(n - 1, k)); if (z > 100) setZ(100); cur = k;
+    tr.scrollTo({ left: -k * tr.clientWidth * (getComputedStyle(tr).direction === "rtl" ? 1 : -1), behavior: smooth ? "smooth" : "auto" }); show(); };
+  let st = null;
+  tr.addEventListener("scroll", () => { clearTimeout(st); st = setTimeout(() => { if (z > 100) return; const k = Math.round(Math.abs(tr.scrollLeft) / Math.max(1, tr.clientWidth)); if (k !== cur) { cur = Math.max(0, Math.min(n - 1, k)); show(); } }, 80); }, { passive: true });
+  // הגדלה: שתי אצבעות או הקשה כפולה (כמו בתמונות)
+  let pd = 0, pz = 100;
+  tr.addEventListener("touchstart", (e) => { if (e.touches.length === 2) { pd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); pz = z; } }, { passive: true });
+  tr.addEventListener("touchmove", (e) => { if (e.touches.length === 2 && pd) { e.preventDefault(); const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); setZ(pz * d / pd); } }, { passive: false });
+  tr.addEventListener("touchend", (e) => { if (e.touches.length < 2) pd = 0; if (z < 115 && z > 100) setZ(100); });
+  ["gesturestart", "gesturechange"].forEach(ev => tr.addEventListener(ev, (e) => e.preventDefault(), { passive: false }));
+  let lastTap = 0;
+  tr.addEventListener("click", (e) => { if (!e.target.closest("img")) return; const t = Date.now(); if (t - lastTap < 320) { setZ(z > 100 ? 100 : 220); lastTap = 0; } else lastTap = t; });
+  slides.forEach((s, i) => { const im = s.querySelector("img"); im.onerror = () => { const p = list[i]; if (!im.dataset.retry && p.storage_path) { im.dataset.retry = "1"; delete URLS[p.storage_path]; sign([p.storage_path]).then(g => { im.src = g(p.storage_path); }); } }; });
+  V.querySelector("#vClose").onclick = () => closeViewer();
+  V.querySelector("#vSave").onclick = () => { const p = list[cur]; saveImage(ST.url(p.storage_path), p.title); };
+  if (V.querySelector("#gPrev")) V.querySelector("#gPrev").onclick = () => go(cur - 1, true);
+  if (V.querySelector("#gNext")) V.querySelector("#gNext").onclick = () => go(cur + 1, true);
+  if (V.querySelector("#gDone")) V.querySelector("#gDone").onclick = () => galDone(list, cur);
+  if (V.querySelector("#gUndo")) V.querySelector("#gUndo").onclick = () => markDone(list[cur], false);
+  if (V.querySelector("#gAll")) V.querySelector("#gAll").onclick = () => markDoneMany(list);
+  if (!keep) history.pushState({ v: 1, d: navD() + 1 }, "");
+  requestAnimationFrame(() => go(cur, false));
+}
+// "סיימתי את הדף" בתוך הדפדוף: אם נשארו עוד דפים – ממשיכים לדף הבא; אם לא – "כל הכבוד"
+async function galDone(list, i){
+  const p = list[i];
+  try { await rpc("portal_mark_done", { p_item: p.item_id, p_done: true }); } catch(e) { toast(errText(e)); return; }
+  p.status = "הושלם"; p.done_at = new Date().toISOString();
+  const rest = list.filter(x => x.status === "נשלח");
+  renderStudent();
+  if (!rest.length) { closeViewer(); doneCheer(1); return; }
+  toast(`✓ כל הכבוד! ${rest.length === 1 ? "נשאר עוד דף אחד" : "נשארו עוד " + rest.length + " דפים"}`, 3500);
+  const nxt = list.slice(i + 1).find(x => x.status === "נשלח") || rest[0];
+  openGallery(rest, nxt.item_id, true);
+}
+async function markDoneMany(list){
+  const todo = list.filter(p => p.status === "נשלח"); if (!todo.length) return;
+  const b = VIEWER && VIEWER.querySelector("#gAll"); if (b) { b.disabled = true; b.textContent = "שומר…"; }
+  const res = await Promise.allSettled(todo.map(p => rpc("portal_mark_done", { p_item: p.item_id, p_done: true }).then(() => { p.status = "הושלם"; p.done_at = new Date().toISOString(); })));
+  const bad = res.filter(r => r.status === "rejected").length;
+  closeViewer(); renderStudent();
+  if (bad) toast(`לא הצלחנו לעדכן ${bad} דפים – לנסות שוב.`); else doneCheer(todo.length);
+}
+function doneCheer(k){
+  openSheet(`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.8 2.8L16.3 9.5"/></svg>
+    <h2 style="margin-top:8px">כל הכבוד!</h2><p class="muted">${k > 1 ? `עדכנו שסיימת ${k} דפים.` : "עדכנו שסיימת את הדף."} הדף הבא יגיע לכאן בקרוב.</p>
+    <button class="btn primary block" onclick="closeSheet()">מעולה</button></div>`);
 }
 async function markDone(p, on){
   try {
