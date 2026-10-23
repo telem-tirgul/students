@@ -1997,7 +1997,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2290,7 +2290,7 @@ $("loginForm").onsubmit = async (ev) => {
 };
 async function logout(){
   try { if (auth) await fetch(CONFIG.supabaseUrl + "/auth/v1/logout", { method:"POST", headers: Object.assign(baseHeaders(), { "Authorization": "Bearer " + auth.access_token }) }); } catch(e) {}
-  saveAuth(null); try { localStorage.removeItem(URLS_KEY); Object.keys(URLS).forEach(k => delete URLS[k]); } catch(e) {} LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; $("adSearch").hidden = false; AD.started = false; } showLogin();
+  saveAuth(null); try { localStorage.removeItem("telem_portal_groups"); AD.groups = null; } catch(e) {} try { localStorage.removeItem(URLS_KEY); Object.keys(URLS).forEach(k => delete URLS[k]); } catch(e) {} LAST_CODE = ""; ST.pages = null; ST.openT = null; AD.loaded = false; AD_CACHE.clear(); store("telem_portal_role", null); if (AD.role) { AD.role = null; document.body.classList.remove("v-ins"); $("adTools").hidden = false; $("adSearch").hidden = false; AD.started = false; } showLogin();
 }
 $("msgLogout").onclick = logout;
 function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = title; $("msgText").textContent = text; }
@@ -2636,7 +2636,7 @@ function showInstallHelp(){
 // ניהול (מנהלת) – גרסה 1.1: תצוגה למחשב (תפריט צד, רשימה + תוכנית זה לצד זה, חלונית מאגר)
 // ותצוגה לנייד (תפריט תחתון, מסך אחרי מסך)
 // ======================================================================
-const AD = { codeReqs: [], groups: null, loaded: false, view: "att", students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
+const AD = { codeReqs: [], groups: null, loaded: false, view: "wait",   /* 1.26.4 (נועה): נפתח על "ממתינים" */ students: [], plan: [], ws: null, wsById: new Map(), filter: "all", q: "",
              st: null, subj: null, sel: new Set(), showDone: false, waitMode: store("telem_portal_waitmode") === "list" ? "list" : "groups", waitCity: store("telem_portal_waitcity") || "*", waitToday: false, waitPresent: false, waitIns: store("telem_portal_waitins") || "", present: null,
              bank: { book: null, kind: "summary", topic: null, tab: "page", pick: null, sel: new Set() } };
 const WS_CACHE = "telem_portal_ws2";
@@ -2721,7 +2721,11 @@ async function adPoll(){
 function updateTitle(){ const n = AD.loaded ? waitingList().length + myReqs().length : 0; document.title = (n ? `(${n}) ` : "") + "תלם שלי"; }
 let AD_TICK = 0;
 setInterval(() => { if (RT.live && (++AD_TICK % 4)) return; adPoll(); }, 15000);
-document.addEventListener("visibilitychange", () => { if (document.hidden) return; adPoll();
+let AD_DAY = "";
+document.addEventListener("visibilitychange", () => { if (document.hidden) { AD_DAY = todayIso(); return; }
+  // 1.26.4 (נועה): פתחתי בבוקר והנוכחות הראתה את אתמול – ביום חדש חוזרים ל"היום"
+  if (AD_DAY && todayIso() !== AD_DAY) { if (!AD.waitDate || AD.waitDate === AD_DAY) AD.waitDate = todayIso(); AD_DAY = todayIso(); if (AD.attG) AD.attG.at = 0; }
+  adPoll();
   // 1.25: בלי כפתור רענון – כשחוזרים לאפליקציה, רשימת הקבוצות של הנוכחות נטענת מחדש (אם לא באמצע דף נוכחות / חלון)
   if (!$("adminView").hidden && !SHEET && (AD.view === "att" || AD.role === "instructor") && !(typeof ATTM !== "undefined" && ATTM.isOpen) && AD.attG && Date.now() - AD.attG.at > 60e3) insRender(); });
 // כפתור "התראות" – התראה של הדפדפן גם כשהלשונית ברקע (במחשב)
@@ -2887,12 +2891,17 @@ function waitingList(){
   return out.sort((a, b) => String(a.done_at || "").localeCompare(String(b.done_at || "")));   // הכי מזמן – ראשון
 }
 async function renderWait(){
-  const list = waitingList();
   await loadGroups();
+  const list = waitingList();
   const fresh = AD.students.filter(s => s.has_account && stMine(s.student_id) && !planOf(s.student_id).some(p => p.status !== "מתוכנן"));
   const noAcc = AD.students.filter(s => !s.has_account && stMine(s.student_id)).length;
   const nexts = [...list.map(w => queueOf(w.s.student_id, w.subj)[0]), ...fresh.map(s => queueOf(s.student_id, (s.subjects || [])[0])[0]), ...AD.plan.filter(p => p.status === "נשלח")].filter(Boolean);
-  const g = await sign(nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path));
+  // 1.26.4: תמונות – מה שכבר שמור מוצג מיד; אם חסר – מציירים שוב כשמגיע (בלי לחכות לרשת)
+  const sp = nexts.map(p => (AD.wsById.get(String(p.worksheet_id)) || {}).storage_path), gP = sign(sp);
+  let g = await Promise.race([gP, new Promise(r => setTimeout(() => r(null), 250))]);
+  if (!g) { g = (p) => URLS[p] ? URLS[p].url + (WS_VER[p] ? "&v=" + WS_VER[p] : "") : ""; gP.then(() => { if (AD.view === "wait" && !AD.st && !SHEET) renderWait(); }); }
+  if (AD.view !== "wait" && AD.view !== "att") return;
+  if (AD.st && !isDesk()) return;
   const byGroup = AD.view === "att";   // 1.20.1: נוכחות = הקבוצות של היום; ממתינים = הרשימה
   const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
   let h = byGroup ? `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1><p>הקבוצות של היום לפי השעה – סימון נוכחות, מי ממתין/ה ומה הבא בתור.</p></div></div>
@@ -4588,20 +4597,20 @@ async function addToPlan(releaseNow){
   } catch(e) { toast(/duplicate|unique/i.test(e.message) ? "חלק מהדפים כבר בתוכנית." : errText(e)); }
 }
 // ---------- שליחה לכמה תלמידים (לפי קבוצה / יום ושעה, או ידנית) ----------
-async function loadGroups(){
-  if (AD.groups && Date.now() - (AD.groupsAt || 0) < 15 * 60e3) return AD.groups;
-  AD.groupsAt = Date.now();
+// 1.26.4 (נועה): "ממתינים" נפתח מיד – הקבוצות נשמרות בטלפון ומתעדכנות ברקע (לא מחכים לרשת)
+const GR_CACHE = "telem_portal_groups";
+let GR_P = null;
+function grSave(){ try { store(GR_CACHE, JSON.stringify({ t: Date.now(), g: (AD.groups || []).map(g => Object.assign({}, g, { kids: [...g.kids] })) })); } catch(e) {} }
+function grLoadCache(){ try { const x = JSON.parse(store(GR_CACHE) || "null"); if (!x || !Array.isArray(x.g) || Date.now() - x.t > 7 * 864e5) return false;
+  AD.groups = x.g.map(g => Object.assign(g, { kids: new Set(g.kids || []) })); AD.groupsAt = x.t; return true; } catch(e) { return false; } }
+async function grFetch(){
   const yr = encodeURIComponent('תשפ"ז');
-  try {
-    const [ss, sins, ssp, asg, lds] = await Promise.all([
+    const [ss, sins, ssp, asg] = await Promise.all([
       get("session_summary", "select=*&school_year=eq." + yr),
       get("session_instructors", "select=session_id,staff(full_name)").catch(() => []),
       get("session_splits", "select=session_id,date_to,staff(full_name)").catch(() => []),
-      getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")"),
-      getAll("leads", "select=student_id,topic,st:lead_statuses(name)&student_id=not.is.null").catch(() => null)   // 1.26: רק "נרשם" ברשימת השליחה
+      getAll("assignments", "select=session_id,student_id&status=in.(" + encodeURIComponent("משובץ") + "," + encodeURIComponent("ממתין") + ")")
     ]);
-    // 1.26 (נועה 22.10, מנ-33): ב"לתלמידים…" רק ילדים בסטטוס "נרשם" (כמו בנוכחות: מתחיל ב"נרשם")
-    AD.regSet = Array.isArray(lds) ? new Set(lds.filter(l => /^נרשם/.test((l.st && l.st.name) || "") || l.topic === "נרשם").map(l => String(l.student_id))) : null;
     const kids = new Map(); (asg || []).forEach(a => { const k = String(a.session_id); if (!kids.has(k)) kids.set(k, new Set()); kids.get(k).add(String(a.student_id)); });
     // 1.18.3: מתרגלים לכל קבוצה (כמו בנוכחות: מתרגלי הקבוצה + מתרגלי חלוקות שעוד בתוקף)
     const td = new Date(), tIso = td.getFullYear() + "-" + String(td.getMonth() + 1).padStart(2, "0") + "-" + String(td.getDate()).padStart(2, "0");
@@ -4609,11 +4618,32 @@ async function loadGroups(){
     (sins || []).forEach(x => addI(x.session_id, x.staff && x.staff.full_name));
     (ssp || []).filter(x => !x.date_to || x.date_to >= tIso).forEach(x => addI(x.session_id, x.staff && x.staff.full_name));
     const DO = { "א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6 };
-    AD.groups = (ss || []).map(g => ({ id: String(g.session_id), city: g.city || "", day: g.day || "", time: g.time_label || String(g.start_time || "").slice(0, 5), loc: g.location || "",
+    return (ss || []).map(g => ({ id: String(g.session_id), city: g.city || "", day: g.day || "", time: g.time_label || String(g.start_time || "").slice(0, 5), loc: g.location || "",
                                         start: String(g.start_time || "").slice(0, 5), end: String(g.end_time || "").slice(0, 5), kids: kids.get(String(g.session_id)) || new Set(), ins: [...(ins.get(String(g.session_id)) || [])] }))
       .filter(g => g.kids.size).sort((a, b) => a.city.localeCompare(b.city) || (DO[a.day] || 9) - (DO[b.day] || 9) || String(a.start).localeCompare(String(b.start)));
-  } catch(e) { AD.groups = []; }
-  return AD.groups;
+}
+function grRefresh(){
+  if (GR_P) return GR_P;
+  GR_P = grFetch().then(gs => { const was = JSON.stringify((AD.groups || []).map(g => [g.id, g.ins, [...g.kids]]));
+      AD.groups = gs; AD.groupsAt = Date.now(); grSave();
+      if (was !== JSON.stringify(gs.map(g => [g.id, g.ins, [...g.kids]]))) { renderNav(); updateTitle(); if (!$("adminView").hidden && !SHEET && AD.view === "wait" && !AD.st) renderWait(); }
+      return gs; })
+    .catch(() => { if (!AD.groups) AD.groups = []; return AD.groups; })
+    .finally(() => { GR_P = null; });
+  return GR_P;
+}
+async function loadGroups(){
+  if (!AD.groups) grLoadCache();
+  if (AD.groups) { if (Date.now() - (AD.groupsAt || 0) > 10 * 60e3) grRefresh(); return AD.groups; }   // יש – מיד; ישן – מתעדכן ברקע
+  return grRefresh();
+}
+// 1.26.4: סטטוס "נרשם" – רק לחלון "לתלמידים…" (נטען בנפרד, לא מעכב את הממתינים)
+async function loadReg(){
+  if (AD.regSet && Date.now() - (AD.regAt || 0) < 15 * 60e3) return AD.regSet;
+  try { const lds = await getAll("leads", "select=student_id,topic,st:lead_statuses(name)&student_id=not.is.null");
+    AD.regSet = new Set(lds.filter(l => /^נרשם/.test((l.st && l.st.name) || "") || l.topic === "נרשם").map(l => String(l.student_id))); AD.regAt = Date.now(); }
+  catch(e) { if (!AD.regSet) AD.regSet = null; }
+  return AD.regSet;
 }
 async function presentToday(sessionId){
   const d = new Date(), iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -4621,6 +4651,7 @@ async function presentToday(sessionId){
   catch(e) { return null; }
 }
 async function bulkSheet(){
+  await loadReg();
   let wids = AD.ws.filter(r => AD.bank.sel.has(r.id)).map(r => r.id);
   const subs = [...new Set(wids.map(w => wsSubject((AD.wsById.get(w) || {}).book)))];
   if (subs.length > 1) { toast("אפשר לשלוח יחד רק דפים מאותו מקצוע."); return; }
