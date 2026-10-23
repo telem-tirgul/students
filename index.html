@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="תלם שלי">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -666,7 +666,6 @@
   .crmws #view-ws > .page-head h1{ display:none; } .crmws #view-ws > .page-head:not(:has(button, a, input, select)){ display:none; }
   body:not(.v-ins) #adLogout, body:not(.v-ins) .ad-ver{ display:none !important; }
   .tools-foot{ display:flex; gap:8px; margin-top:12px; } .tools-foot .btn{ flex:1; }
-  .crmws .ws-viewer, .viewer, .sheet-bg{ bottom:calc(-1 * var(--ios-gap, 0px)) !important; }
   html{ touch-action:pan-x pan-y; } .ws-vimg, .viewer{ touch-action:auto; }   /* 1.26.2: בלי הגדלה בשתי אצבעות, חוץ מהדף עצמו */
   .ad-ver{ text-align:center; font-size:12px; color:var(--ink-soft); opacity:.6; padding:0 0 70px; }
   /* כפתורים, כרטיסים וכותרות – כמו במערכת הניהול */
@@ -1998,7 +1997,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.26.5",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.26.6",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2018,7 +2017,7 @@ function iosGap(){ try {
   const gap = sa && /iPhone|iPad|iPod/.test(navigator.userAgent) ? Math.max(0, Math.min(80, sh - window.innerHeight)) : 0;
   document.documentElement.style.setProperty("--ios-gap", gap + "px");
 } catch(e) {} }
-iosGap(); window.addEventListener("resize", iosGap); window.addEventListener("orientationchange", () => setTimeout(iosGap, 300));
+// 1.26.6: לא בשימוש – הסיבה הייתה שורת הסטטוס השקופה (black-translucent); עכשיו "black" כמו במערכת הניהול
 const ZOOM_OK = (t) => !!(t && t.closest && t.closest(".ws-vimg, .viewer, #viewer, .pv-img, .zoomable"));
 ["gesturestart", "gesturechange"].forEach(ev => document.addEventListener(ev, (e) => { if (!ZOOM_OK(e.target)) e.preventDefault(); }, { passive: false }));
 document.addEventListener("touchmove", (e) => { if (e.touches && e.touches.length > 1 && !ZOOM_OK(e.target)) e.preventDefault(); }, { passive: false });
