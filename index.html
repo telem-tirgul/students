@@ -622,7 +622,8 @@
   /* ---- חלון שליחה לתלמידים ---- */
   .sheet.wide{ max-width:980px; }
   /* 1.29: "לתלמידים…" – הכפתורים תמיד גלויים למטה; רק האמצע נגלל */
-  .sheet.bk-sheet{ display:flex; flex-direction:column; overflow:hidden; max-height:94dvh; height:94dvh; max-width:620px; padding-bottom:calc(12px + var(--safe-b)); }
+  .sheet-bg:has(.bk-sheet){ top:var(--side-h, 0px); }   /* 1.29.3 (נועה): התפריט למעלה נשאר גלוי ולחיץ */
+  .sheet.bk-sheet{ display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - var(--side-h, 0px)); height:calc(100dvh - var(--side-h, 0px) - 8px); max-width:620px; padding-bottom:calc(12px + var(--safe-b)); }
   .bk-sheet .bk-scroll{ flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; display:flex; flex-direction:column; gap:12px; }
   .bk-sheet .bk-foot{ flex:none; margin-top:8px; background:var(--paper); display:flex; flex-wrap:wrap; gap:8px; }
   .bk-sheet .bk-foot .bk-sum{ flex:1 1 100%; font-size:13.5px; } .bk-sheet .bk-foot .btn{ flex:1 1 0; min-width:0; }   /* 1.29.2: "הוספה לתור" ליד "שליחה עכשיו", בשורה אחת */
@@ -2033,7 +2034,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.29.2",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.29.3",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2963,6 +2964,7 @@ async function loadWs(force){
   catch(e) { AD.ws = AD.ws || []; }
 }
 function adGo(v){
+  if (SHEET) closeSheet();   // 1.29.3: מעבר לשונית סוגר חלון פתוח (למשל "לתלמידים…")
   if (typeof ATTM !== "undefined" && ATTM.isOpen) ATTM.detach();
   try { if (CBM.viewerOpen()) CBM.wsViewerOff(); } catch(e) {}   // 1.26.2 (נועה): מעבר ללשונית אחרת סוגר את הדף הפתוח
   if (VIEWER) closeViewer(true);
@@ -4876,15 +4878,14 @@ async function bulkSheet(){
   const B = { q: "", grp: nowG ? nowG.id : "", sel: new Set() };
   const gLbl = (g) => `${g.start || g.time} · ${g.loc}${g.end && g.start <= nowHm && nowHm <= g.end ? " (עכשיו)" : ""}`;
   const g0 = await sign(wids.map(w => (AD.wsById.get(w) || {}).storage_path));
+  attSideH();   // גובה הכותרת – החלון נפתח מתחתיה
   openSheet(`
     <div class="bk-head"><div><h2>שליחת דפים לתלמידים</h2></div>
       <button class="icon-btn dark" id="bkClose" aria-label="סגירה">${IC.x}</button></div>
     <div class="bk-scroll">
       <section class="bk-pages"><div class="bk-sec">הדפים שנבחרו · <span id="bkPN"></span></div><div class="bk-plist" id="bkPages"></div></section>
       <section class="bk-who">
-        <div class="bk-sec">למי לשלוח</div>
-        <label class="bk-qbox">${IC.search}<input id="bkQ" type="search" placeholder="הקלידו שם של תלמיד/ה…" enterkeyhint="done" autocomplete="off"></label>
-        <div class="bk-or">או מהקבוצה:</div>
+        <label class="bk-qbox">${IC.search}<input id="bkQ" type="search" placeholder="למי לשלוח? הקלידו שם…" enterkeyhint="done" autocomplete="off"></label>
         <div class="bk-grprow"><select id="bkGrp" class="bk-grp" aria-label="קבוצה">
           ${mineToday.map(g => `<option value="${esc(g.id)}">${esc(gLbl(g))}</option>`).join("")}
           <option value="">${mineToday.length ? "בלי קבוצה – רק חיפוש" : "אין לך קבוצה היום – חיפוש"}</option></select>
@@ -4920,7 +4921,8 @@ async function bulkSheet(){
         foot();
       };
       const foot = () => { const n = B.sel.size, p = wids.length;
-        $$("#bkSum").innerHTML = n ? `<b>${p === 1 ? "דף אחד" : p + " דפים"}</b> ← <b>${n === 1 ? "תלמיד/ה אחד/ת" : n + " תלמידים"}</b>` : ""; $$("#bkSum").hidden = !n;
+        $$("#bkSum").hidden = true;   // 1.29.3 (נועה): בלי שורת סיכום – רק מספר הנבחרים על הכפתור
+        $$("#bkSend").innerHTML = `${IC.send} שליחה עכשיו${n > 1 ? " (" + n + ")" : ""}`; $$("#bkQueue").textContent = "הוספה לתור" + (n > 1 ? " (" + n + ")" : "");
         $$("#bkQueue").disabled = $$("#bkSend").disabled = !n || !p; };
       $$("#bkGrp").value = B.grp;
       $$("#bkGrp").onchange = (e) => { B.grp = e.target.value; B.q = ""; $$("#bkQ").value = ""; draw(); };
