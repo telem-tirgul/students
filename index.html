@@ -698,6 +698,10 @@
   .crmws #view-ws > .page-head h1{ display:none; } .crmws #view-ws > .page-head:not(:has(button, a, input, select)){ display:none; }
   body:not(.v-ins) #adLogout, body:not(.v-ins) .ad-ver{ display:none !important; }
   .tools-foot{ display:flex; gap:8px; margin-top:12px; } .tools-foot .btn{ flex:1; }
+  /* 1.30: הטמעה במערכת הניהול – רק הנוכחות, בלי הכותרת והתפריט, רקע שקוף */
+  html.embed, html.embed body{ background:transparent !important; background-image:none !important; }
+  html.embed #adminView .side, html.embed .ad-ver, html.embed #adNav, html.embed .actionbar{ display:none !important; }
+  html.embed #adminView .main{ padding-top:4px !important; }
   html{ touch-action:pan-x pan-y; } .ws-vimg, .viewer{ touch-action:auto; }   /* 1.26.2: בלי הגדלה בשתי אצבעות, חוץ מהדף עצמו */
   .ad-ver{ text-align:center; font-size:12px; color:var(--ink-soft); opacity:.6; padding:0 0 70px; }
   /* כפתורים, כרטיסים וכותרות – כמו במערכת הניהול */
@@ -1582,6 +1586,7 @@ html:has(body.ws-vopen), body.ws-vopen{background:#161118 !important;}
 .crmatt .skip-t{display:none;}
 .crmatt .skip-b{padding:0 4px; font-size:11px; line-height:1.5;}
 }
+@media (min-width:761px){ .crmatt .att-rows li[data-i] .att-ctl{ display:flex !important; flex-wrap:nowrap !important; align-items:center; gap:8px; } }
 @media (max-width:760px){ .crmatt .att-rows li[data-i] .att-ctl{ flex-wrap:wrap !important; justify-content:flex-end; row-gap:4px !important; max-width:150px; }
   .crmatt .att-rows li[data-i] .att-ctl .att-sj2{ order:3; flex:0 0 auto; } }   /* 1.29.4: משולב – מת'/אנג' בשורה מתחת, שהשם והתגיות לא יידחקו */
 .crmatt .att-ctl .skip-ctl{ width:30px; height:30px; padding:0; border-radius:50%; font-size:17px; line-height:1; margin:0; flex:none; display:inline-flex; align-items:center; justify-content:center; }   /* 1.29.4 (נועה): הסרה מהשיעור – ליד ✗ */
@@ -2037,7 +2042,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.29.4",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.30",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -2118,9 +2123,19 @@ const IC = {
 // חיבור ל-Supabase (בלי ספריות חיצוניות, כמו במערכת הניהול)
 // ======================================================================
 const AUTH_KEY = "telem_portal_auth";
+// 1.30 (מנ-78): מצב הטמעה במערכת הניהול – #staff&embed=1[&sid=..&date=YYYY-MM-DD]. רק מסך הנוכחות של הצוות.
+// הכניסה – של מערכת הניהול (אותו origin: telem_crm_session), והחידוש בתיאום איתה (lock "telem_refresh" + BroadcastChannel "telem_auth").
+const EMB_Q = (() => { const o = {}; String(location.hash || "").replace(/^#/, "").split("&").forEach(x => { const [k, v] = x.split("="); if (k) o[decodeURIComponent(k)] = v == null ? "1" : decodeURIComponent(v); }); return o; })();
+const EMBED = EMB_Q.embed === "1" && window.parent !== window;
+const crmAuthRead = () => { try { const v = sessionStorage.getItem("telem_crm_session") || (localStorage.getItem("telem_keep") === "1" ? localStorage.getItem("telem_crm_session") : null); return v ? JSON.parse(v) : null; } catch(e) { return null; } };
 let auth = null;
-try { auth = JSON.parse(store(AUTH_KEY) || "null"); } catch(e) {}
-function saveAuth(a){ auth = a; store(AUTH_KEY, a ? JSON.stringify(a) : null); }
+try { auth = EMBED ? crmAuthRead() : JSON.parse(store(AUTH_KEY) || "null"); } catch(e) {}
+function saveAuth(a){ auth = a;
+  if (EMBED) { try { const v = a ? JSON.stringify(a) : null; if (a) { sessionStorage.setItem("telem_crm_session", v); if (localStorage.getItem("telem_keep") === "1") localStorage.setItem("telem_crm_session", v); } } catch(e) {} return; }   // בהטמעה – לא מוחקים את הכניסה של מערכת הניהול
+  store(AUTH_KEY, a ? JSON.stringify(a) : null); }
+const AUTH_BC = EMBED && typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("telem_auth") : null;
+if (AUTH_BC) AUTH_BC.onmessage = (ev) => { const m = ev.data || {}; if (m.type === "refreshed" && m.auth) auth = Object.assign({}, m.auth, { email: (auth && auth.email) || m.auth.email }); };
+const embPost = (o) => { if (!EMBED) return; try { window.parent.postMessage(Object.assign({ telemSheli: "att" }, o), location.origin); } catch(e) {} };
 function baseHeaders(){
   const h = { "apikey": CONFIG.anonKey, "Content-Type": "application/json" };
   if (CONFIG.anonKey.indexOf("eyJ") === 0) h["Authorization"] = "Bearer " + CONFIG.anonKey;
@@ -2138,21 +2153,25 @@ async function tokenRequest(grant, body){
 let REFRESHING = null;
 function refreshAuth(){
   if (REFRESHING) return REFRESHING;
-  REFRESHING = (async () => {
+  const run = async () => {
+    if (EMBED) { const a = crmAuthRead(); if (a) auth = a; }
     if (!auth) return false;
+    if (EMBED && auth.expires_at - 120 > Date.now()/1000) return true;   // מערכת הניהול כבר חידשה
     const old = auth.refresh_token;
     for (let i = 0; i < 3; i++) {
-      try { await tokenRequest("refresh_token", { refresh_token: old }); return true; }
+      try { await tokenRequest("refresh_token", { refresh_token: old }); if (AUTH_BC) AUTH_BC.postMessage({ type: "refreshed", old, auth }); return true; }
       catch(e) {
         if (e.status === 400 || e.status === 401 || e.status === 403) { saveAuth(null); return false; }
         await new Promise(r => setTimeout(r, 1500 * (i + 1)));
       }
     }
     return !!auth && auth.expires_at > Date.now()/1000;
-  })().finally(() => { REFRESHING = null; });
+  };
+  REFRESHING = (EMBED && navigator.locks && navigator.locks.request ? navigator.locks.request("telem_refresh", run) : run()).finally(() => { REFRESHING = null; });
   return REFRESHING;
 }
 async function token(){
+  if (EMBED) { const a = crmAuthRead(); if (a && (!auth || a.expires_at >= auth.expires_at)) auth = a; }   // מערכת הניהול אולי חידשה בינתיים
   if (!auth) return null;
   if (auth.expires_at - 60 > Date.now()/1000) return auth.access_token;
   return (await refreshAuth()) && auth ? auth.access_token : null;
@@ -2275,7 +2294,7 @@ function showLogin(msg){
 }
 // 1.27.1 (נועה): בלי "להישאר מחובר/ת" – יציאה אוטומטית אחרי 120 דקות (גם אם עובדים)
 const KEEP_MIN = 120;
-function expCheck(){ const x = Number(store("telem_portal_exp") || 0); if (!x || !auth || Date.now() < x) return false;
+function expCheck(){ if (EMBED) return false; const x = Number(store("telem_portal_exp") || 0); if (!x || !auth || Date.now() < x) return false;
   store("telem_portal_exp", null); logout().then(() => { $("lgErr").textContent = "התנתקת אוטומטית אחרי שעתיים. אפשר להיכנס שוב."; }); return true; }
 setInterval(expCheck, 60e3);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) expCheck(); });
@@ -2365,7 +2384,8 @@ function showMsg(title, text){ showView("msgView"); $("msgTitle").textContent = 
 // הפעלה: מי נכנס/ה – צוות (מנהלת) או תלמיד/ה
 // ======================================================================
 async function boot(){
-  if (expCheck()) return;
+  if (EMBED) { document.documentElement.classList.add("embed"); if (!(await token())) { showMsg("צריך להיכנס", "צריך להיות מחובר/ת למערכת הניהול. לרענן את העמוד אחרי הכניסה."); embPost({ needAuth: true }); return; } }
+  else if (expCheck()) return;
   if (!(await token())) { showLogin(); return; }
   let isManager = false;
   // 1.16.1: מהירות – תלמיד/ה (אימייל ‎@students) לא יכול/ה להיות מנהל/ת: מדלגים על הבדיקה ומבקשים את הדפים כבר עכשיו
@@ -2840,6 +2860,7 @@ const NAV = [   // [מסך, שם, אייקון, שם קצר לנייד] – אי
 function adminStart(fast){
   if (!$("adminView").hidden && AD.started) return;
   AD.started = true;
+  if (EMBED) { AD.view = "att"; AD.waitIns = ""; if (/^\d{4}-\d{2}-\d{2}$/.test(EMB_Q.date || "")) AD.waitDate = EMB_Q.date; embStart(); }
   showView("adminView");
   $("adLogout").onclick = logout;
   $("adTools").onclick = toolsSheet;
@@ -4804,6 +4825,7 @@ async function addToPlan(releaseNow){
     const inline = !isDesk();
     AD.hl = new Set((res || []).map(p => p.id)); setTimeout(() => { AD.hl = null; document.querySelectorAll(".stm-row.hl").forEach(x => x.classList.remove("hl")); }, 4000);
     AD.stTab = releaseNow ? "now" : "queue";
+    if (AD.attRet) { toast(releaseNow ? "נשלח ✓ – חזרה לנוכחות" : "נוסף לתור ✓ – חזרה לנוכחות"); setTimeout(leaveStudent, 50); return; }   // 1.30: מ"+ דפים" בנוכחות – חוזרים ישר לנוכחות
     if (inline) { navBackTo(AD.bankD); AD.bankD = 0; }
     const st = stById(sid); if (!inline) AD.view = "students"; AD.st = String(sid); AD.subj = subj; AD.sel.clear(); if (st) { window.scrollTo(0, 0); adRender(); }
   } catch(e) { toast(/duplicate|unique/i.test(e.message) ? "חלק מהדפים כבר בתוכנית." : errText(e)); }
@@ -4989,7 +5011,18 @@ function searchSheet(){
 }
 // ===================== מתרגלים (1.20) =====================
 // מתרגל/ת רואה רק את הקבוצות שלו/ה ביום (השרת מחזיר רק אותן) ומסמן/ת נוכחות. בלי דפים, בלי תלמידים, בלי מאגר.
+// 1.30: הטמעה – גובה להורה, פתיחה ישירה של קבוצה
+function embStart(){
+  let lastH = 0; const send = () => { const h = Math.ceil(document.documentElement.scrollHeight); if (Math.abs(h - lastH) > 2) { lastH = h; embPost({ height: h }); } };
+  try { new ResizeObserver(send).observe(document.body); } catch(e) {} setInterval(send, 1000); send();
+  if (EMB_Q.sid) { const sid = String(EMB_Q.sid), d = AD.waitDate || todayIso();
+    const tryOpen = (n) => { const x = AD.attG && AD.attG.iso === d && AD.attG.m.get(sid);
+      if (x) { const hm = (t) => String(t || "").slice(0, 5); ATTM.open(sid, d, { id: sid, city: x.city, loc: x.location, start: hm(x.start_time), end: hm(x.end_time), mar: x.kind === "מרתון" }); }
+      else if (n < 40) setTimeout(() => tryOpen(n + 1), 250); else ATTM.open(sid, d, { id: sid }); };
+    tryOpen(0); }
+}
 function instructorStart(role){
+  if (EMBED) { AD.waitIns = ""; if (/^\d{4}-\d{2}-\d{2}$/.test(EMB_Q.date || "")) AD.waitDate = EMB_Q.date; setTimeout(embStart, 0); }
   AD.role = "instructor"; AD.myName = (role && role.full_name) || "";
   showView("adminView"); document.body.classList.add("v-ins");
   $("adWho").textContent = AD.myName; $("adNav").innerHTML = `<button aria-current="page"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><span>נוכחות</span></button>`;
@@ -5426,7 +5459,8 @@ function attDraftRestore(){
   const saved = A.sheet.lesson && A.sheet.lesson.updated_at ? new Date(A.sheet.lesson.updated_at).getTime() : 0;
   if (d.t < saved) { store(attDraftKey(), null); return; }   // נשמר במערכת אחרי הטיוטה - אין מה לשחזר
   const by = {}; (d.rows || []).forEach(x => by[x.id] = x);
-  A.rows.forEach(r => { const x = by[r.student_id]; if (x) { r.present = x.p; r.did_math = !!x.m; r.did_english = !!x.e; if ("s" in x) r.skip = !!x.s; } });
+  A.rows.forEach(r => { const x = by[r.student_id]; if (x) { r.present = x.p; r.did_math = !!x.m; r.did_english = !!x.e; if ("s" in x) r.skip = !!x.s;
+    if (r.present == null && r.present0 != null && !r.skip) r.unmark = true; } });   // 1.30: סימון שנמחק לפני היציאה – נמחק גם בשמירה (לא נשאר הסימון הישן)
   A.removed = d.removed || []; A.rows = A.rows.filter(r => !A.removed.includes(r.student_id));
   if (d.extra != null) $("shExtra").value = d.extra; if (d.notes != null) $("shNotes").value = d.notes;
   // 5.19.14: אם הטיוטה זהה למה שכבר שמור - אין מה לשחזר ולא שואלים ביציאה
@@ -5526,6 +5560,7 @@ $("shSave").addEventListener("click", async () => {
         .concat((A.removed || []).map(id => ({ student_id: id, present: null, remove: true }))),
       p_extra: "", p_notes: $("shNotes").value });
     toast(missing ? `הנוכחות נשמרה (${missing} לא סומנו)` : "הנוכחות נשמרה"); attDraftClear();
+    embPost({ saved: { sid: A.sheet.session_id, date: A.sheet.date } });
     // 5.19.18: נשארים בדף הקבוצה אחרי שמירה (אפשר לשמור חלק ולהמשיך לסמן כשמגיעים עוד ילדים). לרשימה - "חזרה".
     A.rows.forEach(r => { if (r.unmark) { r.unmark = false; r.present0 = null; } if (r.present != null) { r.saved = true; r.present0 = r.present; } r.skip0 = r.skip; if (A.hasPlan && r.added && !r.in_group) { r.planned = true; r.saved = true; } }); A.rows = A.rows.filter(r => !(A.removed || []).includes(r.student_id)); A.removed = [];
     A.base = attSnap(); renderSheetRows(); loadAttGroups();
@@ -5633,7 +5668,7 @@ function renderSheetCx(){
     <input id="cxOther" placeholder="סיבה" hidden><button type="button" class="btn small primary" data-cx="save">שמירה</button></span>
     ${L0.cancelled === false ? `<span class="muted" style="font-size:12.5px;">סומן "התקיים" למרות החג.</span>` : ""}`;
   const set = async (v, reason) => { try { await rpc("set_lesson_cancelled", { p_session: sh.session_id, p_date: A.date, p_cancelled: v, p_reason: reason || null });
-      sh.lesson = Object.assign({}, sh.lesson || {}, { cancelled: v, cancel_reason: v ? reason : null }); toast(v ? "סומן: לא התקיים" : "נשמר"); renderSheetCx(); }
+      sh.lesson = Object.assign({}, sh.lesson || {}, { cancelled: v, cancel_reason: v ? reason : null }); toast(v ? "סומן: לא התקיים" : "נשמר"); renderSheetCx(); embPost({ saved: { sid: sh.session_id, date: A.date } }); }
     catch(e) { toast(/set_lesson_cancelled|404/.test(e.message + e.status) ? "צריך להריץ את קובץ 46" : "לא נשמר: " + e.message); } };
   box.querySelectorAll("[data-cx]").forEach(b => b.onclick = () => {
     const a = b.dataset.cx;
