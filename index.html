@@ -2027,7 +2027,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.29",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.29.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -3992,6 +3992,11 @@ function bankMatch(t, k){
 // תוספות של האפליקציה (CB.cardExtra / onOpen / onSel): מצב הדף בתוכנית, "לתור" / "שחרור", "לתלמידים…".
 // ======================================================================
 const CB = { ctx: "browse", cardExtra: null, onOpen: null, onSel: null };
+// 1.29.1 (נועה): אחרי ששלחתי (שיתוף בטלפון) – חוזרים ישר למאגר, בלי לסגור את הדף ב-✕
+const wsAfterSend = () => { setTimeout(() => { try {
+  const W = CBM.WS; if (W.sel && W.sel.size) { W.sel = new Set(); W.ready = null; }   // כמה דפים: מנקים את הבחירה – בלי הפס של "שליחה / לתלמידים"
+  if (!$("wsViewer").hidden) CBM.wsClose(); else { AD.bank.sel = new Set(); AD.bank.multi = false; CBM.renderWs(); CBM.wsSelUpd(); }
+} catch(e) {} }, 300); };
 let CB_SEC = null;
 const CB_VIS = () => !!(CB_SEC && CB_SEC.isConnected);
 const CBM = (() => {
@@ -4330,7 +4335,7 @@ async function wsSendRow(r){
     const ready = WS.files[r.storage_path];
     try {
       const f = ready || await wsFileFor(r);
-      if (navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+      if (navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); wsAfterSend(); return; }
     } catch(e) { if (e.name === "AbortError") return; if (e.name === "NotAllowedError") { toast("הדף מוכן - לוחצים שוב \"שליחה\""); return; } }
   }
   try {
@@ -4359,7 +4364,7 @@ async function wsSendRows(rows){
     const ready = rows.map(r => WS.files[r.storage_path]);
     try {
       const files = ready.every(Boolean) ? ready : await Promise.all(rows.map(wsFileFor));
-      if (navigator.canShare({ files })) { await navigator.share({ files }); return; }
+      if (navigator.canShare({ files })) { await navigator.share({ files }); wsAfterSend(); return; }
     } catch(e) { if (e.name === "AbortError") return; if (e.name === "NotAllowedError") { toast("הדפים מוכנים - לוחצים שוב \"שליחה\""); return; } }
   }
   WS.sel = new Set(rows.map(r => r.storage_path)); WS.ready = null; wsSelUpd(); $("wsSelSend").click();
@@ -4436,14 +4441,14 @@ $("wsSelSend").addEventListener("click", async () => {
   const btn = $("wsSelSend"), n = WS.sel.size; if (!n) return;
   const t = (WS.list[0] && WS.list[0].topic_name) || "דפים";
   if (WS.ready && WS.ready.n === n && wsMobile() && navigator.canShare && navigator.canShare({ files: WS.ready.files })) {   // הקבצים הוכנו מראש - חלון השיתוף נפתח מיד
-    try { await navigator.share({ files: WS.ready.files }); } catch(e) { if (e.name !== "AbortError") toast("השליחה לא עבדה: " + e.message); }
+    try { await navigator.share({ files: WS.ready.files }); wsAfterSend(); } catch(e) { if (e.name !== "AbortError") toast("השליחה לא עבדה: " + e.message); }
     return;
   }
   btn.disabled = true; const old = btn.textContent; btn.textContent = "מכין " + n + " דפים…";
   try {
     const files = await wsSelFiles();
     if (wsMobile() && navigator.canShare && navigator.canShare({ files })) {
-      try { await navigator.share({ files }); }
+      try { await navigator.share({ files }); btn.disabled = false; btn.textContent = old; wsAfterSend(); return; }
       catch(e) {
         if (e.name === "NotAllowedError") { WS.ready = { n, files, key: [...WS.sel].join("|") }; toast("הדפים מוכנים - לוחצים שוב \"שליחה\""); }
         else if (e.name !== "AbortError") toast("השליחה לא עבדה: " + e.message);
@@ -4647,7 +4652,7 @@ $("wsCopy").addEventListener("click", async () => {
   if (WS_SHARE) {
     const f = WS.file || await fetch(url).then(x => x.blob()).then(b => new File([b], "דף.png", { type: b.type || "image/png" })).catch(() => null);
     if (f && navigator.canShare({ files: [f] })) {
-      try { await navigator.share({ files: [f] }); } catch(e) { if (e.name !== "AbortError") toast("השליחה לא עבדה - אפשר \"הורדה\" ולשלוח מהגלריה"); }
+      try { await navigator.share({ files: [f] }); wsAfterSend(); } catch(e) { if (e.name !== "AbortError") toast("השליחה לא עבדה - אפשר \"הורדה\" ולשלוח מהגלריה"); }
       return;
     }
   }
