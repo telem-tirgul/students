@@ -463,6 +463,9 @@
   .rq-b{ font-size:16px; padding:13px; }
   .rq-on{ display:flex; align-items:center; gap:10px; justify-content:space-between; background:var(--ok-bg); border:1px solid var(--ok); color:var(--ink); border-radius:14px; padding:11px 14px; font-weight:700; font-size:15px; }
   .rq-on .lnk{ background:none; border:0; padding:0; color:var(--ink-soft); text-decoration:underline; font:inherit; font-weight:400; cursor:pointer; flex:none; }
+  .pa-st{ display:inline-flex; align-items:center; font-weight:800; font-size:14px; color:#3F4FA8; background:#EEF0FA; border-radius:999px; padding:6px 12px; white-space:nowrap; }
+  .stm-sec-h b.sn{ font-size:12.5px; padding:1px 8px; border-radius:999px; margin-inline-start:4px; }
+  .stm-sec-h b.sn.s-m, .stm-sec-h b.sn.subj-m{ background:#DDF5D6; color:#1F6B17; } .stm-sec-h b.sn.s-e, .stm-sec-h b.sn.subj-e{ background:#FFF6B8; color:#6B5600; }
   .lb-g.on{ border:2px solid var(--ok); box-shadow:0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
   .lb-hint{ margin-inline-start:auto; font-family:var(--font-body, inherit); font-size:12px; color:var(--ink-soft); font-weight:400; }
   .lb-f{ display:flex; gap:6px; flex-wrap:wrap; margin:0 0 8px; }
@@ -1548,6 +1551,7 @@ html:has(body.ws-vopen), body.ws-vopen{background:#161118 !important;}
   .crmws .ws-vapp .btn.pa-q{ background:#fff !important; color:#161118 !important; border-color:#fff !important; }
   .crmws .ws-vapp .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
   .crmws .ws-vapp .btn.pa-rm{ background:transparent !important; color:#ff8a80 !important; border:1.5px solid #ff8a80 !important; flex:0 1 auto; padding:0 12px; }
+  .crmws .ws-vapp .pa-st{ flex:none; height:34px; padding:0 12px; font-size:13.5px; background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.35); }
   .crmws .ws-vapp .pa-done{ color:#9be29b; font-weight:700; padding:10px; text-align:center; flex:1; }
   body.ws-app-on .crmws .ws-vbot{ padding-top:6px; gap:6px; }
   body.ws-app-on .crmws .ws-vbot .btn, body.ws-app-on .crmws .ws-vbot .ws-nav{ height:34px !important; min-height:0 !important; font-size:13px !important; padding:0 10px !important; flex:0 0 auto !important; }
@@ -2091,7 +2095,7 @@ body[data-att] .toast, body:has(#attListV) .toast{ bottom:auto; top:calc(12px + 
 // הגדרות
 // ======================================================================
 const CONFIG = {
-  version: "1.34",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
+  version: "1.34.1",                                               // גרסת האפליקציה – עולה בכל גרסה חדשה
   supabaseUrl: "https://oulivucqbpmbavbavfvy.supabase.co",
   anonKey: "sb_publishable_M8wEF2-9fXMmX0U97nfENw_AfZw9wNz",   // מפתח ציבורי - מותר שיהיה גלוי (ההרשאות נבדקות בשרת)
   appUrl: "https://telem-tirgul.github.io/telem-sheli/",           // הכתובת של האפליקציה (לשליחה לתלמידים)
@@ -3289,8 +3293,7 @@ async function renderWait(){
   const kpi = (v, l, cls) => `<span class="kpi ${cls}"><b>${v}</b> ${l}</span>`;   // שורת דוח – בלי מעבר מסך
   let h = byGroup ? `<div class="page-h"><div style="flex:1;min-width:200px"><h1>נוכחות</h1><p>הקבוצות של היום לפי השעה – סימון נוכחות, מי ממתין/ה ומה הבא בתור.</p></div></div>
 `
-    : `<div class="kpi-row">${AD.nreq ? "" : kpi(waitingKids(list).length, "ממתינים לדף", "k-gold", "wait")}${kpi(noAcc, "רשומים בלי חשבון", "", "students", "noacc")}</div>
-`;
+    : (AD.nreq ? "" : `<div class="kpi-row">${kpi(waitingKids(list).length, "ממתינים לדף", "k-gold", "wait")}</div>`);   // 1.34.1 (נועה): "רשומים בלי חשבון" – בהגדרות
   const reqs = myReqs();
   if (reqs.length) h += `<section class="need-box"><div class="need-h">${IC.key}<b>לטיפול: ביקשו קוד חדש (${reqs.length})</b></div><div class="wait-grid">` + reqs.map(r => { const s = stById(r.student_id);
       return `<div class="wcard req"><div class="who">${avatar(s)}<div style="flex:1;min-width:0"><div class="n">${esc(stName(s))}</div><div class="sub">${esc(stMeta(s))}</div>
@@ -3901,7 +3904,7 @@ async function renderStudentMobile(T, s){
     if (tab === "queue") body += `<div class="stm-hint">${qn ? "" : "אין דפים בתור. אפשר להוסיף מהמאגר."}</div>`;
     const part = (x) => {   // מה שמוצג במקצוע אחד
       let h = "";
-      if (tab === "queue") { const qAll = tColl(queueOf(s.student_id, x)), q = AD.showQ ? qAll : qAll.slice(0, 2); hid += qAll.length - q.length;
+      if (tab === "queue") { const qAll = tColl(queueOf(s.student_id, x)), q = qAll;   // 1.34.1 (נועה): כל התור, גם ארוך (סיים/ה – מקוצר)
         h += q.length ? `<div class="stm-q" data-q="${esc(x)}">` + q.map((p, i) => qRow(p, i)).join("") + `</div>` : `<div class="stm-empty">${EMPTY.queue}</div>`;
         if (q.length && s.has_account && multi) h += `<button class="btn sm primary stm-rel" data-relnext="${esc(x)}">${IC.check} שליחת הדף הבא</button>`; }
       else if (tab === "now") { const L = open.filter(p => !multi || p.subject === x);
@@ -3911,7 +3914,7 @@ async function renderStudentMobile(T, s){
       return h; };
     if (multi) body += `<div class="stm-cols">` + subs.map(x => `<div class="stm-col"><div class="stm-colh"><span class="subj-chip ${subjCls(x)} on sm">${esc(x)}</span>${(s.waiting_subjects || []).includes(x) && tab !== "done" ? `<span class="chip new">ממתין/ה</span>` : ""}</div>${part(x)}</div>`).join("") + `</div>`;
     else body += part(subs[0]);
-    if (tab === "queue") { if (hid) body += `<button class="linkish small stm-more" id="moreQAd">עוד ${hid} בתור ▾</button>`; else if (AD.showQ && qn > 2) body += `<button class="linkish small stm-more" id="moreQAd">להציג פחות ▴</button>`; }
+    // 1.34.1: בלי "עוד N בתור" – התור מוצג כולו
     if (tab === "done") { if (hid) body += `<button class="linkish small stm-more" id="moreDoneAd">עוד ${hid} שסיים/ה ▾</button>`; else if (AD.showDone && done.length > 2) body += `<button class="linkish small stm-more" id="moreDoneAd">להציג פחות ▴</button>`; }
     return body; };
   const SEC = { queue: ["☰", "בתור", "עוד לא נשלחו"], now: ["✎", "בעבודה", 'נשלחו ועוד לא סומנו "סיימתי"'], done: ["🏁", "סיים/ה", ""] };
@@ -3920,7 +3923,10 @@ async function renderStudentMobile(T, s){
     return L.map(p => `<div class="pk-row">${multi ? subTag(p) : ""}<b>${esc(ptTitle(p))}</b><small>${esc(k === "done" ? ago(p.done_at) : k === "now" ? "נשלח " + ago(p.released_at) : (W(p.worksheet_id) || {}).topic_name || "")}</small>${lvIc(W(p.worksheet_id))}</div>`).join("")
       || `<div class="pk-row muted">${k === "queue" ? "התור ריק." : k === "now" ? "אין דף פתוח." : "עוד לא סיים/ה דפים."}</div>`; };
   const shut = AD.secShut || (AD.secShut = new Set(JSON.parse(store("telem_portal_secshut") || "[]")));
-  const body = tabs.map(([k, , n]) => `<section class="stm-sec sec-${k}${shut.has(k) ? " shut" : ""}"><h3 class="stm-sec-h" data-sec="${k}" role="button" aria-expanded="${!shut.has(k)}"><span class="ic">${SEC[k][0]}</span>${SEC[k][1]}<b>${n}</b>${SEC[k][2] ? `<small>${esc(SEC[k][2])}</small>` : ""}<span class="sec-car">${shut.has(k) ? "▸" : "▾"}</span></h3>${shut.has(k) ? "" : `<div class="stm-sec-b">${secBody(k)}</div>`}</section>`).join("");
+  // 1.34.1 (נועה): משולב/ת – הספירה בכותרת לפי מקצוע (מת' 4 · אנג' 2), לא רק סה"כ
+  const secN = (k, n) => !multi ? `<b>${n}</b>` : subs.map(x => { const c = k === "queue" ? (queues.find(q => q[0] === x) || [, []])[1].length : (k === "now" ? open : done).filter(p => p.subject === x).length;
+    return `<b class="sn ${subjCls(x)}">${esc(x === "מתמטיקה" ? "מת'" : x === "אנגלית" ? "אנג'" : x)} ${c}</b>`; }).join("");
+  const body = tabs.map(([k, , n]) => `<section class="stm-sec sec-${k}${shut.has(k) ? " shut" : ""}"><h3 class="stm-sec-h" data-sec="${k}" role="button" aria-expanded="${!shut.has(k)}"><span class="ic">${SEC[k][0]}</span>${SEC[k][1]}${secN(k, n)}${SEC[k][2] ? `<small>${esc(SEC[k][2])}</small>` : ""}<span class="sec-car">${shut.has(k) ? "▸" : "▾"}</span></h3>${shut.has(k) ? "" : `<div class="stm-sec-b">${secBody(k)}</div>`}</section>`).join("");
 
   // 1.18: החשבון בשורה קטנה מתחת לפרטים (בלי "חשבון ◂"): טלפון · כניסה אחרונה · קוד חדש
   const acc = !s.has_account
@@ -4119,6 +4125,8 @@ function toolsSheet(){
   const st = AD.settings;
   openSheet(`<h2>⚙ הגדרות</h2>
     ${st ? `<div class="ic-line">🔑 <span>קוד ראשוני לכולם:</span>${st.initial_code ? `<b class="code">${esc(st.initial_code)}</b><span class="muted small">· תקף ${esc(st.initial_days)} ימים</span>` : `<span class="muted">עוד לא נקבע</span>`}<span style="flex:1"></span><button class="btn sm" id="icEdit">${st.initial_code ? "שינוי" : "קביעת קוד"}</button></div>` : ""}
+    ${(() => { const n = (AD.students || []).filter(x => !x.has_account).length, m = (AD.students || []).filter(x => x.has_account).length;
+      return `<div class="ic-line">📱 <span>חשבונות בתלם שלי:</span><b>${m}</b><span class="muted small">· ${n} רשומים בלי חשבון (יוצרים במערכת הניהול)</span></div>`; })()}
     <h3 class="tl-h">ייבוא דפים מהמחשב</h3>
     <p class="muted small" style="margin-top:-4px">בוחרים במחשב את התיקייה הראשית של דפי התרגול. המערכת מוצאת לבד את הדפים שברשימה, מעלה אותם ומחליפה דפים קיימים בגרסה החדשה. ${isDesk() ? "" : "<b>רק מהמחשב.</b>"}</p>
     ${isDesk() ? `<input type="file" id="wsFolderP" webkitdirectory directory multiple><div id="wsImportMsgP" class="small" style="margin-top:6px"></div>` : ""}
@@ -5000,8 +5008,8 @@ CB.onOpen = (r) => { const box = document.getElementById("wsAppBtns"); if (!box)
   const B = (a, t, cls) => `<button type="button" class="btn ${cls}" data-pa="${a}">${t}</button>`;
   // 1.22 (נועה): אותם כפתורים גם בלי חשבון – "שחרור" = הדף נרשם כנשלח
   box.innerHTML = !p ? B("add", "הוסף לתור", "pa-q") + B("addrel", "הוסף ושחרר עכשיו", "primary")
-    : p.status === "מתוכנן" ? B("rel", "שחרר עכשיו", "primary") + B("rm", "הסרה", "pa-rm")
-    : p.status === "נשלח" ? B("unrel", "ביטול שחרור (חזרה לתור)", "pa-q") : `<span class="pa-done">✔ סיים/ה את הדף</span>`;
+    : p.status === "מתוכנן" ? `<span class="pa-st">☰ נמצא בתור</span>` + B("rel", "שחרר עכשיו", "primary") + B("rm", "הסרה", "pa-rm")   // 1.34.1 (נועה): כתוב שהדף בתור
+    : p.status === "נשלח" ? `<span class="pa-st">✎ נשלח – בעבודה</span>` + B("unrel", "ביטול שחרור (חזרה לתור)", "pa-q") : `<span class="pa-done">✔ סיים/ה את הדף</span>`;
   box.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { const a = b.dataset.pa;
     if (a === "add" || a === "addrel") { if (CB.ctx === "pick") return cbAdd([String(r.id)], a === "addrel"); CBM.wsClose(); return; }
     CBM.wsClose(); setTimeout(() => { if (a === "rel") releaseItems([p.id]); else if (a === "unrel") unrelease(p.id); else if (a === "rm") removePlan(p.id); }, 60); }); };
