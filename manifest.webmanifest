@@ -1,7 +1,7 @@
 {
   "name": "תלם שלי",
   "short_name": "תלם שלי",
-  "description": "דפי התרגול האישיים שלך מתלם",
+  "description": "משימות התרגול האישיות שלך מתלם",
   "lang": "he",
   "dir": "rtl",
   "start_url": "./",
